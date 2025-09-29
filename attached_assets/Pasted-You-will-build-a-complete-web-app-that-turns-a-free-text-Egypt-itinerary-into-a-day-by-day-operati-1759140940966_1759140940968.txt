@@ -1,0 +1,239 @@
+You will build a complete web app that turns a free-text Egypt itinerary into:
+
+a day-by-day operations breakdown (Per-Group services first, then Per-Person services), and
+
+a pricing & quotation with per-person and per-group sell prices, ready to export.
+
+Use clean British English. Keep everything auditable and simple for the operations team.
+
+1) What the app must ask for
+
+Number of days (NUM_DAYS)
+
+Number of people (NUM_PEOPLE)
+
+Trip start date (optional, for seasons)
+
+Itinerary text (one day per block, e.g., “Day 1 — Arrival in Cairo …”)
+
+2) Service catalogue (use these exact labels)
+Airport Services
+
+Meet & Assist service at airport
+
+Transfer to hotel from airport
+
+Transfer to airport from hotel
+
+Hotel Services
+
+Hotel Checkin Assist
+
+Hotel Checkout Assist
+
+Accommodation at hotels, Dahabiya or Nile Cruise
+
+Meals at hotels, Dahabiya or Nile Cruise
+
+Train Station Services
+
+Transfer to hotel from station
+
+Transfer to station from hotel
+
+Seated Train
+
+Sleeping Train
+
+Tour Services
+
+Day Tour Transfer
+
+Guide
+
+Entrance Fees to attractions
+
+Restaurant tiping
+
+Meals at Local Restaurants
+
+Special Activities & Rides
+
+Horse Carriage Ride
+
+Motor Boat Ride
+
+Felucca Ride
+
+Camel Ride
+
+Hotair Balloon Ride
+
+Transportation Fees
+
+Parking Fees
+
+Toll Fees
+
+Road Permission Fees
+
+Domestic Flight
+
+Administrative Fees
+
+Ground Handler Handling Fee (Luxor)
+
+Ground Handler Handling Fee (Aswan)
+
+Ground Handler Handling Fee (Abu Simbel)
+
+3) Critical business rules (apply automatically)
+
+Airport events (any arrival or departure): add Meet & Assist service at airport and the matching airport transfer (to/from hotel).
+
+Hotel assistance: any check-in → Hotel Checkin Assist; any check-out → Hotel Checkout Assist. Any outside dinner or Sound & Light Show requires hotel escort/coordination; if there is no check-in/out that day, note this under assumptions.
+
+Ground handler fees (city-specific)
+
+If the itinerary includes Luxor: add Ground Handler Handling Fee (Luxor) on the last Luxor day.
+
+If it includes Aswan: add Ground Handler Handling Fee (Aswan) on the last Aswan day.
+
+If it includes Abu Simbel: add Ground Handler Handling Fee (Abu Simbel) on the Abu Simbel day.
+(Apply each fee once per city.)
+
+Nubian Village (Aswan): add Motor Boat Ride (per group) and Camel Ride (per person).
+
+Attractions (pyramids, museums, temples, sites): add Parking Fees once per day that includes site visits.
+
+Inter-city ground transportation (private car/van/coach): add Toll Fees and Road Permission Fees for each inter-city segment. Do not add these for trains or flights.
+
+Trains & flights: add Seated Train, Sleeping Train, or Domestic Flight when present.
+
+Classification order: for each day, list Per-Group services first, then Per-Person services. Deduplicate within the day and merge reasons.
+
+Typical assumptions (state clearly if used): Balloon rides are charged per person; feluccas and motor boats are group hires unless “shared” is specified; hotel board is BB unless otherwise stated.
+
+4) Parsing & inference
+
+Detect days from headings like “Day X” and infer city codes when shown (CAI, LXR, ASW, ABS, HRG, SSH).
+
+Recognise phrases that imply airport arrival/departure, hotel check-in/out, inter-city ground moves (“drive to…”, “by private car”), trains (“sleeping train”, “seated”), flights, site visits (“visit”, “tour”, temple names), and special activities (felucca, balloon, Nubian Village, horse carriage, camel).
+
+Track when the traveller is on a Nile Cruise: accommodation and meals are onboard; do not add hotel assists for cruise nights.
+
+Record “presence windows” for Luxor, Aswan, Abu Simbel to place handler fees correctly.
+
+5) Output (two layers, always in this order)
+A) JSON (strict, pretty-printed)
+
+An overview with num_days, num_people, cities_detected, and a map of ground handler fees applied with the exact day and reason.
+
+days[ ]: for each day → day, label, city_or_region, activities_detected, then two arrays:
+
+per_group: objects { service, reason, quantity? }
+
+per_person: objects { service, reason, quantity?/nights?/board? }
+
+notes: optional messages
+
+final_day_adjustments: shows the ground handler fees added.
+
+assumptions and missing_info arrays.
+
+B) Human-readable summary
+
+For each day:
+
+Per Group: comma-separated list
+
+Per Person: comma-separated list
+
+Note: one line noting key triggers (e.g., “Parking Fees added due to site visits.”)
+
+6) Pricing & quotation (state of the art but simple to use)
+
+The app must attach prices to every detected service and produce per-person and per-group totals.
+
+Up-front, the user provides Number of People; all Per-Group items are automatically divided by the number of people to create a per-person share that can be added to true per-person items.
+
+Support two accommodation modes:
+
+Per person per night (simple mode), or
+
+Per room per night (advanced): choose occupancy (e.g., 2 per room), optionally single supplement; the app allocates room costs per person.
+
+Include Tax (default 12%) and Markup (default 20%). Show both values and allow editing.
+
+Rounding rules: configurable (e.g., nearest 50 EGP or 5 USD).
+
+Currency: choose display currency (EGP/USD/EUR). Provide a transparent exchange rate value that can be edited for the quote; lock it into the calculation for audit.
+
+Profiles / Packages (three presets the user can switch at any time):
+
+Base: car + guide + parking/fees + essentials (no entrance tickets, no lunch)
+
++Tickets: Base plus Entrance Fees to attractions
+
++Tickets+Lunch: +Tickets plus Meals at Local Restaurants
+For any service, the user can include/exclude and override unit rate or quantity with a short note; totals update instantly.
+
+Show per-day mini-totals and sticky grand totals: Net / person, Tax, Markup, Sell / person, Sell / group.
+
+7) Exports
+
+Download JSON (canonical ops+pricing).
+
+Download PDF Quotation with:
+
+Brand-ready layout (elegant, modern).
+
+“Daily Breakdown” (Per-Group first, then Per-Person).
+
+“What’s Included / Excluded” informed by the current profile.
+
+A summary panel with Sell / person and Sell / group.
+
+Optionally show the three package variants side-by-side.
+
+8) UX expectations
+
+Step 1: inputs panel (days, people, start date optional, itinerary textarea).
+
+Step 2: results — Daily Breakdown cards. Each service card shows label, reason, quantity, and (in pricing view) unit price, subtotal, include toggle, and quick override.
+
+A right-hand totals area per day, plus a persistent bottom bar with grand totals.
+
+Clear flags for missing rates and simple inline fixes.
+
+Everything readable at a glance; no jargon.
+
+9) Validation & guardrails
+
+Warn if NUM_DAYS doesn’t match parsed days but still allow proceed.
+
+Never duplicate the same service on the same day. Merge reasons when multiple triggers exist.
+
+Do not add Toll/Road Permission for trains or flights.
+
+Apply each ground handler fee once in its correct city/day position.
+
+Optional activities in the text (e.g., camel or balloon) default excluded unless turned on.
+
+Keep an assumptions list and missing_info list for any guesswork.
+
+10) Acceptance criteria
+
+Pasting a typical 14–15 day Egypt itinerary and entering travellers returns:
+
+Correct daily Per-Group then Per-Person services with reasons.
+
+Correct handler fees (Luxor last day, Aswan last day, Abu Simbel day).
+
+Correct Parking on site-visit days; correct Toll & Road Permission on inter-city ground segments only.
+
+Live pricing that splits group items by travellers, adds per-person items, applies tax, markup, rounding, and produces Sell / person and Sell / group.
+
+Clean JSON and a professional PDF quotation.
+
+Now build this app end-to-end. Keep it simple, elegant, auditable, and fast.

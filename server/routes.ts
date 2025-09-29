@@ -414,13 +414,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
+    // Handle uploaded_by - set to null if user doesn't exist
+    let uploadedBy = null;
+    if (req.body.uploaded_by) {
+      const user = await storage.getUserByUsername(req.body.uploaded_by);
+      if (user) {
+        uploadedBy = user.id;
+      }
+    }
+
     const uploadData = {
       filename: req.file.filename,
       original_filename: req.file.originalname,
       file_path: req.file.path,
       file_size: req.file.size,
       status: 'pending' as const,
-      uploaded_by: req.body.uploaded_by || null
+      uploaded_by: uploadedBy
     };
 
     const upload = await storage.createExcelUpload(uploadData);

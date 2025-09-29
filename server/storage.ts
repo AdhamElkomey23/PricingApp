@@ -138,11 +138,15 @@ export class DatabaseStorage implements IStorage {
 
   // Service Item methods
   async getServiceItems(categoryId?: string): Promise<ServiceItem[]> {
-    const query = db.select().from(serviceItems).where(eq(serviceItems.is_active, true));
     if (categoryId) {
-      return await query.where(eq(serviceItems.category_id, categoryId));
+      return await db.select().from(serviceItems).where(
+        and(
+          eq(serviceItems.is_active, true),
+          eq(serviceItems.category_id, categoryId)
+        )
+      );
     }
-    return await query;
+    return await db.select().from(serviceItems).where(eq(serviceItems.is_active, true));
   }
 
   async getServiceItem(id: string): Promise<ServiceItem | undefined> {
@@ -182,31 +186,31 @@ export class DatabaseStorage implements IStorage {
     profile?: string;
     effectiveDate?: string;
   }): Promise<PricingRate[]> {
-    let query = db.select().from(pricingRates).where(eq(pricingRates.is_active, true));
+    const conditions = [eq(pricingRates.is_active, true)];
     
     if (filters?.serviceId) {
-      query = query.where(eq(pricingRates.service_id, filters.serviceId));
+      conditions.push(eq(pricingRates.service_id, filters.serviceId));
     }
     if (filters?.currency) {
-      query = query.where(eq(pricingRates.currency, filters.currency as any));
+      conditions.push(eq(pricingRates.currency, filters.currency as any));
     }
     if (filters?.profile) {
-      query = query.where(eq(pricingRates.profile, filters.profile as any));
+      conditions.push(eq(pricingRates.profile, filters.profile as any));
     }
     if (filters?.effectiveDate) {
       const date = new Date(filters.effectiveDate);
-      query = query.where(
+      conditions.push(
         and(
           lte(pricingRates.effective_from, date),
           or(
             isNull(pricingRates.effective_to),
             gte(pricingRates.effective_to, date)
           )
-        )
+        )!
       );
     }
     
-    return await query;
+    return await db.select().from(pricingRates).where(conditions.length > 1 ? and(...conditions) : conditions[0]);
   }
 
   async getPricingRate(id: string): Promise<PricingRate | undefined> {
@@ -244,16 +248,20 @@ export class DatabaseStorage implements IStorage {
     status?: string;
     createdBy?: string;
   }): Promise<Tour[]> {
-    let query = db.select().from(tours).orderBy(desc(tours.created_at));
+    const conditions = [];
     
     if (filters?.status) {
-      query = query.where(eq(tours.status, filters.status as any));
+      conditions.push(eq(tours.status, filters.status as any));
     }
     if (filters?.createdBy) {
-      query = query.where(eq(tours.created_by, filters.createdBy));
+      conditions.push(eq(tours.created_by, filters.createdBy));
     }
     
-    return await query;
+    if (conditions.length > 0) {
+      return await db.select().from(tours).where(and(...conditions)).orderBy(desc(tours.created_at));
+    }
+    
+    return await db.select().from(tours).orderBy(desc(tours.created_at));
   }
 
   async getTour(id: string): Promise<Tour | undefined> {
@@ -317,13 +325,13 @@ export class DatabaseStorage implements IStorage {
 
   // Excel Upload methods
   async getExcelUploads(uploadedBy?: string): Promise<ExcelUpload[]> {
-    let query = db.select().from(excelUploads).orderBy(desc(excelUploads.created_at));
-    
     if (uploadedBy) {
-      query = query.where(eq(excelUploads.uploaded_by, uploadedBy));
+      return await db.select().from(excelUploads)
+        .where(eq(excelUploads.uploaded_by, uploadedBy))
+        .orderBy(desc(excelUploads.created_at));
     }
     
-    return await query;
+    return await db.select().from(excelUploads).orderBy(desc(excelUploads.created_at));
   }
 
   async getExcelUpload(id: string): Promise<ExcelUpload | undefined> {

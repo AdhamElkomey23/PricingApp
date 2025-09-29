@@ -153,7 +153,7 @@ export const tourStatusEnum = pgEnum("tour_status", ["draft", "active", "archive
 
 // Service Categories table
 export const serviceCategories = pgTable("service_categories", {
-  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: text("name").notNull().unique(),
   description: text("description"),
   is_active: boolean("is_active").default(true),
@@ -163,8 +163,8 @@ export const serviceCategories = pgTable("service_categories", {
 
 // Service Items table
 export const serviceItems = pgTable("service_items", {
-  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
-  category_id: uuid("category_id").references(() => serviceCategories.id),
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  category_id: varchar("category_id").references(() => serviceCategories.id),
   name: text("name").notNull(),
   description: text("description"),
   unit_type: text("unit_type").notNull(), // 'per_person', 'per_group', 'per_night', etc.
@@ -176,8 +176,8 @@ export const serviceItems = pgTable("service_items", {
 
 // Pricing Rates table
 export const pricingRates = pgTable("pricing_rates", {
-  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
-  service_id: uuid("service_id").references(() => serviceItems.id),
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  service_id: varchar("service_id").references(() => serviceItems.id),
   currency: currencyEnum("currency").notNull(),
   profile: pricingProfileEnum("profile").notNull(),
   unit_price: real("unit_price").notNull(),
@@ -192,7 +192,7 @@ export const pricingRates = pgTable("pricing_rates", {
 
 // Tours table
 export const tours = pgTable("tours", {
-  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: text("name").notNull(),
   client_name: text("client_name"),
   client_email: text("client_email"),
@@ -202,29 +202,29 @@ export const tours = pgTable("tours", {
   num_days: integer("num_days").notNull(),
   num_people: integer("num_people").notNull(),
   start_date: timestamp("start_date"),
-  created_by: uuid("created_by").references(() => users.id),
+  created_by: varchar("created_by").references(() => users.id),
   created_at: timestamp("created_at").defaultNow(),
   updated_at: timestamp("updated_at").defaultNow(),
 });
 
 // Tour Versions table (for versioning/history)
 export const tourVersions = pgTable("tour_versions", {
-  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
-  tour_id: uuid("tour_id").references(() => tours.id),
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  tour_id: varchar("tour_id").references(() => tours.id),
   version_number: integer("version_number").notNull(),
   parsed_itinerary: jsonb("parsed_itinerary").notNull(),
   pricing_config: jsonb("pricing_config").notNull(),
   pricing_totals: jsonb("pricing_totals").notNull(),
   notes: text("notes"),
-  created_by: uuid("created_by").references(() => users.id),
+  created_by: varchar("created_by").references(() => users.id),
   created_at: timestamp("created_at").defaultNow(),
 });
 
 // Tour Services table (links tours to specific services with applied prices)
 export const tourServices = pgTable("tour_services", {
-  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
-  tour_version_id: uuid("tour_version_id").references(() => tourVersions.id),
-  service_id: uuid("service_id").references(() => serviceItems.id),
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  tour_version_id: varchar("tour_version_id").references(() => tourVersions.id),
+  service_id: varchar("service_id").references(() => serviceItems.id),
   day_number: integer("day_number").notNull(),
   quantity: integer("quantity").default(1),
   unit_price: real("unit_price").notNull(),
@@ -236,13 +236,13 @@ export const tourServices = pgTable("tour_services", {
 
 // Excel Uploads table
 export const excelUploads = pgTable("excel_uploads", {
-  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   filename: text("filename").notNull(),
   original_filename: text("original_filename").notNull(),
   file_path: text("file_path").notNull(),
   file_size: integer("file_size").notNull(),
   status: uploadStatusEnum("status").default("pending"),
-  uploaded_by: uuid("uploaded_by").references(() => users.id),
+  uploaded_by: varchar("uploaded_by").references(() => users.id),
   processed_at: timestamp("processed_at"),
   error_log: text("error_log"),
   records_processed: integer("records_processed"),
@@ -253,15 +253,15 @@ export const excelUploads = pgTable("excel_uploads", {
 
 // New Zod schemas for the new tables
 export const serviceCategorySchema = z.object({
-  id: z.string().uuid().optional(),
+  id: z.string().optional(),
   name: z.string().min(1),
   description: z.string().optional(),
   is_active: z.boolean().default(true),
 });
 
 export const serviceItemSchema = z.object({
-  id: z.string().uuid().optional(),
-  category_id: z.string().uuid(),
+  id: z.string().optional(),
+  category_id: z.string(),
   name: z.string().min(1),
   description: z.string().optional(),
   unit_type: z.enum(["per_person", "per_group", "per_night", "per_day", "flat_rate"]),
@@ -270,8 +270,8 @@ export const serviceItemSchema = z.object({
 });
 
 export const pricingRateSchema = z.object({
-  id: z.string().uuid().optional(),
-  service_id: z.string().uuid(),
+  id: z.string().optional(),
+  service_id: z.string(),
   currency: z.enum(["EGP", "USD", "EUR"]),
   profile: z.enum(["Base", "+Tickets", "+Tickets+Lunch"]),
   unit_price: z.number().positive(),
@@ -283,7 +283,7 @@ export const pricingRateSchema = z.object({
 });
 
 export const tourSchema = z.object({
-  id: z.string().uuid().optional(),
+  id: z.string().optional(),
   name: z.string().min(1),
   client_name: z.string().optional(),
   client_email: z.string().email().optional(),
@@ -293,28 +293,28 @@ export const tourSchema = z.object({
   num_days: z.number().int().positive(),
   num_people: z.number().int().positive(),
   start_date: z.string().datetime().optional(),
-  created_by: z.string().uuid().optional(),
+  created_by: z.string().optional(),
 });
 
 export const tourVersionSchema = z.object({
-  id: z.string().uuid().optional(),
-  tour_id: z.string().uuid(),
+  id: z.string().optional(),
+  tour_id: z.string(),
   version_number: z.number().int().positive(),
   parsed_itinerary: parsedItinerarySchema,
   pricing_config: pricingConfigSchema,
   pricing_totals: pricingTotalsSchema,
   notes: z.string().optional(),
-  created_by: z.string().uuid().optional(),
+  created_by: z.string().optional(),
 });
 
 export const excelUploadSchema = z.object({
-  id: z.string().uuid().optional(),
+  id: z.string().optional(),
   filename: z.string().min(1),
   original_filename: z.string().min(1),
   file_path: z.string().min(1),
   file_size: z.number().int().positive(),
   status: z.enum(["pending", "processing", "completed", "failed"]).default("pending"),
-  uploaded_by: z.string().uuid().optional(),
+  uploaded_by: z.string().optional(),
   processed_at: z.string().datetime().optional(),
   error_log: z.string().optional(),
   records_processed: z.number().int().optional(),

@@ -80,13 +80,13 @@ const validateBody = (schema: z.ZodSchema) => {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // ========== Service Categories API ==========
-  
+
   // Get all service categories
   app.get('/api/pricing/categories', asyncHandler(async (req: Request, res: Response) => {
     const categories = await storage.getServiceCategories();
     res.json(categories);
   }));
-  
+
   // Get single service category
   app.get('/api/pricing/categories/:id', asyncHandler(async (req: Request, res: Response) => {
     const category = await storage.getServiceCategory(req.params.id);
@@ -95,13 +95,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.json(category);
   }));
-  
+
   // Create service category
   app.post('/api/pricing/categories', validateBody(insertServiceCategorySchema), asyncHandler(async (req: Request, res: Response) => {
     const category = await storage.createServiceCategory(req.body);
     res.status(201).json(category);
   }));
-  
+
   // Update service category
   app.put('/api/pricing/categories/:id', validateBody(insertServiceCategorySchema.partial()), asyncHandler(async (req: Request, res: Response) => {
     const category = await storage.updateServiceCategory(req.params.id, req.body);
@@ -110,7 +110,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.json(category);
   }));
-  
+
   // Delete service category (soft delete)
   app.delete('/api/pricing/categories/:id', asyncHandler(async (req: Request, res: Response) => {
     const success = await storage.deleteServiceCategory(req.params.id);
@@ -119,16 +119,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.status(204).send();
   }));
-  
+
   // ========== Service Items API ==========
-  
+
   // Get all service items (optionally filtered by category)
   app.get('/api/pricing/services', asyncHandler(async (req: Request, res: Response) => {
     const categoryId = req.query.categoryId as string;
     const services = await storage.getServiceItems(categoryId);
     res.json(services);
   }));
-  
+
   // Get single service item
   app.get('/api/pricing/services/:id', asyncHandler(async (req: Request, res: Response) => {
     const service = await storage.getServiceItem(req.params.id);
@@ -137,13 +137,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.json(service);
   }));
-  
+
   // Create service item
   app.post('/api/pricing/services', validateBody(insertServiceItemSchema), asyncHandler(async (req: Request, res: Response) => {
     const service = await storage.createServiceItem(req.body);
     res.status(201).json(service);
   }));
-  
+
   // Update service item
   app.put('/api/pricing/services/:id', validateBody(insertServiceItemSchema.partial()), asyncHandler(async (req: Request, res: Response) => {
     const service = await storage.updateServiceItem(req.params.id, req.body);
@@ -152,7 +152,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.json(service);
   }));
-  
+
   // Delete service item (soft delete)
   app.delete('/api/pricing/services/:id', asyncHandler(async (req: Request, res: Response) => {
     const success = await storage.deleteServiceItem(req.params.id);
@@ -161,9 +161,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.status(204).send();
   }));
-  
+
   // ========== Pricing Rates API ==========
-  
+
   // Get pricing rates with optional filters
   app.get('/api/pricing/rates', asyncHandler(async (req: Request, res: Response) => {
     const filters = {
@@ -175,7 +175,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const rates = await storage.getPricingRates(filters);
     res.json(rates);
   }));
-  
+
   // Get single pricing rate
   app.get('/api/pricing/rates/:id', asyncHandler(async (req: Request, res: Response) => {
     const rate = await storage.getPricingRate(req.params.id);
@@ -184,13 +184,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.json(rate);
   }));
-  
+
   // Create pricing rate
   app.post('/api/pricing/rates', validateBody(insertPricingRateSchema), asyncHandler(async (req: Request, res: Response) => {
     const rate = await storage.createPricingRate(req.body);
     res.status(201).json(rate);
   }));
-  
+
   // Update pricing rate
   app.put('/api/pricing/rates/:id', validateBody(insertPricingRateSchema.partial()), asyncHandler(async (req: Request, res: Response) => {
     const rate = await storage.updatePricingRate(req.params.id, req.body);
@@ -199,7 +199,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.json(rate);
   }));
-  
+
   // Delete pricing rate (soft delete)
   app.delete('/api/pricing/rates/:id', asyncHandler(async (req: Request, res: Response) => {
     const success = await storage.deletePricingRate(req.params.id);
@@ -208,20 +208,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.status(204).send();
   }));
-  
+
   // Bulk upsert pricing rates (for Excel import)
   app.post('/api/pricing/rates/bulk', asyncHandler(async (req: Request, res: Response) => {
     const ratesData = req.body.rates;
     if (!Array.isArray(ratesData)) {
       return res.status(400).json({ error: 'rates must be an array' });
     }
-    
+
     const results = {
       created: 0,
       updated: 0,
       errors: [] as any[]
     };
-    
+
     for (const rateData of ratesData) {
       try {
         const validatedData = insertPricingRateSchema.parse(rateData);
@@ -231,14 +231,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         results.errors.push({ data: rateData, error: error.message });
       }
     }
-    
+
     res.json(results);
   }));
 
   // Import transportation data
   app.post('/api/import/transportation', asyncHandler(async (req: Request, res: Response) => {
     const { transportationData } = await import('./importTransportationData');
-    
+
     const results = {
       categoriesCreated: 0,
       servicesCreated: 0,
@@ -302,9 +302,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: error.message });
     }
   }));
-  
+
   // ========== Tours API ==========
-  
+
   // Get all tours with optional filters
   app.get('/api/tours', asyncHandler(async (req: Request, res: Response) => {
     const filters = {
@@ -314,7 +314,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const tours = await storage.getTours(filters);
     res.json(tours);
   }));
-  
+
   // Get single tour
   app.get('/api/tours/:id', asyncHandler(async (req: Request, res: Response) => {
     const tour = await storage.getTour(req.params.id);
@@ -323,13 +323,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.json(tour);
   }));
-  
+
   // Create tour
   app.post('/api/tours', validateBody(insertTourSchema), asyncHandler(async (req: Request, res: Response) => {
     const tour = await storage.createTour(req.body);
     res.status(201).json(tour);
   }));
-  
+
   // Update tour
   app.put('/api/tours/:id', validateBody(insertTourSchema.partial()), asyncHandler(async (req: Request, res: Response) => {
     const tour = await storage.updateTour(req.params.id, req.body);
@@ -338,7 +338,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.json(tour);
   }));
-  
+
   // Update tour name
   app.patch('/api/tours/:id/name', validateBody(z.object({ name: z.string().min(1) })), asyncHandler(async (req: Request, res: Response) => {
     const tour = await storage.updateTour(req.params.id, { name: req.body.name });
@@ -347,7 +347,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.json(tour);
   }));
-  
+
   // Delete tour
   app.delete('/api/tours/:id', asyncHandler(async (req: Request, res: Response) => {
     const success = await storage.deleteTour(req.params.id);
@@ -356,15 +356,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.status(204).send();
   }));
-  
+
   // ========== Tour Versions API ==========
-  
+
   // Get all versions for a tour
   app.get('/api/tours/:tourId/versions', asyncHandler(async (req: Request, res: Response) => {
     const versions = await storage.getTourVersions(req.params.tourId);
     res.json(versions);
   }));
-  
+
   // Get latest version for a tour
   app.get('/api/tours/:tourId/versions/latest', asyncHandler(async (req: Request, res: Response) => {
     const version = await storage.getLatestTourVersion(req.params.tourId);
@@ -373,7 +373,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.json(version);
   }));
-  
+
   // Get single tour version
   app.get('/api/tours/:tourId/versions/:versionId', asyncHandler(async (req: Request, res: Response) => {
     const version = await storage.getTourVersion(req.params.versionId);
@@ -382,23 +382,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.json(version);
   }));
-  
+
   // Create new tour version
   app.post('/api/tours/:tourId/versions', validateBody(insertTourVersionSchema), asyncHandler(async (req: Request, res: Response) => {
     const versionData = { ...req.body, tour_id: req.params.tourId };
     const version = await storage.createTourVersion(versionData);
     res.status(201).json(version);
   }));
-  
+
   // ========== Excel Uploads API ==========
-  
+
   // Get all excel uploads
   app.get('/api/uploads', asyncHandler(async (req: Request, res: Response) => {
     const uploadedBy = req.query.uploadedBy as string;
     const uploads = await storage.getExcelUploads(uploadedBy);
     res.json(uploads);
   }));
-  
+
   // Get single excel upload
   app.get('/api/uploads/:id', asyncHandler(async (req: Request, res: Response) => {
     const upload = await storage.getExcelUpload(req.params.id);
@@ -407,13 +407,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.json(upload);
   }));
-  
+
   // Upload Excel file
   app.post('/api/uploads', upload.single('file'), asyncHandler(async (req: Request, res: Response) => {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    
+
     const uploadData = {
       filename: req.file.filename,
       original_filename: req.file.originalname,
@@ -422,11 +422,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       status: 'pending' as const,
       uploaded_by: req.body.uploaded_by || null
     };
-    
+
     const upload = await storage.createExcelUpload(uploadData);
     res.status(201).json(upload);
   }));
-  
+
   // Update upload status (for processing)
   app.patch('/api/uploads/:id/status', validateBody(z.object({ 
     status: z.enum(['pending', 'processing', 'completed', 'failed']),
@@ -440,28 +440,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ? new Date().toISOString()
         : undefined
     };
-    
+
     const upload = await storage.updateExcelUpload(req.params.id, updateData);
     if (!upload) {
       return res.status(404).json({ error: 'Upload not found' });
     }
     res.json(upload);
   }));
-  
+
   // Process uploaded Excel file
   app.post('/api/uploads/:id/process', asyncHandler(async (req: Request, res: Response) => {
     const upload = await storage.getExcelUpload(req.params.id);
     if (!upload) {
       return res.status(404).json({ error: 'Upload not found' });
     }
-    
+
     if (upload.status !== 'pending') {
       return res.status(400).json({ error: 'Upload has already been processed' });
     }
-    
+
     // Update status to processing
     await storage.updateExcelUpload(req.params.id, { status: 'processing' });
-    
+
     try {
       const fileContent = await fs.readFile(upload.file_path, 'utf-8');
       let records: any[] = [];
@@ -483,12 +483,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
               // Extract cost and currency
               const costStr = record['Base Cost'].toString();
               const costMatch = costStr.match(/(\d+(?:\.\d+)?)\s*([€$]|EUR|USD)/i);
-              
+
               if (costMatch) {
                 const cost = parseFloat(costMatch[1]);
                 const currencySymbol = costMatch[2];
                 let currency = 'EUR';
-                
+
                 if (currencySymbol === '$' || currencySymbol.toUpperCase() === 'USD') {
                   currency = 'USD';
                 }
@@ -528,14 +528,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
         }
       }
-      
+
       await storage.updateExcelUpload(req.params.id, {
         status: 'completed',
         processed_at: new Date().toISOString(),
         records_processed: recordsProcessed,
         records_failed: recordsFailed
       });
-      
+
       res.json({ 
         message: 'Processing completed successfully',
         recordsProcessed,
@@ -547,33 +547,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         processed_at: new Date().toISOString(),
         error_log: error.message
       });
-      
+
       res.status(500).json({ error: 'Processing failed', message: error.message });
     }
   }));
-  
+
   // Delete upload and associated file
   app.delete('/api/uploads/:id', asyncHandler(async (req: Request, res: Response) => {
     const upload = await storage.getExcelUpload(req.params.id);
     if (!upload) {
       return res.status(404).json({ error: 'Upload not found' });
     }
-    
+
     // Delete the file from disk
     try {
       await fs.unlink(upload.file_path);
     } catch (error) {
       console.warn('Failed to delete file:', upload.file_path, error);
     }
-    
+
     const success = await storage.deleteExcelUpload(req.params.id);
     if (!success) {
       return res.status(404).json({ error: 'Upload not found' });
     }
-    
+
     res.status(204).send();
   }));
-  
+
   // ========== Health Check ==========
   app.get('/api/health', (req: Request, res: Response) => {
     res.json({ status: 'healthy', timestamp: new Date().toISOString() });

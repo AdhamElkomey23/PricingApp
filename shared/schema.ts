@@ -1,10 +1,10 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, real, boolean, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, real, boolean, jsonb, timestamp, uuid, pgEnum } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-// Service Categories
-export type ServiceCategory = 
+// Service Categories (legacy enum for compatibility)
+export type ServiceCategoryType = 
   | "Airport Services"
   | "Hotel Services" 
   | "Train Station Services"
@@ -144,7 +144,235 @@ export const insertQuotationSchema = createInsertSchema(quotations).omit({
   updated_at: true,
 });
 
+// Enums for database
+export const currencyEnum = pgEnum("currency", ["EGP", "USD", "EUR"]);
+export const pricingProfileEnum = pgEnum("pricing_profile", ["Base", "+Tickets", "+Tickets+Lunch"]);
+export const accommodationModeEnum = pgEnum("accommodation_mode", ["per_person", "per_room"]);
+export const uploadStatusEnum = pgEnum("upload_status", ["pending", "processing", "completed", "failed"]);
+export const tourStatusEnum = pgEnum("tour_status", ["draft", "active", "archived", "invoiced"]);
+
+// Service Categories table
+export const serviceCategories = pgTable("service_categories", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull().unique(),
+  description: text("description"),
+  is_active: boolean("is_active").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
+// Service Items table
+export const serviceItems = pgTable("service_items", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  category_id: uuid("category_id").references(() => serviceCategories.id),
+  name: text("name").notNull(),
+  description: text("description"),
+  unit_type: text("unit_type").notNull(), // 'per_person', 'per_group', 'per_night', etc.
+  default_quantity: integer("default_quantity").default(1),
+  is_active: boolean("is_active").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
+// Pricing Rates table
+export const pricingRates = pgTable("pricing_rates", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  service_id: uuid("service_id").references(() => serviceItems.id),
+  currency: currencyEnum("currency").notNull(),
+  profile: pricingProfileEnum("profile").notNull(),
+  unit_price: real("unit_price").notNull(),
+  effective_from: timestamp("effective_from").notNull(),
+  effective_to: timestamp("effective_to"),
+  season: text("season"), // 'high', 'low', 'peak', etc.
+  markup_override: real("markup_override"), // Optional markup override for specific services
+  is_active: boolean("is_active").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
+// Tours table
+export const tours = pgTable("tours", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  client_name: text("client_name"),
+  client_email: text("client_email"),
+  description: text("description"),
+  status: tourStatusEnum("status").default("draft"),
+  original_itinerary_text: text("original_itinerary_text"),
+  num_days: integer("num_days").notNull(),
+  num_people: integer("num_people").notNull(),
+  start_date: timestamp("start_date"),
+  created_by: uuid("created_by").references(() => users.id),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
+// Tour Versions table (for versioning/history)
+export const tourVersions = pgTable("tour_versions", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  tour_id: uuid("tour_id").references(() => tours.id),
+  version_number: integer("version_number").notNull(),
+  parsed_itinerary: jsonb("parsed_itinerary").notNull(),
+  pricing_config: jsonb("pricing_config").notNull(),
+  pricing_totals: jsonb("pricing_totals").notNull(),
+  notes: text("notes"),
+  created_by: uuid("created_by").references(() => users.id),
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+// Tour Services table (links tours to specific services with applied prices)
+export const tourServices = pgTable("tour_services", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  tour_version_id: uuid("tour_version_id").references(() => tourVersions.id),
+  service_id: uuid("service_id").references(() => serviceItems.id),
+  day_number: integer("day_number").notNull(),
+  quantity: integer("quantity").default(1),
+  unit_price: real("unit_price").notNull(),
+  total_price: real("total_price").notNull(),
+  is_included: boolean("is_included").default(true),
+  override_reason: text("override_reason"),
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+// Excel Uploads table
+export const excelUploads = pgTable("excel_uploads", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  filename: text("filename").notNull(),
+  original_filename: text("original_filename").notNull(),
+  file_path: text("file_path").notNull(),
+  file_size: integer("file_size").notNull(),
+  status: uploadStatusEnum("status").default("pending"),
+  uploaded_by: uuid("uploaded_by").references(() => users.id),
+  processed_at: timestamp("processed_at"),
+  error_log: text("error_log"),
+  records_processed: integer("records_processed"),
+  records_failed: integer("records_failed"),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
+// New Zod schemas for the new tables
+export const serviceCategorySchema = z.object({
+  id: z.string().uuid().optional(),
+  name: z.string().min(1),
+  description: z.string().optional(),
+  is_active: z.boolean().default(true),
+});
+
+export const serviceItemSchema = z.object({
+  id: z.string().uuid().optional(),
+  category_id: z.string().uuid(),
+  name: z.string().min(1),
+  description: z.string().optional(),
+  unit_type: z.enum(["per_person", "per_group", "per_night", "per_day", "flat_rate"]),
+  default_quantity: z.number().int().positive().default(1),
+  is_active: z.boolean().default(true),
+});
+
+export const pricingRateSchema = z.object({
+  id: z.string().uuid().optional(),
+  service_id: z.string().uuid(),
+  currency: z.enum(["EGP", "USD", "EUR"]),
+  profile: z.enum(["Base", "+Tickets", "+Tickets+Lunch"]),
+  unit_price: z.number().positive(),
+  effective_from: z.string().datetime(),
+  effective_to: z.string().datetime().optional(),
+  season: z.string().optional(),
+  markup_override: z.number().optional(),
+  is_active: z.boolean().default(true),
+});
+
+export const tourSchema = z.object({
+  id: z.string().uuid().optional(),
+  name: z.string().min(1),
+  client_name: z.string().optional(),
+  client_email: z.string().email().optional(),
+  description: z.string().optional(),
+  status: z.enum(["draft", "active", "archived", "invoiced"]).default("draft"),
+  original_itinerary_text: z.string().optional(),
+  num_days: z.number().int().positive(),
+  num_people: z.number().int().positive(),
+  start_date: z.string().datetime().optional(),
+  created_by: z.string().uuid().optional(),
+});
+
+export const tourVersionSchema = z.object({
+  id: z.string().uuid().optional(),
+  tour_id: z.string().uuid(),
+  version_number: z.number().int().positive(),
+  parsed_itinerary: parsedItinerarySchema,
+  pricing_config: pricingConfigSchema,
+  pricing_totals: pricingTotalsSchema,
+  notes: z.string().optional(),
+  created_by: z.string().uuid().optional(),
+});
+
+export const excelUploadSchema = z.object({
+  id: z.string().uuid().optional(),
+  filename: z.string().min(1),
+  original_filename: z.string().min(1),
+  file_path: z.string().min(1),
+  file_size: z.number().int().positive(),
+  status: z.enum(["pending", "processing", "completed", "failed"]).default("pending"),
+  uploaded_by: z.string().uuid().optional(),
+  processed_at: z.string().datetime().optional(),
+  error_log: z.string().optional(),
+  records_processed: z.number().int().optional(),
+  records_failed: z.number().int().optional(),
+});
+
+// Insert schemas
+export const insertServiceCategorySchema = createInsertSchema(serviceCategories).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+});
+
+export const insertServiceItemSchema = createInsertSchema(serviceItems).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+});
+
+export const insertPricingRateSchema = createInsertSchema(pricingRates).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+});
+
+export const insertTourSchema = createInsertSchema(tours).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+});
+
+export const insertTourVersionSchema = createInsertSchema(tourVersions).omit({
+  id: true,
+  created_at: true,
+});
+
+export const insertExcelUploadSchema = createInsertSchema(excelUploads).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+});
+
 // Types
+export type ServiceCategory = typeof serviceCategories.$inferSelect;
+export type ServiceItem = typeof serviceItems.$inferSelect;
+export type PricingRate = typeof pricingRates.$inferSelect;
+export type Tour = typeof tours.$inferSelect;
+export type TourVersion = typeof tourVersions.$inferSelect;
+export type TourService = typeof tourServices.$inferSelect;
+export type ExcelUpload = typeof excelUploads.$inferSelect;
+
+export type InsertServiceCategory = z.infer<typeof insertServiceCategorySchema>;
+export type InsertServiceItem = z.infer<typeof insertServiceItemSchema>;
+export type InsertPricingRate = z.infer<typeof insertPricingRateSchema>;
+export type InsertTour = z.infer<typeof insertTourSchema>;
+export type InsertTourVersion = z.infer<typeof insertTourVersionSchema>;
+export type InsertExcelUpload = z.infer<typeof insertExcelUploadSchema>;
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertQuotation = z.infer<typeof insertQuotationSchema>;

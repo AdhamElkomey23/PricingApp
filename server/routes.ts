@@ -233,6 +233,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     res.json(results);
   }));
+
+  // Import transportation data
+  app.post('/api/import/transportation', asyncHandler(async (req: Request, res: Response) => {
+    const { transportationData } = await import('./importTransportationData');
+    
+    const results = {
+      categoriesCreated: 0,
+      servicesCreated: 0,
+      ratesCreated: 0,
+      errors: [] as any[]
+    };
+
+    try {
+      // Create or get transport category
+      let transportCategory = await storage.getServiceCategoryByName('Transportation');
+      if (!transportCategory) {
+        transportCategory = await storage.createServiceCategory({
+          name: 'Transportation',
+          description: 'Transportation services including airport transfers, tours and intercity travel'
+        });
+        results.categoriesCreated++;
+      }
+
+      // Process each transportation service
+      for (const data of transportationData) {
+        try {
+          // Create service item
+          const serviceItem = await storage.createServiceItem({
+            category_id: transportCategory.id,
+            name: data.serviceName,
+            description: data.notes,
+            unit_type: data.costBasis,
+            default_quantity: 1
+          });
+          results.servicesCreated++;
+
+          // Create pricing rate for EUR
+          await storage.createPricingRate({
+            service_id: serviceItem.id,
+            currency: 'EUR' as any,
+            profile: 'Base' as any,
+            unit_price: data.baseCost,
+            effective_from: new Date(),
+            is_active: true
+          });
+          results.ratesCreated++;
+
+          // Create pricing rate for USD (converted at 1.08 rate)
+          await storage.createPricingRate({
+            service_id: serviceItem.id,
+            currency: 'USD' as any,
+            profile: 'Base' as any,
+            unit_price: Math.round(data.baseCost * 1.08 * 100) / 100,
+            effective_from: new Date(),
+            is_active: true
+          });
+          results.ratesCreated++;
+
+        } catch (error) {
+          results.errors.push({ service: data.serviceName, error: error.message });
+        }
+      }
+
+      res.json(results);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }));
   
   // ========== Tours API ==========
   

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "wouter";
 import { ThemeProvider } from "next-themes";
@@ -21,9 +20,9 @@ export default function DatabasePage() {
 
   // Mock data for demonstration
   const mockRateCards = [
-    { id: "1", name: "Standard 2024", baseCurrency: "EGP", status: "Published", lastUpdated: "2024-01-15" },
+    { id: "1", name: "Standard 2024", baseCurrency: "USD", status: "Published", lastUpdated: "2024-01-15" },
     { id: "2", name: "Premium Package", baseCurrency: "USD", status: "Draft", lastUpdated: "2024-01-20" },
-    { id: "3", name: "Budget Options", baseCurrency: "EGP", status: "Archived", lastUpdated: "2023-12-10" }
+    { id: "3", name: "Budget Options", baseCurrency: "EUR", status: "Archived", lastUpdated: "2023-12-10" }
   ];
 
   const mockSeasons = [
@@ -33,9 +32,8 @@ export default function DatabasePage() {
   ];
 
   const mockExchangeRates = [
-    { base: "EGP", quote: "USD", rate: 0.032, lastUpdated: "2024-01-22" },
-    { base: "EGP", quote: "EUR", rate: 0.029, lastUpdated: "2024-01-22" },
-    { base: "USD", quote: "EGP", rate: 31.25, lastUpdated: "2024-01-22" }
+    { base: "USD", quote: "EUR", rate: 0.92, lastUpdated: "2024-01-22" },
+    { base: "EUR", quote: "USD", rate: 1.08, lastUpdated: "2024-01-22" }
   ];
 
   const serviceCatalogue = {
@@ -103,7 +101,25 @@ export default function DatabasePage() {
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm">
             <Upload className="h-4 w-4 mr-2" />
-            Import
+            Upload CSV
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={async () => {
+              try {
+                const response = await fetch('/api/import/transportation', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' }
+                });
+                const results = await response.json();
+                alert(`Import completed: ${results.servicesCreated} services, ${results.ratesCreated} rates created`);
+              } catch (error) {
+                alert('Import failed: ' + error.message);
+              }
+            }}
+          >
+            Import Transportation Data
           </Button>
           <Button variant="outline" size="sm">
             <Download className="h-4 w-4 mr-2" />
@@ -198,7 +214,7 @@ export default function DatabasePage() {
                 Multi-edit
               </Button>
             </div>
-            
+
             <div className="border rounded-lg overflow-hidden">
               <Table>
                 <TableHeader>
@@ -295,7 +311,6 @@ export default function DatabasePage() {
                           <SelectValue placeholder="Currency" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="EGP">EGP</SelectItem>
                           <SelectItem value="USD">USD</SelectItem>
                           <SelectItem value="EUR">EUR</SelectItem>
                         </SelectContent>
@@ -392,7 +407,6 @@ export default function DatabasePage() {
               <SelectValue placeholder="Select currency" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="EGP">Egyptian Pound (EGP)</SelectItem>
               <SelectItem value="USD">US Dollar (USD)</SelectItem>
               <SelectItem value="EUR">Euro (EUR)</SelectItem>
             </SelectContent>
@@ -569,7 +583,6 @@ export default function DatabasePage() {
                   <SelectValue placeholder="Select rounding" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="egp-50">Nearest 50 EGP</SelectItem>
                   <SelectItem value="usd-5">Nearest 5 USD</SelectItem>
                   <SelectItem value="eur-5">Nearest 5 EUR</SelectItem>
                 </SelectContent>
@@ -790,7 +803,7 @@ export default function DatabasePage() {
         <div className="flex">
           {/* Sidebar */}
           {renderSidebar()}
-          
+
           {/* Main Content */}
           <div className="flex-1 p-6">
             {renderMainContent()}

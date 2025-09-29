@@ -17,7 +17,7 @@ export type ServiceCategoryType =
 export type EgyptCityCode = "CAI" | "LXR" | "ASW" | "ABS" | "HRG" | "SSH";
 
 // Currency types
-export type Currency = "EGP" | "USD" | "EUR";
+export type Currency = "USD" | "EUR";
 
 // Pricing profiles
 export type PricingProfile = "Base" | "+Tickets" | "+Tickets+Lunch";
@@ -77,7 +77,7 @@ export type ParsedItinerary = z.infer<typeof parsedItinerarySchema>;
 
 // Pricing configuration
 export const pricingConfigSchema = z.object({
-  currency: z.enum(["EGP", "USD", "EUR"]),
+  currency: z.enum(["USD", "EUR"]),
   exchange_rate: z.number().default(1),
   tax_rate: z.number().default(0.12),
   markup_rate: z.number().default(0.20),
@@ -145,7 +145,7 @@ export const insertQuotationSchema = createInsertSchema(quotations).omit({
 });
 
 // Enums for database
-export const currencyEnum = pgEnum("currency", ["EGP", "USD", "EUR"]);
+export const currencyEnum = pgEnum("currency", ["USD", "EUR"]);
 export const pricingProfileEnum = pgEnum("pricing_profile", ["Base", "+Tickets", "+Tickets+Lunch"]);
 export const accommodationModeEnum = pgEnum("accommodation_mode", ["per_person", "per_room"]);
 export const uploadStatusEnum = pgEnum("upload_status", ["pending", "processing", "completed", "failed"]);
@@ -272,7 +272,7 @@ export const serviceItemSchema = z.object({
 export const pricingRateSchema = z.object({
   id: z.string().optional(),
   service_id: z.string(),
-  currency: z.enum(["EGP", "USD", "EUR"]),
+  currency: z.enum(["USD", "EUR"]),
   profile: z.enum(["Base", "+Tickets", "+Tickets+Lunch"]),
   unit_price: z.number().positive(),
   effective_from: z.string().datetime(),

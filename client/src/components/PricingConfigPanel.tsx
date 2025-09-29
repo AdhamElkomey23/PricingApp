@@ -77,13 +77,12 @@ export default function PricingConfigPanel({ config, onUpdate }: PricingConfigPa
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="EGP">EGP</SelectItem>
                 <SelectItem value="USD">USD</SelectItem>
                 <SelectItem value="EUR">EUR</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="space-y-2">
             <Label>Exchange Rate</Label>
             <Input
@@ -110,7 +109,7 @@ export default function PricingConfigPanel({ config, onUpdate }: PricingConfigPa
               data-testid="input-tax-rate"
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label>Markup Rate (%)</Label>
             <Input
@@ -140,7 +139,7 @@ export default function PricingConfigPanel({ config, onUpdate }: PricingConfigPa
               <SelectItem value="per_room">Per Room per Night</SelectItem>
             </SelectContent>
           </Select>
-          
+
           {config.accommodation_mode === 'per_room' && (
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -154,7 +153,7 @@ export default function PricingConfigPanel({ config, onUpdate }: PricingConfigPa
                   data-testid="input-occupancy"
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label>Single Supplement</Label>
                 <Input
@@ -195,7 +194,7 @@ export default function PricingConfigPanel({ config, onUpdate }: PricingConfigPa
         </div>
 
         <Separator />
-        
+
         {/* Quick Actions */}
         <div className="space-y-2">
           <Label className="text-sm font-medium">Quick Presets</Label>

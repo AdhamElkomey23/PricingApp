@@ -18,11 +18,11 @@ export default function PricingSummaryPanelExample() {
   };
 
   const mockConfig: PricingConfig = {
-    currency: 'EGP',
+    currency: 'EUR',
     exchange_rate: 1.0,
     tax_rate: 0.12,
     markup_rate: 0.20,
-    rounding_increment: 50,
+    rounding_increment: 5,
     accommodation_mode: 'per_person',
     occupancy: 2,
     profile: '+Tickets+Lunch'

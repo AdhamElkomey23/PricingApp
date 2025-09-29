@@ -106,6 +106,12 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(serviceCategories).where(eq(serviceCategories.is_active, true));
   }
 
+  async getServiceCategoryByName(name: string): Promise<ServiceCategory | undefined> {
+    const [category] = await db.select().from(serviceCategories)
+      .where(and(eq(serviceCategories.name, name), eq(serviceCategories.is_active, true)));
+    return category || undefined;
+  }
+
   async getServiceCategory(id: string): Promise<ServiceCategory | undefined> {
     const [category] = await db.select().from(serviceCategories).where(eq(serviceCategories.id, id));
     return category || undefined;

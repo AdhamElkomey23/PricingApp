@@ -1,5 +1,5 @@
-import { 
-  type User, 
+import {
+  type User,
   type InsertUser,
   type ServiceCategory,
   type InsertServiceCategory,
@@ -34,6 +34,7 @@ export interface IStorage {
   // Service Category methods
   getServiceCategories(): Promise<ServiceCategory[]>;
   getServiceCategory(id: string): Promise<ServiceCategory | undefined>;
+  getServiceCategoryByName(name: string): Promise<ServiceCategory | undefined>;
   createServiceCategory(category: InsertServiceCategory): Promise<ServiceCategory>;
   updateServiceCategory(id: string, category: Partial<InsertServiceCategory>): Promise<ServiceCategory | undefined>;
   deleteServiceCategory(id: string): Promise<boolean>;
@@ -193,7 +194,7 @@ export class DatabaseStorage implements IStorage {
     effectiveDate?: string;
   }): Promise<PricingRate[]> {
     const conditions = [eq(pricingRates.is_active, true)];
-    
+
     if (filters?.serviceId) {
       conditions.push(eq(pricingRates.service_id, filters.serviceId));
     }
@@ -215,7 +216,7 @@ export class DatabaseStorage implements IStorage {
         )!
       );
     }
-    
+
     return await db.select().from(pricingRates).where(conditions.length > 1 ? and(...conditions) : conditions[0]);
   }
 
@@ -255,18 +256,18 @@ export class DatabaseStorage implements IStorage {
     createdBy?: string;
   }): Promise<Tour[]> {
     const conditions = [];
-    
+
     if (filters?.status) {
       conditions.push(eq(tours.status, filters.status as any));
     }
     if (filters?.createdBy) {
       conditions.push(eq(tours.created_by, filters.createdBy));
     }
-    
+
     if (conditions.length > 0) {
       return await db.select().from(tours).where(and(...conditions)).orderBy(desc(tours.created_at));
     }
-    
+
     return await db.select().from(tours).orderBy(desc(tours.created_at));
   }
 
@@ -336,7 +337,7 @@ export class DatabaseStorage implements IStorage {
         .where(eq(excelUploads.uploaded_by, uploadedBy))
         .orderBy(desc(excelUploads.created_at));
     }
-    
+
     return await db.select().from(excelUploads).orderBy(desc(excelUploads.created_at));
   }
 

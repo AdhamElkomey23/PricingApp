@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import multer from "multer";
 import path from "path";
 import fs from "fs/promises";
+import { parse } from 'csv-parse/sync';
 import { storage } from "./storage";
 import { 
   insertServiceCategorySchema,
@@ -462,18 +463,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
     await storage.updateExcelUpload(req.params.id, { status: 'processing' });
     
     try {
-      // TODO: Implement actual Excel processing logic here
-      // For now, just simulate processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const fileContent = await fs.readFile(upload.file_path, 'utf-8');
+      let records: any[] = [];
+      let recordsProcessed = 0;
+      let recordsFailed = 0;
+
+      if (upload.original_filename.toLowerCase().endsWith('.csv')) {
+        // Parse CSV
+        records = parse(fileContent, {
+          columns: true,
+          skip_empty_lines: true,
+          trim: true
+        });
+
+        // Process transportation data if it matches the expected format
+        for (const record of records) {
+          try {
+            if (record['Service Name'] && record['Base Cost']) {
+              // Extract cost and currency
+              const costStr = record['Base Cost'].toString();
+              const costMatch = costStr.match(/(\d+(?:\.\d+)?)\s*([€$]|EUR|USD)/i);
+              
+              if (costMatch) {
+                const cost = parseFloat(costMatch[1]);
+                const currencySymbol = costMatch[2];
+                let currency = 'EUR';
+                
+                if (currencySymbol === '$' || currencySymbol.toUpperCase() === 'USD') {
+                  currency = 'USD';
+                }
+
+                // Create service and rates (similar to transportation import)
+                let transportCategory = await storage.getServiceCategoryByName('Transportation');
+                if (!transportCategory) {
+                  transportCategory = await storage.createServiceCategory({
+                    name: 'Transportation',
+                    description: 'Transportation services from CSV upload'
+                  });
+                }
+
+                const serviceItem = await storage.createServiceItem({
+                  category_id: transportCategory.id,
+                  name: record['Service Name'],
+                  description: record['Notes'] || '',
+                  unit_type: record['Cost Basis'] || 'per_group',
+                  default_quantity: 1
+                });
+
+                await storage.createPricingRate({
+                  service_id: serviceItem.id,
+                  currency: currency as any,
+                  profile: 'Base' as any,
+                  unit_price: cost,
+                  effective_from: new Date(),
+                  is_active: true
+                });
+
+                recordsProcessed++;
+              }
+            }
+          } catch (error) {
+            recordsFailed++;
+            console.error('Failed to process record:', record, error);
+          }
+        }
+      }
       
       await storage.updateExcelUpload(req.params.id, {
         status: 'completed',
         processed_at: new Date().toISOString(),
-        records_processed: 100, // Mock value
-        records_failed: 0
+        records_processed: recordsProcessed,
+        records_failed: recordsFailed
       });
       
-      res.json({ message: 'Processing completed successfully' });
+      res.json({ 
+        message: 'Processing completed successfully',
+        recordsProcessed,
+        recordsFailed
+      });
     } catch (error) {
       await storage.updateExcelUpload(req.params.id, {
         status: 'failed',

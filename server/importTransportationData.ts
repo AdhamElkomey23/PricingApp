@@ -1,4 +1,3 @@
-
 const transportationData = [
   {
     serviceName: "Sedan Alexandria Airport Pickup",
@@ -93,30 +92,6 @@ const transportationData = [
     baseCost: 50,
     currency: "EUR",
     notes: "12-hour city tour",
-    vehicleType: "Sedan",
-    passengerCapacity: "1-2 pax"
-  },
-  {
-    serviceName: "Sedan Alexandria Outside Dinner",
-    category: "transport",
-    routeName: "Alexandria Dinner Transfer",
-    costBasis: "per_group",
-    unit: "transfer",
-    baseCost: 25,
-    currency: "EUR",
-    notes: "2 hours dinner transfer",
-    vehicleType: "Sedan",
-    passengerCapacity: "1-2 pax"
-  },
-  {
-    serviceName: "Sedan Alexandria to Cairo transfer",
-    category: "transport",
-    routeName: "Alexandria–Cairo Transfer",
-    costBasis: "per_group",
-    unit: "transfer",
-    baseCost: 52,
-    currency: "EUR",
-    notes: "3-4 hours transfer",
     vehicleType: "Sedan",
     passengerCapacity: "1-2 pax"
   }

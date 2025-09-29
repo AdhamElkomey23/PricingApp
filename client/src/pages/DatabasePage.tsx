@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "wouter";
 import { ThemeProvider } from "next-themes";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +17,9 @@ export default function DatabasePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRateCard, setSelectedRateCard] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState("rate-cards");
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadMessage, setUploadMessage] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Mock data for demonstration
   const mockRateCards = [
@@ -55,6 +58,79 @@ export default function DatabasePage() {
       case "Archived": return "outline";
       default: return "secondary";
     }
+  };
+
+  const handleCSVUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    setUploadMessage("");
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('uploaded_by', 'admin');
+
+      const response = await fetch('/api/uploads', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const result = await response.json();
+      setUploadMessage(`File uploaded successfully: ${result.original_filename}`);
+      
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      setUploadMessage(`Upload failed: ${error.message}`);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleImportTransportation = async () => {
+    try {
+      const response = await fetch('/api/import/transportation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Import failed');
+      }
+      
+      const results = await response.json();
+      alert(`Import completed: ${results.servicesCreated} services, ${results.ratesCreated} rates created`);
+    } catch (error) {
+      alert('Import failed: ' + error.message);
+    }
+  };
+
+  const handleExport = () => {
+    alert('Export functionality ready for implementation');
+  };
+
+  const handleClone = () => {
+    alert('Clone functionality ready for implementation');
+  };
+
+  const handlePublish = () => {
+    alert('Publish functionality ready for implementation');
+  };
+
+  const handleUndo = () => {
+    alert('Undo functionality ready for implementation');
+  };
+
+  const handleSaveDraft = () => {
+    alert('Save draft functionality ready for implementation');
   };
 
   const renderSidebar = () => (
@@ -99,44 +175,45 @@ export default function DatabasePage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <input
+            type="file"
+            accept=".csv,.xlsx,.xls"
+            onChange={handleCSVUpload}
+            ref={fileInputRef}
+            className="hidden"
+          />
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploading}
+          >
             <Upload className="h-4 w-4 mr-2" />
-            Upload CSV
+            {isUploading ? "Uploading..." : "Upload CSV"}
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={async () => {
-              try {
-                const response = await fetch('/api/import/transportation', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' }
-                });
-                const results = await response.json();
-                alert(`Import completed: ${results.servicesCreated} services, ${results.ratesCreated} rates created`);
-              } catch (error) {
-                alert('Import failed: ' + error.message);
-              }
-            }}
+            onClick={handleImportTransportation}
           >
             Import Transportation Data
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={handleExport}>
             <Download className="h-4 w-4 mr-2" />
             Export
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={handleClone}>
             <Copy className="h-4 w-4 mr-2" />
             Clone
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={handlePublish}>
             Publish
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={handleUndo}>
             <Undo className="h-4 w-4 mr-2" />
             Undo
           </Button>
-          <Button variant="default" size="sm">
+          <Button variant="default" size="sm" onClick={handleSaveDraft}>
             <Save className="h-4 w-4 mr-2" />
             Save Draft
           </Button>
@@ -152,7 +229,7 @@ export default function DatabasePage() {
           <h2 className="text-2xl font-bold">Rate Cards</h2>
           <p className="text-muted-foreground">Maintain prices for every service with city/season/provider context</p>
         </div>
-        <Button>
+        <Button onClick={() => alert('Creating new rate card')}>
           <Plus className="h-4 w-4 mr-2" />
           New Rate Card
         </Button>
@@ -179,11 +256,11 @@ export default function DatabasePage() {
                     <Eye className="h-3 w-3 mr-1" />
                     Open
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => alert(`Cloning rate card: ${card.name}`)}>
                     <Copy className="h-3 w-3 mr-1" />
                     Clone
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => alert(`Archiving rate card: ${card.name}`)}>
                     Archive
                   </Button>
                 </div>
@@ -203,14 +280,14 @@ export default function DatabasePage() {
           </CardHeader>
           <CardContent>
             <div className="mb-4 flex gap-2">
-              <Button size="sm">
+              <Button size="sm" onClick={() => alert('Adding new row to rate card')}>
                 <Plus className="h-3 w-3 mr-1" />
                 Add Row
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={() => alert('Delete selected rows functionality')}>
                 Delete Selected
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={() => alert('Multi-edit functionality')}>
                 Multi-edit
               </Button>
             </div>
@@ -321,10 +398,10 @@ export default function DatabasePage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" onClick={() => alert('Edit row functionality')}>
                           <Edit className="h-3 w-3" />
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" onClick={() => alert('Delete row functionality')}>
                           <Trash2 className="h-3 w-3" />
                         </Button>
                       </div>
@@ -346,7 +423,7 @@ export default function DatabasePage() {
           <h2 className="text-2xl font-bold">Seasons</h2>
           <p className="text-muted-foreground">Define date bands for pricing</p>
         </div>
-        <Button>
+        <Button onClick={() => alert('Adding new season')}>
           <Plus className="h-4 w-4 mr-2" />
           Add Season
         </Button>
@@ -371,14 +448,14 @@ export default function DatabasePage() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => alert(`Adding date range for ${season.label}`)}>
                     <Plus className="h-3 w-3 mr-1" />
                     Add Range
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => alert(`Editing season: ${season.label}`)}>
                     <Edit className="h-3 w-3" />
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => alert(`Deleting season: ${season.label}`)}>
                     <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>
@@ -438,7 +515,7 @@ export default function DatabasePage() {
                   <TableCell>{rate.rate.toFixed(4)}</TableCell>
                   <TableCell>{new Date(rate.lastUpdated).toLocaleDateString()}</TableCell>
                   <TableCell>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => alert(`Editing exchange rate: ${rate.base}/${rate.quote}`)}>
                       Edit rate for quote
                     </Button>
                   </TableCell>
@@ -459,8 +536,8 @@ export default function DatabasePage() {
           <p className="text-muted-foreground">Define include/exclude bundles for quick pricing variants</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">Reset to Defaults</Button>
-          <Button>New Profile</Button>
+          <Button variant="outline" onClick={() => alert('Resetting profiles to defaults')}>Reset to Defaults</Button>
+          <Button onClick={() => alert('Creating new profile')}>New Profile</Button>
         </div>
       </div>
 
@@ -470,8 +547,8 @@ export default function DatabasePage() {
             <CardHeader>
               <CardTitle className="text-lg">{profile}</CardTitle>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm">Duplicate</Button>
-                <Button variant="outline" size="sm">Test with Sample</Button>
+                <Button variant="outline" size="sm" onClick={() => alert(`Duplicating profile: ${profile}`)}>Duplicate</Button>
+                <Button variant="outline" size="sm" onClick={() => alert(`Testing profile with sample: ${profile}`)}>Test with Sample</Button>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -662,7 +739,7 @@ export default function DatabasePage() {
                 Photography Ticket (ABS) - No rate found
               </div>
             </div>
-            <Button variant="outline" size="sm" className="mt-3">
+            <Button variant="outline" size="sm" className="mt-3" onClick={() => alert('Scanning recent itineraries for missing rates')}>
               Scan Recent Itineraries
             </Button>
           </CardContent>
@@ -680,7 +757,7 @@ export default function DatabasePage() {
                 Hotel Accommodation using "per_group" (should be "per_person")
               </div>
             </div>
-            <Button variant="outline" size="sm" className="mt-3">
+            <Button variant="outline" size="sm" className="mt-3" onClick={() => alert('Running consistency check on pricing basis')}>
               Run Consistency Check
             </Button>
           </CardContent>
@@ -695,7 +772,7 @@ export default function DatabasePage() {
             <div className="text-sm text-muted-foreground mb-3">
               Found 3 unused rate lines
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => alert('Reviewing unused rate lines')}>
               Review Unused Lines
             </Button>
           </CardContent>
@@ -708,7 +785,7 @@ export default function DatabasePage() {
           </CardHeader>
           <CardContent>
             <Textarea placeholder="Paste sample itinerary text..." className="mb-3" />
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => alert('Running dry-run test with sample itinerary')}>
               Run Test
             </Button>
           </CardContent>
@@ -724,7 +801,7 @@ export default function DatabasePage() {
           <h2 className="text-2xl font-bold">Changelog</h2>
           <p className="text-muted-foreground">Timeline of database actions (read-only)</p>
         </div>
-        <Button variant="outline">
+        <Button variant="outline" onClick={() => alert('Exporting changelog')}>
           <Download className="h-4 w-4 mr-2" />
           Export Log
         </Button>
@@ -798,6 +875,17 @@ export default function DatabasePage() {
 
         {/* Top Bar */}
         {renderTopBar()}
+        
+        {/* Upload Message */}
+        {uploadMessage && (
+          <div className="border-b bg-card p-2">
+            <div className="container mx-auto px-4">
+              <div className={`text-sm ${uploadMessage.includes('failed') ? 'text-destructive' : 'text-green-600'}`}>
+                {uploadMessage}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Main Layout */}
         <div className="flex">

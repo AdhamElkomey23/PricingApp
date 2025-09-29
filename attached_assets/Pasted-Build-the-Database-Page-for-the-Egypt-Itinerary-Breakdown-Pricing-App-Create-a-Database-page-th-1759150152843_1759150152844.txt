@@ -1,0 +1,191 @@
+Build the “Database” Page for the Egypt Itinerary Breakdown & Pricing App
+
+Create a Database page that lets the team maintain all pricing and settings used by the app. It must be simple, auditable, and fast to use. British English throughout.
+
+Page Purpose
+
+One place to view, add, edit, import, export, and version all data that powers detection, pricing, and quotations.
+
+Everything must map to the exact service labels used by the Breakdown engine.
+
+Page Layout (left → right)
+
+Sidebar with sections: Rate Cards, Seasons, FX & Currency, Profiles (Packages), Catalogue & Cities, Defaults, Quality Checks & Gaps, Changelog.
+
+Main work area showing the selected section.
+
+Top bar: Search, Filters, “Import”, “Export”, “Clone”, “Publish”, “Undo”, “Save draft”.
+
+1) Rate Cards (core)
+
+Goal: Maintain prices for every service with city/season/provider context.
+
+Rate card list: name, base currency, status (Draft / Published / Archived), last updated. Buttons: Open, Clone, Archive, Set as Default.
+
+Lines table (editable, spreadsheet-style):
+
+Service label (dropdown from the catalogue; must match exactly)
+
+City code (optional): CAI, LXR, ASW, ABS, HRG, SSH, etc.
+
+Season code (optional): e.g., peak / shoulder / low
+
+Provider (optional text)
+
+Basis: per_group / per_person / per_room
+
+Unit: day, night, segment, visit, ride, transfer, room_night
+
+Net price (numeric)
+
+Currency (select)
+
+Min/Max group size (optional)
+
+Notes (free text)
+
+Active (toggle)
+
+Bulk tools: Add row, Delete, Multi-edit, Copy/Paste from spreadsheet.
+
+Import: accept YAML or CSV; show a dry-run preview with validation (invalid labels must be fixed before import).
+
+Export: YAML or CSV of the current card.
+
+Filters: by Service, City, Season, Provider, Basis, Active.
+
+Validation rules:
+
+Service label must exist in the catalogue.
+
+Basis & Unit must be compatible (e.g., room_night only allowed with per_room).
+
+Currency required; Net price ≥ 0.
+
+Versions & publishing: Editing creates a Draft. “Publish” locks it for pricing use. Keep a diff view (what changed since last publish).
+
+Priority logic (displayed as helper text): The app resolves rates in this order:
+
+label+city+season+provider → 2) label+city+season → 3) label+city → 4) label+season → 5) label only.
+
+UX microcopy examples:
+
+Empty state: “No rates yet. Add your first line or import a card.”
+
+On save: “Saved as draft. Publish when ready.”
+
+2) Seasons
+
+Goal: Define date bands for pricing.
+
+Table of Season codes with human labels and date ranges (e.g., 20 Mar–10 May).
+
+Allow multiple ranges per season and blackout dates.
+
+Buttons: Add Season, Add Range, Remove.
+
+Validation: no overlapping ranges within the same season; friendly errors.
+
+3) FX & Currency
+
+Goal: Control display currency and exchange rates used for quotes.
+
+Default display currency selector (EGP/USD/EUR).
+
+Exchange rates table: Base→Quote, Rate, Last updated.
+
+Button: “Edit rate for quote” (manual override).
+
+Note: “The exchange rate is captured into each quote for audit.”
+
+4) Profiles (Packages)
+
+Goal: Define include/exclude bundles for quick pricing variants.
+
+Show three preloaded profiles: Base, +Tickets, +Tickets+Lunch.
+
+Editor: two lists with drag-and-drop: Included services and Excluded services.
+
+Services must come from the catalogue list (use the exact labels).
+
+Buttons: New Profile, Duplicate, Reset to Defaults.
+
+“Test with Sample Itinerary” button: applies the profile to a sample and shows included/excluded counts.
+
+5) Catalogue & Cities (read-only)
+
+Goal: Keep labels and codes canonical.
+
+Service Catalogue (read-only): Show the exact labels grouped by category (Airport, Hotel, Train Station, Tour, Activities, Transport Fees, Administrative Fees).
+
+City Codes: CAI, LXR, ASW, ABS, HRG, SSH, (and others if needed).
+
+Display a note: “All service labels in Rate Cards must match this list exactly.”
+
+6) Defaults
+
+Goal: Global assumptions used in pricing.
+
+Tax (default 12%)
+
+Markup (default 20%)
+
+Rounding rule (e.g., nearest 50 EGP / nearest 5 USD)
+
+Accommodation mode default: Per person per night or Per room per night
+
+Room mode settings (if per room): occupancy default, single-supplement default.
+
+Ground handler fee placement (read-only reminder of logic):
+
+Luxor → last Luxor day
+
+Aswan → last Aswan day
+
+Abu Simbel → on the Abu Simbel day
+
+7) Quality Checks & Gaps
+
+Goal: Prevent surprises in pricing.
+
+Missing Rates Finder: scan the last parsed itineraries and list any services that lacked a matching rate in the current default card.
+
+Inconsistent Basis Check: flags services priced with a basis that conflicts with their typical use.
+
+Unused Lines: highlight rate lines not used in the last 90 days (optional tidy-up).
+
+Dry-Run Test: pick an itinerary sample → show which rate lines would be used, in which priority tier, and any fallbacks.
+
+8) Changelog (read-only)
+
+Show a timeline of database actions: imports, publishes, edits (summary level), who/when (if user accounts exist).
+
+Allow CSV export of the log.
+
+Global Behaviours
+
+Undo last change and Autosave drafts while editing.
+
+All tables support search, sorting, column show/hide, and keyboard navigation.
+
+Inline help tooltips define basis, unit, and priority order.
+
+Clear, friendly error messages; no jargon.
+
+Acceptance Criteria
+
+I can import a rate card (YAML or CSV), fix any errors, save as Draft, and Publish it.
+
+I can add/edit lines inline with instant validation.
+
+Profiles let me include/exclude services using exact labels and test them.
+
+Seasons, FX, and Defaults are easy to review and change.
+
+Quality Checks clearly list missing rates and inconsistencies.
+
+Everything is auditable via the Changelog.
+
+All text uses British English and is readable at a glance.
+
+Now build this Database page exactly as specified—clean, elegant, auditable, and fast.

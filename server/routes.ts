@@ -157,11 +157,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
+    const city = req.body.city;
+    
+    if (!city) {
+      return res.status(400).json({ error: 'City is required' });
+    }
+
     const uploadData = {
       filename: req.file.filename,
       original_filename: req.file.originalname,
       file_path: req.file.path,
       file_size: req.file.size,
+      city: city,
       status: 'pending' as const,
       uploaded_by: req.body.uploaded_by || null
     };
@@ -247,9 +254,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           }
 
-          // Extract location from service_name or route_name
-          const locationMatch = (validatedRow.service_name || validatedRow.route_name || '').match(/(Alexandria|Cairo|Luxor|Aswan|Marsa Matrouh|Bahariya Oasis|Siwa Oasis)/i);
-          const location = locationMatch ? locationMatch[1] : null;
+          // Use city from upload record as location
+          // This ensures all prices from this CSV are tagged with the assigned city
+          const location = upload.city;
 
           pricesToCreate.push({
             service_name: validatedRow.service_name,

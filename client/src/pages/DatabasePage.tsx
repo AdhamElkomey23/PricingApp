@@ -46,6 +46,7 @@ interface CsvUpload {
   original_filename: string;
   file_path: string;
   file_size: number;
+  city: string;
   status: "pending" | "processing" | "completed" | "failed";
   uploaded_by: string | null;
   processed_at: string | null;
@@ -59,6 +60,8 @@ export default function DatabasePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [currencyFilter, setCurrencyFilter] = useState<string>("");
+  const [locationFilter, setLocationFilter] = useState<string>("");
+  const [selectedCity, setSelectedCity] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -74,9 +77,10 @@ export default function DatabasePage() {
 
   // Upload mutation
   const uploadMutation = useMutation({
-    mutationFn: async (file: File) => {
+    mutationFn: async ({ file, city }: { file: File; city: string }) => {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('city', city);
       
       const response = await fetch('/api/csv-uploads', {
         method: 'POST',
@@ -92,6 +96,7 @@ export default function DatabasePage() {
     },
     onSuccess: () => {
       refetchUploads();
+      setSelectedCity("");
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -154,8 +159,17 @@ export default function DatabasePage() {
       return;
     }
 
+    if (!selectedCity.trim()) {
+      toast({
+        title: "City Required",
+        description: "Please select a city before uploading",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
-      const upload = await uploadMutation.mutateAsync(file);
+      const upload = await uploadMutation.mutateAsync({ file, city: selectedCity });
       toast({
         title: "File Uploaded",
         description: "Your CSV file has been uploaded. Click 'Process' to import the data.",
@@ -192,12 +206,14 @@ export default function DatabasePage() {
                          price.notes?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = !categoryFilter || price.category === categoryFilter;
     const matchesCurrency = !currencyFilter || price.currency === currencyFilter;
-    return matchesSearch && matchesCategory && matchesCurrency;
+    const matchesLocation = !locationFilter || price.location === locationFilter;
+    return matchesSearch && matchesCategory && matchesCurrency && matchesLocation;
   });
 
-  // Get unique categories and currencies
+  // Get unique categories, currencies, and locations
   const categories = Array.from(new Set(prices.map(p => p.category).filter(Boolean)));
   const currencies = Array.from(new Set(prices.map(p => p.currency)));
+  const locations = Array.from(new Set(prices.map(p => p.location).filter(Boolean)));
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -250,6 +266,28 @@ export default function DatabasePage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
+                  {/* City Selection */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                      Assign to City
+                    </label>
+                    <select
+                      className="w-full border rounded-md px-3 py-2 bg-background text-foreground"
+                      value={selectedCity}
+                      onChange={(e) => setSelectedCity(e.target.value)}
+                      data-testid="select-city"
+                    >
+                      <option value="">Select a city...</option>
+                      <option value="Alexandria">Alexandria</option>
+                      <option value="Cairo">Cairo</option>
+                      <option value="Luxor">Luxor</option>
+                      <option value="Aswan">Aswan</option>
+                      <option value="Marsa Matrouh">Marsa Matrouh</option>
+                      <option value="Bahariya Oasis">Bahariya Oasis</option>
+                      <option value="Siwa Oasis">Siwa Oasis</option>
+                    </select>
+                  </div>
+
                   <div className="flex items-center gap-4">
                     <Input
                       ref={fileInputRef}
@@ -303,6 +341,7 @@ export default function DatabasePage() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>File Name</TableHead>
+                        <TableHead>City</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Processed</TableHead>
                         <TableHead>Failed</TableHead>
@@ -315,6 +354,9 @@ export default function DatabasePage() {
                         <TableRow key={upload.id} data-testid={`row-upload-${upload.id}`}>
                           <TableCell className="font-medium" data-testid={`text-filename-${upload.id}`}>
                             {upload.original_filename}
+                          </TableCell>
+                          <TableCell data-testid={`text-city-${upload.id}`}>
+                            <Badge variant="outline">{upload.city}</Badge>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
@@ -381,6 +423,17 @@ export default function DatabasePage() {
                       data-testid="input-search-prices"
                     />
                   </div>
+                  <select
+                    className="border rounded-md px-3 py-2 bg-background text-foreground"
+                    value={locationFilter}
+                    onChange={(e) => setLocationFilter(e.target.value)}
+                    data-testid="select-location-filter"
+                  >
+                    <option value="">All Cities</option>
+                    {locations.map(loc => (
+                      <option key={loc} value={loc || ''}>{loc || 'Unknown'}</option>
+                    ))}
+                  </select>
                   <select
                     className="border rounded-md px-3 py-2 bg-background text-foreground"
                     value={categoryFilter}

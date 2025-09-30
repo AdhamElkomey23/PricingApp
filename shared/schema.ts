@@ -145,6 +145,7 @@ export const csvUploads = pgTable("csv_uploads", {
   original_filename: text("original_filename").notNull(),
   file_path: text("file_path").notNull(),
   file_size: integer("file_size").notNull(),
+  city: text("city").notNull(), // City assignment for this upload (e.g., "Alexandria", "Cairo")
   status: uploadStatusEnum("status").default("pending"),
   uploaded_by: varchar("uploaded_by").references(() => users.id),
   processed_at: timestamp("processed_at"),

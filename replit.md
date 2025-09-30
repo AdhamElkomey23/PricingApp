@@ -10,6 +10,23 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (September 30, 2025)
 
+**AI Chatbot Assistant (Latest):**
+- Implemented intelligent AI-powered chatbot using OpenAI GPT-5 for natural language database management
+- Features:
+  - Search prices using conversational queries
+  - Create new price entries through natural language
+  - Update existing prices by description
+  - Delete/deactivate price entries
+  - Query database statistics (counts, categories, locations)
+  - Real-time conversation interface with message history
+- Architecture:
+  - Secure OpenAI API integration via environment variables
+  - Uses storage interface pattern for all database operations
+  - Comprehensive input validation and error handling
+  - Conversation history limited to last 10 messages for context
+  - User-friendly error messages and structured data display
+- Accessible via `/chatbot` route with dedicated navigation card on homepage
+
 **Database Schema Update for Alexandria Format:**
 - Updated prices table schema to match Alexandria CSV format
 - New fields: route_name, cost_basis, unit, notes, vehicle_type, passenger_capacity
@@ -66,6 +83,7 @@ Preferred communication style: Simple, everyday language.
   - View Prices tab: Browse all prices with search and filter capabilities
 - `/tours` - ToursPage: List view of saved quotations
 - `/new` - NewTourPage: Main quotation workflow (input → breakdown → pricing → export)
+- `/chatbot` - ChatbotPage: AI assistant for natural language database management
 
 ### Backend Architecture
 

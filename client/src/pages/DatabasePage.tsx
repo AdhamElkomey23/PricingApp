@@ -138,7 +138,16 @@ export default function DatabasePage() {
   // Delete upload mutation
   const deleteUploadMutation = useMutation({
     mutationFn: async (uploadId: string) => {
-      return await apiRequest(`/api/csv-uploads/${uploadId}`, 'DELETE');
+      const response = await fetch(`/api/csv-uploads/${uploadId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Delete failed');
+      }
+
+      return response.ok;
     },
     onSuccess: () => {
       toast({
@@ -152,7 +161,16 @@ export default function DatabasePage() {
   // Delete price mutation
   const deletePriceMutation = useMutation({
     mutationFn: async (priceId: string) => {
-      return await apiRequest(`/api/prices/${priceId}`, 'DELETE');
+      const response = await fetch(`/api/prices/${priceId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Delete failed');
+      }
+
+      return response.ok;
     },
     onSuccess: () => {
       toast({
@@ -173,7 +191,20 @@ export default function DatabasePage() {
   // Update price mutation
   const updatePriceMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<Price> }) => {
-      return await apiRequest(`/api/prices/${id}`, 'PUT', data);
+      const response = await fetch(`/api/prices/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Update failed');
+      }
+
+      return response.json();
     },
     onSuccess: () => {
       toast({

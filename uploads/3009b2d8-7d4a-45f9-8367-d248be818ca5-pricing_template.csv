@@ -1,0 +1,3 @@
+service_name,category,description,unit_type,unit_price,currency,location
+Airport Transfer,Transport,Transfer from Cairo Airport,per_group,45,USD,Cairo
+Hotel Night,Accommodation,Standard hotel room,per_night,80,USD,Cairo

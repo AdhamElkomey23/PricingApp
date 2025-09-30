@@ -1,0 +1,493 @@
+Service Name , Category , Route Name , Cost Basis , Unit , Base Cost , Notes , Vehicle Type , Passenger Capacity
+Sedan Alexandria Airport Pickup , transport ,Alexandria Airport Pickup, per_group ,transfer ,20 €, One-way airport pickup , Sedan , 1-2 pax
+Sedan Alexandria Airport Dropoff , transport ,Alexandria Airport Dropoff, per_group ,transfer ,20 €, One-way airport dropoff , Sedan , 1-2 pax
+Sedan Alexandria Airport Roundtrip , transport ,Alexandria Airport Roundtrip, per_group ,transfer ,20 €, Round-trip airport service , Sedan , 1-2 pax
+Sedan Sidi Gaber Station Pickup , transport ,Sidi Gaber Station Pickup, per_group ,transfer ,17 €, One-way airport pickup , Sedan , 1-2 pax
+Sedan Gaber Station Station Dropoff , transport ,Sidi Gaber Station Dropoff, per_group ,transfer ,17 €, One-way airport dropoff , Sedan , 1-2 pax
+Sedan Alexandria Day Tour 4 Hours , transport ,Alexandria Day Tour 4 Hours, per_group ,tour,25 €, 4-hour city tour , Sedan , 1-2 pax
+Sedan Alexandria Day Tour 8 Hours , transport ,Alexandria Day Tour 8 Hours, per_group ,tour,40 €, 8-hour city tour , Sedan , 1-2 pax
+Sedan Alexandria Day Tour 12 Hours , transport ,Alexandria Day Tour 12 Hours, per_group ,tour,50 €, 12-hour city tour , Sedan , 1-2 pax
+Sedan Alexandria Outside Dinner, transport ,Alexandria Dinner Transfer, per_group ,transfer ,25 €,2 hours, Sedan , 1-2 pax
+Sedan Alexandria to Cairo transfer, transport ,Alexandria–Cairo Transfer, per_group ,transfer ,52 €,3-4 hours, Sedan , 1-2 pax
+Sedan Alexandria to Cairo Roundtrip, transport ,Alexandria–Cairo Roundtrip, per_group ,tour,74 €,9-10 hours, Sedan , 1-2 pax
+Sedan Alexandria to Cairo Overnight, transport ,Alexandria–Cairo Overnight, per_group ,tour,84 €,48 hours, Sedan , 1-2 pax
+Sedan Alexandria to Marsa Matrouh transfer, transport ,Alexandria–Marsa Matrouh Transfer, per_group ,transfer ,78 €,3-4 hours, Sedan , 1-2 pax
+Sedan Alexandria to Bahariya Oasis transfer, transport ,Alexandria–Bahariya Oasis Transfer, per_group ,transfer ,171 €,3-4 hours, Sedan , 1-2 pax
+Sedan Alexandria to Bahariya Oasis  Roundtrip, transport ,Alexandria–Bahariya Oasis Roundtrip, per_group ,tour,195 €,9-10 hours, Sedan , 1-2 pax
+Sedan Alexandria to Bahariya Oasis  Overnight, transport ,Alexandria–Bahariya Oasis Overnight, per_group ,tour,220 €,48 hours, Sedan , 1-2 pax
+Sedan Alexandria to Siwa Oasis transfer, transport ,Alexandria–Siwa Oasis Transfer, per_group ,transfer ,115 €,3-4 hours, Hiace , 3-7 pax
+Sedan Alexandria to Siwa Oasis  Roundtrip, transport ,Alexandria–Siwa Oasis Roundtrip, per_group ,tour,155 €,9-10 hours, Hiace , 3-7 pax
+Sedan Alexandria to Siwa Oasis  Overnight, transport ,Alexandria–Siwa Oasis Overnight, per_group ,tour,205 €,48 hours, Hiace , 3-7 pax
+Hiace Alexandria Airport Pickup , transport ,Alexandria Airport Pickup, per_group ,transfer ,0 €, One-way airport pickup , Hiace , 3-7 pax
+Hiace Alexandria Airport Dropoff , transport ,Alexandria Airport Dropoff, per_group ,transfer ,33 €, One-way airport dropoff , Hiace , 3-7 pax
+Hiace Alexandria Airport Roundtrip , transport ,Alexandria Airport Roundtrip, per_group ,transfer ,33 €, Round-trip airport service , Hiace , 3-7 pax
+Hiace  Sidi Gaber Station Pickup , transport ,Sidi Gaber Station Pickup, per_group ,transfer ,35 €, One-way airport pickup , Hiace , 3-7 pax
+Hiace Sidi Gaber Station Dropoff , transport ,Sidi Gaber Station Dropoff, per_group ,transfer ,35 €, One-way airport dropoff , Hiace , 3-7 pax
+Hiace Alexandria Day Tour 4 Hours , transport ,Alexandria Day Tour 4 Hours, per_group ,tour,33 €, 4-hour city tour , Hiace , 3-7 pax
+Hiace Alexandria Day Tour 8 Hours , transport ,Alexandria Day Tour 8 Hours, per_group ,tour,69 €, 8-hour city tour , Hiace , 3-7 pax
+Hiace Alexandria Day Tour 12 Hours , transport ,Alexandria Day Tour 12 Hours, per_group ,tour,90 €, 12-hour city tour , Hiace , 3-7 pax
+Hiace Alexandria Outside Dinner, transport ,Alexandria Dinner Transfer, per_group ,transfer ,33 €,2 hours, Hiace , 3-7 pax
+Hiace Alexandria to Cairo transfer, transport ,Alexandria–Cairo Transfer, per_group ,transfer ,53 €,3-4 hours, Hiace , 3-7 pax
+Hiace Alexandria to Cairo Roundtrip, transport ,Alexandria–Cairo Roundtrip, per_group ,tour,90 €,9-10 hours, Hiace , 3-7 pax
+Hiace Alexandria to Cairo Overnight, transport ,Alexandria–Cairo Overnight, per_group ,tour,105 €,48 hours, Hiace , 3-7 pax
+Hiace Alexandria to Marsa Matrouh transfer, transport ,Alexandria–Marsa Matrouh Transfer, per_group ,transfer ,96 €,3-4 hours, Sedan , 1-2 pax
+Hiace Alexandria to Bahariya Oasis transfer, transport ,Alexandria–Bahariya Oasis Transfer, per_group ,transfer ,193 €,3-4 hours, Hiace , 3-7 pax
+Hiace Alexandria to Bahariya Oasis  Roundtrip, transport ,Alexandria–Bahariya Oasis Roundtrip, per_group ,tour,220 €,9-10 hours, Hiace , 3-7 pax
+Hiace Alexandria to Bahariya Oasis  Overnight, transport ,Alexandria–Bahariya Oasis Overnight, per_group ,tour,250 €,48 hours, Hiace , 3-7 pax
+Hiace Alexandria to Siwa Oasis transfer, transport ,Alexandria–Siwa Oasis Transfer, per_group ,transfer ,160 €,3-4 hours, Hiace , 3-7 pax
+Hiace Alexandria to Siwa Oasis  Roundtrip, transport ,Alexandria–Siwa Oasis Roundtrip, per_group ,tour,205 €,9-10 hours, Hiace , 3-7 pax
+Hiace Alexandria to Siwa Oasis  Overnight, transport ,Alexandria–Siwa Oasis Overnight, per_group ,tour,255 €,48 hours, Hiace , 3-7 pax
+Coaster Alexandria Airport Pickup , transport ,Alexandria Airport Pickup, per_group ,transfer ,54 €, One-way airport pickup , Coaster , 3-7 pax
+Coaster Alexandria Airport Dropoff , transport ,Alexandria Airport Dropoff, per_group ,transfer ,54 €, One-way airport dropoff , Coaster , 3-7 pax
+Coaster Alexandria Airport Roundtrip , transport ,Alexandria Airport Roundtrip, per_group ,transfer ,54 €, Round-trip airport service , Coaster , 3-7 pax
+Coaster Sidi Gaber Station Pickup , transport ,Sidi Gaber Station Pickup, per_group ,transfer ,54 €, One-way airport pickup , Coaster , 3-7 pax
+Coaster Sidi Gaber Station Dropoff , transport ,Sidi Gaber Station Dropoff, per_group ,transfer ,54 €, One-way airport dropoff , Coaster , 3-7 pax
+Coaster Alexandria Day Tour 4 Hours , transport ,Alexandria Day Tour 4 Hours, per_group ,tour,96 €, 4-hour city tour , Coaster , 3-7 pax
+Coaster Alexandria Day Tour 8 Hours , transport ,Alexandria Day Tour 8 Hours, per_group ,tour,145 €, 8-hour city tour , Coaster , 3-7 pax
+Coaster Alexandria Day Tour 12 Hours , transport ,Alexandria Day Tour 12 Hours, per_group ,tour,178 €, 12-hour city tour , Coaster , 3-7 pax
+Coaster Alexandria Outside Dinner, transport ,Alexandria Dinner Transfer, per_group ,transfer ,96 €,2 hours, Coaster , 3-7 pax
+Coaster Alexandria to Cairo transfer, transport ,Alexandria–Cairo Transfer, per_group ,transfer ,161 €,3-4 hours, Coaster , 3-7 pax
+Coaster Alexandria to Cairo Roundtrip, transport ,Alexandria–Cairo Roundtrip, per_group ,tour,189 €,9-10 hours, Coaster , 3-7 pax
+Coaster Alexandria to Cairo Overnight, transport ,Alexandria–Cairo Overnight, per_group ,tour,199 €,48 hours, Coaster , 3-7 pax
+Coaster Alexandria to Marsa Matrouh transfer, transport ,Alexandria–Marsa Matrouh Transfer, per_group ,transfer ,188 €,3-4 hours, Coaster , 3-7 pax
+Coaster Alexandria to Bahariya Oasis transfer, transport ,Alexandria–Bahariya Oasis Transfer, per_group ,transfer ,278 €,3-4 hours, Coaster , 3-7 pax
+Coaster Alexandria to Bahariya Oasis  Roundtrip, transport ,Alexandria–Bahariya Oasis Roundtrip, per_group ,tour,305 €,9-10 hours, Coaster , 3-7 pax
+Coaster Alexandria to Bahariya Oasis  Overnight, transport ,Alexandria–Bahariya Oasis Overnight, per_group ,tour,350 €,48 hours, Coaster , 3-7 pax
+Coaster Alexandria to Siwa Oasis transfer, transport ,Alexandria–Siwa Oasis Transfer, per_group ,transfer ,278 €,3-4 hours, Coaster , 3-7 pax
+Coaster Alexandria to Siwa Oasis  Roundtrip, transport ,Alexandria–Siwa Oasis Roundtrip, per_group ,tour,305 €,9-10 hours, Coaster , 3-7 pax
+Coaster Alexandria to Siwa Oasis  Overnight, transport ,Alexandria–Siwa Oasis Overnight, per_group ,tour,350 €,48 hours, Coaster , 3-7 pax
+Coach Alexandria Airport Pickup , transport ,Alexandria Airport Pickup, per_group ,transfer ,54 €, One-way airport pickup , Coach , 3-7 pax
+Coach Alexandria Airport Dropoff , transport ,Alexandria Airport Dropoff, per_group ,transfer ,54 €, One-way airport dropoff , Coach , 3-7 pax
+Coach Alexandria Airport Roundtrip , transport ,Alexandria Airport Roundtrip, per_group ,transfer ,54 €, Round-trip airport service , Coach , 3-7 pax
+Coach  Sidi Gaber Station Pickup , transport ,Sidi Gaber Station Pickup, per_group ,transfer ,54 €, One-way airport pickup , Coach , 3-7 pax
+Coach Giza Sidi Gaber Dropoff , transport ,Sidi Gaber Station Dropoff, per_group ,transfer ,54 €, One-way airport dropoff , Coach , 3-7 pax
+Coach Alexandria Day Tour 4 Hours , transport ,Alexandria Day Tour 4 Hours, per_group ,tour,96 €, 4-hour city tour , Coach , 3-7 pax
+Coach Alexandria Day Tour 8 Hours , transport ,Alexandria Day Tour 8 Hours, per_group ,tour,145 €, 8-hour city tour , Coach , 3-7 pax
+Coach Alexandria Day Tour 12 Hours , transport ,Alexandria Day Tour 12 Hours, per_group ,tour,178 €, 12-hour city tour , Coach , 3-7 pax
+Coach Alexandria Outside Dinner, transport ,Alexandria Dinner Transfer, per_group ,transfer ,54 €,2 hours, Coach , 3-7 pax
+Coach Alexandria to Cairo transfer, transport ,Alexandria–Cairo Transfer, per_group ,transfer ,158 €,3-4 hours, Coach , 3-7 pax
+Coach Alexandria to Cairo Roundtrip, transport ,Alexandria–Cairo Roundtrip, per_group ,tour,182 €,9-10 hours, Coach , 3-7 pax
+Coach Alexandria to Cairo Overnight, transport ,Alexandria–Cairo Overnight, per_group ,tour,192 €,48 hours, Coach , 3-7 pax
+Coach Alexandria to Marsa Matrouh transfer, transport ,Alexandria–Marsa Matrouh Transfer, per_group ,transfer ,243 €,3-4 hours, Coach , 3-7 pax
+Coach Alexandria to Bahariya Oasis transfer, transport ,Alexandria–Bahariya Oasis Transfer, per_group ,transfer ,510 €,3-4 hours, Coach , 3-7 pax
+Coach Alexandria to Bahariya Oasis  Roundtrip, transport ,Alexandria–Bahariya Oasis Roundtrip, per_group ,tour,545 €,9-10 hours, Coach , 3-7 pax
+Coach Alexandria to Bahariya Oasis  Overnight, transport ,Alexandria–Bahariya Oasis Overnight, per_group ,tour,590 €,48 hours, Coach , 3-7 pax
+Coach Alexandria to Siwa Oasis transfer, transport ,Alexandria–Siwa Oasis Transfer, per_group ,transfer ,340 €,3-4 hours, Coach , 3-7 pax
+Coach Alexandria to Siwa Oasis  Roundtrip, transport ,Alexandria–Siwa Oasis Roundtrip, per_group ,tour,390 €,9-10 hours, Coach , 3-7 pax
+Coach Alexandria to Siwa Oasis  Overnight, transport ,Alexandria–Siwa Oasis Overnight, per_group ,tour,3 €,48 hours, Coach , 3-7 pax
+Sedan Aswan Airport Pickup , transport ,Aswan Airport Pickup, per_group ,transfer ,18 €, One-way airport pickup , Sedan , 1-2 pax
+Sedan Aswan Airport Dropoff , transport ,Aswan Airport Dropoff, per_group ,transfer ,18 €, One-way airport dropoff , Sedan , 1-2 pax
+Sedan Aswan Airport Roundtrip , transport ,Aswan Airport Roundtrip, per_group ,transfer ,36 €, Round-trip airport service , Sedan , 1-2 pax
+Sedan Station Pickup , transport ,Aswan Station Pickup, per_group ,transfer ,9 €, One-way airport pickup , Sedan , 1-2 pax
+Sedan Station Dropoff , transport ,Aswan Station Dropoff, per_group ,transfer ,9 €, One-way airport dropoff , Sedan , 1-2 pax
+Sedan Aswan (High Dam), transport ,Aswan City Tour – High Dam, per_group ,tour,20 €, 4-hour city tour , Sedan , 1-2 pax
+Sedan Aswan (High Dam & Philae), transport ,Aswan City Tour – High Dam & Philae, per_group ,tour,20 €, 12-hour city tour , Sedan , 1-2 pax
+"Sedan Aswan  (High Dam, Unfinished Obelisk & Philae)", transport ,"Aswan City Tour – High Dam, Obelisk & Philae", per_group ,tour,20 €, 8-hour city tour , Sedan , 1-2 pax
+Sedan Aswan  (Kalabsha Temple), transport ,Aswan City Tour – Kalabsha, per_group ,tour,18 €, 8-hour city tour , Sedan , 1-2 pax
+Sedan Aswan Outside Dinner, transport ,Aswan Dinner Transfer, per_group ,transfer ,12 €,2 hours, Sedan , 1-2 pax
+Sedan Aswan City Transfer, transport ,Aswan City Transfer, per_group ,transfer ,8 €,2 hours, Sedan , 1-2 pax
+Sedan Aswan Sound & light Show Return Transfer, transport ,Aswan Sound & Light Show Transfer, per_group ,transfer ,12 €,3 hours, Sedan , 1-2 pax
+Sedan Aswan to Luxor transfer, transport ,Aswan–Luxor Transfer, per_group ,transfer ,80 €,3-4 hours, Sedan , 1-2 pax
+Sedan Aswan to Luxor Roundtrip, transport ,Aswan–Luxor Roundtrip, per_group ,tour,86 €,9-10 hours, Sedan , 1-2 pax
+Sedan Aswan to Luxor Overnight, transport ,Aswan–Luxor Overnight, per_group ,tour,131 €,48 hours, Sedan , 1-2 pax
+Sedan Aswan to Abu Simbel transfer, transport ,Aswan–Abu Simbel Transfer, per_group ,transfer ,108 €,3-4 hours, Sedan , 1-2 pax
+Sedan Aswan to Abu Simbel Roundtrip, transport ,Aswan–Abu Simbel Roundtrip, per_group ,tour,108 €,9-10 hours, Sedan , 1-2 pax
+Sedan Aswan to Abu Simbel Overnight, transport ,Aswan–Abu Simbel Overnight, per_group ,tour,154 €,48 hours, Sedan , 1-2 pax
+Sedan Aswan to Marsa Alam transfer, transport ,Aswan–Marsa Alam Transfer, per_group ,transfer ,146 €,3-4 hours, Sedan , 1-2 pax
+Sedan Aswan to Hurghada transfer, transport ,Aswan–Hurghada Transfer, per_group ,transfer ,175 €,3-4 hours, Sedan , 1-2 pax
+Hiace Aswan Airport Pickup , transport ,Aswan Airport Pickup, per_group ,transfer ,18 €, One-way airport pickup , Sedan , 3-7 pax
+Hiace Aswan Airport Dropoff , transport ,Aswan Airport Dropoff, per_group ,transfer ,18 €, One-way airport dropoff , Sedan , 3-7 pax
+Hiace Aswan Airport Roundtrip , transport ,Aswan Airport Roundtrip, per_group ,transfer ,72 €, Round-trip airport service , Sedan , 3-7 pax
+Hiace Station Pickup , transport ,Aswan Station Pickup, per_group ,transfer ,12 €, One-way airport pickup , Sedan , 3-7 pax
+Hiace Station Dropoff , transport ,Aswan Station Dropoff, per_group ,transfer ,12 €, One-way airport dropoff , Sedan , 3-7 pax
+Hiace Aswan (High Dam), transport ,Aswan City Tour – High Dam, per_group ,tour,28 €, 4-hour city tour , Sedan , 3-7 pax
+Hiace Aswan (High Dam & Philae), transport ,Aswan City Tour – High Dam & Philae, per_group ,tour,30 €, 12-hour city tour , Sedan , 3-7 pax
+"Hiace Aswan  (High Dam, Unfinished Obelisk & Philae)", transport ,"Aswan City Tour – High Dam, Obelisk & Philae", per_group ,tour,30 €, 8-hour city tour , Sedan , 3-7 pax
+Hiace Aswan  (Kalabsha Temple), transport ,Aswan City Tour – Kalabsha, per_group ,tour,21 €, 8-hour city tour , Sedan , 3-7 pax
+Hiace Aswan Outside Dinner, transport ,Aswan Dinner Transfer, per_group ,transfer ,18 €,2 hours, Sedan , 3-7 pax
+Hiace Aswan City Transfer, transport ,Aswan City Transfer, per_group ,transfer ,8 €,2 hours, Sedan , 3-7 pax
+Hiace Aswan Sound & light Show Return Transfer, transport ,Aswan Sound & Light Show Transfer, per_group ,transfer ,19 €,3 hours, Sedan , 3-7 pax
+Hiace Aswan to Luxor transfer, transport ,Aswan–Luxor Transfer, per_group ,transfer ,95 €,3-4 hours, Sedan , 3-7 pax
+Hiace Aswan to Luxor Roundtrip, transport ,Aswan–Luxor Roundtrip, per_group ,tour,100 €,9-10 hours, Sedan , 3-7 pax
+Hiace Aswan to Luxor Overnight, transport ,Aswan–Luxor Overnight, per_group ,tour,170 €,48 hours, Sedan , 3-7 pax
+Hiace Aswan to Abu Simbel transfer, transport ,Aswan–Abu Simbel Transfer, per_group ,transfer ,137 €,3-4 hours, Sedan , 3-7 pax
+Hiace Aswan to Abu Simbel Roundtrip, transport ,Aswan–Abu Simbel Roundtrip, per_group ,tour,137 €,9-10 hours, Sedan , 3-7 pax
+Hiace Aswan to Abu Simbel Overnight, transport ,Aswan–Abu Simbel Overnight, per_group ,tour,194 €,48 hours, Sedan , 3-7 pax
+Hiace Aswan to Marsa Alam transfer, transport ,Aswan–Marsa Alam Transfer, per_group ,transfer ,161 €,3-4 hours, Sedan , 3-7 pax
+Hiace Aswan to Hurghada transfer, transport ,Aswan–Hurghada Transfer, per_group ,transfer ,191 €,3-4 hours, Sedan , 3-7 pax
+Coaster Aswan Airport Pickup , transport ,Aswan Airport Pickup, per_group ,transfer ,37 €, One-way airport pickup , Sedan , 8-14 pax
+Coaster Aswan Airport Dropoff , transport ,Aswan Airport Dropoff, per_group ,transfer ,37 €, One-way airport dropoff , Sedan , 8-14 pax
+Coaster Aswan Airport Roundtrip , transport ,Aswan Airport Roundtrip, per_group ,transfer ,156 €, Round-trip airport service , Sedan , 8-14 pax
+Coaster Station Pickup , transport ,Aswan Station Pickup, per_group ,transfer ,18 €, One-way airport pickup , Sedan , 8-14 pax
+Coaster Station Dropoff , transport ,Aswan Station Dropoff, per_group ,transfer ,18 €, One-way airport dropoff , Sedan , 8-14 pax
+Coaster Aswan (High Dam), transport ,Aswan City Tour – High Dam, per_group ,tour,41 €, 4-hour city tour , Sedan , 8-14 pax
+Coaster Aswan (High Dam & Philae), transport ,Aswan City Tour – High Dam & Philae, per_group ,tour,45 €, 12-hour city tour , Sedan , 8-14 pax
+"Coaster Aswan  (High Dam, Unfinished Obelisk & Philae)", transport ,"Aswan City Tour – High Dam, Obelisk & Philae", per_group ,tour,50 €, 8-hour city tour , Sedan , 8-14 pax
+Coaster Aswan  (Kalabsha Temple), transport ,Aswan City Tour – Kalabsha, per_group ,tour,45 €, 8-hour city tour , Sedan , 8-14 pax
+Coaster Aswan Outside Dinner, transport ,Aswan Dinner Transfer, per_group ,transfer ,33 €,2 hours, Sedan , 8-14 pax
+Coaster Aswan City Transfer, transport ,Aswan City Transfer, per_group ,transfer ,25 €,2 hours, Sedan , 8-14 pax
+Coaster Aswan Sound & light Show Return Transfer, transport ,Aswan Sound & Light Show Transfer, per_group ,transfer ,33 €,3 hours, Sedan , 8-14 pax
+Coaster Aswan to Luxor transfer, transport ,Aswan–Luxor Transfer, per_group ,transfer ,138 €,3-4 hours, Sedan , 8-14 pax
+Coaster Aswan to Luxor Roundtrip, transport ,Aswan–Luxor Roundtrip, per_group ,tour,155 €,9-10 hours, Sedan , 8-14 pax
+Coaster Aswan to Luxor Overnight, transport ,Aswan–Luxor Overnight, per_group ,tour,211 €,48 hours, Sedan , 8-14 pax
+Coaster Aswan to Abu Simbel transfer, transport ,Aswan–Abu Simbel Transfer, per_group ,transfer ,194 €,3-4 hours, Sedan , 8-14 pax
+Coaster Aswan to Abu Simbel Roundtrip, transport ,Aswan–Abu Simbel Roundtrip, per_group ,tour,194 €,9-10 hours, Sedan , 8-14 pax
+Coaster Aswan to Abu Simbel Overnight, transport ,Aswan–Abu Simbel Overnight, per_group ,tour,285 €,48 hours, Sedan , 8-14 pax
+Coaster Aswan to Marsa Alam transfer, transport ,Aswan–Marsa Alam Transfer, per_group ,transfer ,254 €,3-4 hours, Sedan , 8-14 pax
+Coaster Aswan to Hurghada transfer, transport ,Aswan–Hurghada Transfer, per_group ,transfer ,272 €,3-4 hours, Sedan , 8-14 pax
+Coach Aswan Airport Pickup , transport ,Aswan Airport Pickup, per_group ,transfer ,60 €, One-way airport pickup , Coach , 15-38 pax
+Coach Aswan Airport Dropoff , transport ,Aswan Airport Dropoff, per_group ,transfer ,60 €, One-way airport dropoff , Coach , 15-38 pax
+Coach Aswan Airport Roundtrip , transport ,Aswan Airport Roundtrip, per_group ,transfer ,282 €, Round-trip airport service , Coach , 15-38 pax
+Coach Station Pickup , transport ,Aswan Station Pickup, per_group ,transfer ,42 €, One-way airport pickup , Coach , 15-38 pax
+Coach Station Dropoff , transport ,Aswan Station Dropoff, per_group ,transfer ,42 €, One-way airport dropoff , Coach , 15-38 pax
+Coach Aswan (High Dam), transport ,Aswan City Tour – High Dam, per_group ,tour,65 €, 4-hour city tour , Coach , 15-38 pax
+Coach Aswan (High Dam & Philae), transport ,Aswan City Tour – High Dam & Philae, per_group ,tour,85 €, 12-hour city tour , Coach , 15-38 pax
+"Coach Aswan  (High Dam, Unfinished Obelisk & Philae)", transport ,"Aswan City Tour – High Dam, Obelisk & Philae", per_group ,tour,85 €, 8-hour city tour , Coach , 15-38 pax
+Coach Aswan  (Kalabsha Temple), transport ,Aswan City Tour – Kalabsha, per_group ,tour,85 €, 8-hour city tour , Coach , 15-38 pax
+Coach Aswan Outside Dinner, transport ,Aswan Dinner Transfer, per_group ,transfer ,60 €,2 hours, Coach , 15-38 pax
+Coach Aswan City Transfer, transport ,Aswan City Transfer, per_group ,transfer ,42 €,2 hours, Coach , 15-38 pax
+Coach Aswan Sound & light Show Return Transfer, transport ,Aswan Sound & Light Show Transfer, per_group ,transfer ,60 €,3 hours, Coach , 15-38 pax
+Coach Aswan to Luxor transfer, transport ,Aswan–Luxor Transfer, per_group ,transfer ,299 €,3-4 hours, Coach , 15-38 pax
+Coach Aswan to Luxor Roundtrip, transport ,Aswan–Luxor Roundtrip, per_group ,tour,325 €,9-10 hours, Coach , 15-38 pax
+Coach Aswan to Luxor Overnight, transport ,Aswan–Luxor Overnight, per_group ,tour,405 €,48 hours, Coach , 15-38 pax
+Coach Aswan to Abu Simbel transfer, transport ,Aswan–Abu Simbel Transfer, per_group ,transfer ,357 €,3-4 hours, Coach , 15-38 pax
+Coach Aswan to Abu Simbel Roundtrip, transport ,Aswan–Abu Simbel Roundtrip, per_group ,tour,357 €,9-10 hours, Coach , 15-38 pax
+Coach Aswan to Abu Simbel Overnight, transport ,Aswan–Abu Simbel Overnight, per_group ,tour,519 €,48 hours, Coach , 15-38 pax
+Coach Aswan to Marsa Alam transfer, transport ,Aswan–Marsa Alam Transfer, per_group ,transfer ,476 €,3-4 hours, Coach , 15-38 pax
+Coach Aswan to Hurghada transfer, transport ,Aswan–Hurghada Transfer, per_group ,transfer ,499 €,3-4 hours, Coach , 15-38 pax
+Sedan Cairo Airport Pickup , transport , Cairo Airport-Hotel , per_group ,transfer ,22 €, One-way airport pickup , Sedan , 1-2 pax
+Sedan Cairo Airport Dropoff , transport , Hotel-Cairo Airport , per_group ,transfer ,22 €, One-way airport dropoff , Sedan , 1-2 pax
+Sedan Cairo Airport Roundtrip , transport , Cairo Airport-Hotel-Airport , per_group ,transfer ,45 €, Round-trip airport service , Sedan , 1-2 pax
+Sedan Giza Station Pickup , transport , Cairo Station-Hotel , per_group ,transfer ,22 €, One-way airport pickup , Sedan , 1-2 pax
+Sedan Giza Station Dropoff , transport , Hotel-Cairo Station , per_group ,transfer ,22 €, One-way airport dropoff , Sedan , 1-2 pax
+Sedan Cairo Day Tour 4 Hours , transport , Cairo City Day Tour, per_group ,tour,27 €, 4-hour city tour , Sedan , 1-2 pax
+Sedan Cairo Day Tour 8 Hours , transport , Cairo City Day Tour, per_group ,tour,34 €, 8-hour city tour , Sedan , 1-2 pax
+Sedan Cairo Day Tour 12 Hours , transport , Cairo City Day Tour, per_group ,tour,65 €, 12-hour city tour , Sedan , 1-2 pax
+Sedan Cairo Day Tour 8 Hours + Dahshure, transport , Cairo City Day Tour, per_group ,tour,38 €, 8-hour city tour , Sedan , 1-2 pax
+Sedan Cairo Sound & Light Show, transport ,Cairo S&L Transfer, per_group ,transfer ,22 €,2 hours, Sedan , 1-2 pax
+Sedan Cairo Dinner Nile Cruise, transport ,Cairo Dinner Transfer, per_group ,transfer ,22 €,2-4 hours, Sedan , 1-2 pax
+Sedan Cairo Outside Dinner, transport ,Cairo Outside Dinner Transfer, per_group ,transfer ,22 €,2 hours, Sedan , 1-2 pax
+Sedan Cairo to Alexandria transfer, transport ,Cairo–Alexandria Transfer, per_group ,transfer ,84 €,3-4 hours, Sedan , 1-2 pax
+Sedan Cairo to Alexandria Roundtrip, transport ,Cairo–Alexandria Roundtrip, per_group ,tour,96 €,9-10 hours, Sedan , 1-2 pax
+Sedan Cairo to Alexandria Overnight, transport ,Cairo–Alexandria Overnight, per_group ,tour,141 €,48 hours, Sedan , 1-2 pax
+Sedan Cairo to Al Fayoum transfer, transport ,Cairo–Fayoum Transfer, per_group ,transfer ,84 €,3-4 hours, Sedan , 1-2 pax
+Sedan Cairo to Al Fayoum Roundtrip, transport ,Cairo–Fayoum Roundtrip, per_group ,tour,96 €,9-10 hours, Sedan , 1-2 pax
+Sedan Cairo to Al Fayoum Overnight, transport ,Cairo–Fayoum Overnight, per_group ,tour,141 €,48 hours, Sedan , 1-2 pax
+Sedan Cairo to Ras Sudr transfer, transport ,Cairo–Ras Sudr Transfer, per_group ,transfer ,84 €,3-4 hours, Sedan , 1-2 pax
+Sedan Cairo to Ras Sudr Roundtrip, transport ,Cairo–Ras Sudr Roundtrip, per_group ,tour,96 €,9-10 hours, Sedan , 1-2 pax
+Sedan Cairo to Ras Sudr Overnight, transport ,Cairo–Ras Sudr Overnight, per_group ,tour,141 €,48 hours, Sedan , 1-2 pax
+Sedan Cairo to Ismailia transfer, transport ,Cairo–Ismailia Transfer, per_group ,transfer ,73 €,3-4 hours, Sedan , 1-2 pax
+Sedan Cairo to Ismailia Roundtrip, transport ,Cairo–Ismailia Roundtrip, per_group ,tour,85 €,9-10 hours, Sedan , 1-2 pax
+Sedan Cairo to Ain Sokhna transfer, transport ,Cairo–Ain Sokhna Transfer, per_group ,transfer ,73 €,3-4 hours, Sedan , 1-2 pax
+Sedan Cairo to Ain Sokhna Roundtrip, transport ,Cairo–Ain Sokhna Roundtrip, per_group ,tour,85 €,9-10 hours, Sedan , 1-2 pax
+Sedan Cairo to Ain Sokhna Overnight, transport ,Cairo–Ain Sokhna Overnight, per_group ,tour,130 €,48 hours, Sedan , 1-2 pax
+Sedan Cairo to Hurghada transfer, transport ,Cairo–Hurghada Transfer, per_group ,transfer ,121 €,3-4 hours, Sedan , 1-2 pax
+Sedan Cairo to Hurghada Overnight, transport ,Cairo–Hurghada Overnight, per_group ,tour,166 €,48 hours, Sedan , 1-2 pax
+Sedan Cairo to Sharm El-Sheikh transfer, transport ,Cairo–Sharm El-Sheikh Transfer, per_group ,transfer ,135 €,3-4 hours, Sedan , 1-2 pax
+Sedan Cairo to Sharm El-Sheikh Overnight, transport ,Cairo–Sharm El-Sheikh Overnight, per_group ,tour,180 €,48 hours, Sedan , 1-2 pax
+Sedan Cairo to Marsa Alam transfer, transport ,Cairo–Marsa Alam Transfer, per_group ,transfer ,190 €,3-4 hours, Sedan , 1-2 pax
+Sedan Cairo to Marsa Alam Overnight, transport ,Cairo–Marsa Alam Overnight, per_group ,tour,235 €,48 hours, Sedan , 1-2 pax
+Sedan Cairo to Marsa Matrouh transfer, transport ,Cairo–Marsa Matrouh Transfer, per_group ,transfer ,121 €,3-4 hours, Sedan , 1-2 pax
+Sedan Cairo to Marsa Matrouh Overnight, transport ,Cairo–Marsa Matrouh Overnight, per_group ,tour,166 €,48 hours, Sedan , 1-2 pax
+Sedan Cairo to Al-Minya transfer, transport ,Cairo–Al-Minya Transfer, per_group ,transfer ,107 €,3-4 hours, Sedan , 1-2 pax
+Sedan Cairo to  Al-Minya Roundtrip, transport ,Cairo–Al-Minya Roundtrip, per_group ,tour,114 €,9-10 hours, Sedan , 1-2 pax
+Sedan Cairo to  Al-Minya Overnight, transport ,Cairo–Al-Minya Overnight, per_group ,tour,130 €,48 hours, Sedan , 1-2 pax
+Sedan Cairo to Bahariya Oasis transfer, transport ,Cairo–Bahariya Oasis Transfer, per_group ,transfer ,190 €,3-4 hours, Sedan , 1-2 pax
+Sedan Cairo to Bahariya Oasis  Roundtrip, transport ,Cairo–Bahariya Oasis Roundtrip, per_group ,tour,207 €,9-10 hours, Sedan , 1-2 pax
+Sedan Cairo to Bahariya Oasis  Overnight, transport ,Cairo–Bahariya Oasis Overnight, per_group ,tour,225 €,48 hours, Sedan , 1-2 pax
+Sedan Cairo to Siwa Oasis transfer, transport ,Cairo–Siwa Oasis Transfer, per_group ,transfer ,190 €,3-4 hours, Sedan , 1-2 pax
+Sedan Cairo to Siwa Oasis  Roundtrip, transport ,Cairo–Siwa Oasis Roundtrip, per_group ,tour,207 €,9-10 hours, Sedan , 1-2 pax
+Sedan Cairo to Siwa Oasis  Overnight, transport ,Cairo–Siwa Oasis Overnight, per_group ,tour,225 €,48 hours, Sedan , 1-2 pax
+Hiace Cairo Airport Pickup , transport , Cairo Airport-Hotel , per_group ,transfer ,23 €, One-way airport pickup , Hiace , 3-7 pax
+Hiace Cairo Airport Dropoff , transport , Hotel-Cairo Airport , per_group ,transfer ,23 €, One-way airport dropoff , Hiace , 3-7 pax
+Hiace Cairo Airport Roundtrip , transport , Cairo Airport-Hotel-Airport , per_group ,transfer ,61 €, Round-trip airport service , Hiace , 3-7 pax
+Hiace Giza Station Pickup , transport , Cairo Station-Hotel , per_group ,transfer ,23 €, One-way airport pickup , Hiace , 3-7 pax
+Hiace Giza Station Dropoff , transport , Hotel-Cairo Station , per_group ,transfer ,23 €, One-way airport dropoff , Hiace , 3-7 pax
+Hiace Cairo Day Tour 4 Hours , transport , Cairo City Day Tour, per_group ,tour,30 €, 4-hour city tour , Hiace , 3-7 pax
+Hiace Cairo Day Tour 8 Hours , transport , Cairo City Day Tour, per_group ,tour,39 €, 8-hour city tour , Hiace , 3-7 pax
+Hiace Cairo Day Tour 12 Hours , transport , Cairo City Day Tour, per_group ,tour,84 €, 12-hour city tour , Hiace , 3-7 pax
+Hiace Cairo Day Tour 8 Hours + Dahshure, transport , Cairo City Day Tour, per_group ,tour,42 €, 8-hour city tour , Hiace , 3-7 pax
+Hiace Cairo Sound & Light Show, transport ,Cairo S&L Transfer, per_group ,transfer ,23 €,2 hours, Hiace , 3-7 pax
+Hiace Cairo Dinner Nile Cruise, transport ,Cairo Dinner Transfer, per_group ,transfer ,23 €,2-4 hours, Hiace , 3-7 pax
+Hiace Cairo Outside Dinner, transport ,Cairo Outside Dinner Transfer, per_group ,transfer ,23 €,2 hours, Hiace , 3-7 pax
+Hiace Cairo to Alexandria transfer, transport ,Cairo–Alexandria Transfer, per_group ,transfer ,99 €,3-4 hours, Hiace , 3-7 pax
+Hiace Cairo to Alexandria Roundtrip, transport ,Cairo–Alexandria Roundtrip, per_group ,tour,110 €,9-10 hours, Hiace , 3-7 pax
+Hiace Cairo to Alexandria Overnight, transport ,Cairo–Alexandria Overnight, per_group ,tour,128 €,48 hours, Hiace , 3-7 pax
+Hiace Cairo to Al Fayoum transfer, transport ,Cairo–Fayoum Transfer, per_group ,transfer ,99 €,3-4 hours, Hiace , 3-7 pax
+Hiace Cairo to Al Fayoum Roundtrip, transport ,Cairo–Fayoum Roundtrip, per_group ,tour,110 €,9-10 hours, Hiace , 3-7 pax
+Hiace Cairo to Al Fayoum Overnight, transport ,Cairo–Fayoum Overnight, per_group ,tour,128 €,48 hours, Hiace , 3-7 pax
+Hiace Cairo to Ras Sudr transfer, transport ,Cairo–Ras Sudr Transfer, per_group ,transfer ,99 €,3-4 hours, Hiace , 3-7 pax
+Hiace Cairo to Ras Sudr Roundtrip, transport ,Cairo–Ras Sudr Roundtrip, per_group ,tour,110 €,9-10 hours, Hiace , 3-7 pax
+Hiace Cairo to Ras Sudr Overnight, transport ,Cairo–Ras Sudr Overnight, per_group ,tour,128 €,48 hours, Hiace , 3-7 pax
+Hiace Cairo to Ismailia transfer, transport ,Cairo–Ismailia Transfer, per_group ,transfer ,86 €,3-4 hours, Hiace , 3-7 pax
+Hiace Cairo to Ismailia Roundtrip, transport ,Cairo–Ismailia Roundtrip, per_group ,tour,98 €,9-10 hours, Hiace , 3-7 pax
+Hiace Cairo to Ismailia Overnight, transport ,Cairo–Ismailia Overnight, per_group ,tour,158 €,48 hours, Hiace , 3-7 pax
+Hiace Cairo to Ain Sokhna transfer, transport ,Cairo–Ain Sokhna Transfer, per_group ,transfer ,86 €,3-4 hours, Hiace , 3-7 pax
+Hiace Cairo to Ain Sokhna Roundtrip, transport ,Cairo–Ain Sokhna Roundtrip, per_group ,tour,98 €,9-10 hours, Hiace , 3-7 pax
+Hiace Cairo to Ain Sokhna Overnight, transport ,Cairo–Ain Sokhna Overnight, per_group ,tour,158 €,48 hours, Hiace , 3-7 pax
+Hiace Cairo to Hurghada transfer, transport ,Cairo–Hurghada Transfer, per_group ,transfer ,139 €,3-4 hours, Hiace , 3-7 pax
+Hiace Cairo to Hurghada Overnight, transport ,Cairo–Hurghada Overnight, per_group ,tour,157 €,48 hours, Hiace , 3-7 pax
+Hiace Cairo to Sharm El-Sheikh transfer, transport ,Cairo–Sharm El-Sheikh Transfer, per_group ,transfer ,172 €,3-4 hours, Hiace , 3-7 pax
+Hiace Cairo to Sharm El-Sheikh Overnight, transport ,Cairo–Sharm El-Sheikh Overnight, per_group ,tour,232 €,48 hours, Hiace , 3-7 pax
+Hiace Cairo to Marsa Alam transfer, transport ,Cairo–Marsa Alam Transfer, per_group ,transfer ,237 €,3-4 hours, Hiace , 3-7 pax
+Hiace Cairo to Marsa Alam Overnight, transport ,Cairo–Marsa Alam Overnight, per_group ,tour,297 €,48 hours, Hiace , 3-7 pax
+Hiace Cairo to Marsa Matrouh transfer, transport ,Cairo–Marsa Matrouh Transfer, per_group ,transfer ,139 €,3-4 hours, Hiace , 3-7 pax
+Hiace Cairo to Marsa Matrouh Overnight, transport ,Cairo–Marsa Matrouh Overnight, per_group ,tour,157 €,48 hours, Hiace , 3-7 pax
+Hiace Cairo to Al-Minya transfer, transport ,Cairo–Al-Minya Transfer, per_group ,transfer ,155 €,3-4 hours, Hiace , 3-7 pax
+Hiace Cairo to  Al-Minya Roundtrip, transport ,Cairo–Al-Minya Roundtrip, per_group ,tour,165 €,9-10 hours, Hiace , 3-7 pax
+Hiace Cairo to  Al-Minya Overnight, transport ,Cairo–Al-Minya Overnight, per_group ,tour,205 €,48 hours, Hiace , 3-7 pax
+Hiace Cairo to Bahariya Oasis transfer, transport ,Cairo–Bahariya Oasis Transfer, per_group ,transfer ,237 €,3-4 hours, Hiace , 3-7 pax
+Hiace Cairo to Bahariya Oasis  Roundtrip, transport ,Cairo–Bahariya Oasis Roundtrip, per_group ,tour,267 €,9-10 hours, Hiace , 3-7 pax
+Hiace Cairo to Bahariya Oasis  Overnight, transport ,Cairo–Bahariya Oasis Overnight, per_group ,tour,297 €,48 hours, Hiace , 3-7 pax
+Hiace Cairo to Siwa Oasis transfer, transport ,Cairo–Siwa Oasis Transfer, per_group ,transfer ,237 €,3-4 hours, Hiace , 3-7 pax
+Hiace Cairo to Siwa Oasis  Roundtrip, transport ,Cairo–Siwa Oasis Roundtrip, per_group ,tour,267 €,9-10 hours, Hiace , 3-7 pax
+Hiace Cairo to Siwa Oasis  Overnight, transport ,Cairo–Siwa Oasis Overnight, per_group ,tour,297 €,48 hours, Hiace , 3-7 pax
+Coaster Cairo Airport Pickup , transport , Cairo Airport-Hotel , per_group ,transfer ,56 €, One-way airport pickup , Coaster , 8-14 pax
+Coaster Cairo Airport Dropoff , transport , Hotel-Cairo Airport , per_group ,transfer ,56 €, One-way airport dropoff , Coaster , 8-14 pax
+Coaster Cairo Airport Roundtrip , transport , Cairo Airport-Hotel-Airport , per_group ,transfer ,94 €, Round-trip airport service , Coaster , 8-14 pax
+Coaster Giza Station Pickup , transport , Cairo Station-Hotel , per_group ,transfer ,56 €, One-way airport pickup , Coaster , 8-14 pax
+Coaster Giza Station Dropoff , transport , Hotel-Cairo Station , per_group ,transfer ,56 €, One-way airport dropoff , Coaster , 8-14 pax
+Coaster Cairo Day Tour 4 Hours , transport , Cairo City Day Tour, per_group ,tour,45 €, 4-hour city tour , Coaster , 8-14 pax
+Coaster Cairo Day Tour 8 Hours , transport , Cairo City Day Tour, per_group ,tour,60 €, 8-hour city tour , Coaster , 8-14 pax
+Coaster Cairo Day Tour 12 Hours , transport , Cairo City Day Tour, per_group ,tour,114 €, 12-hour city tour , Coaster , 8-14 pax
+Coaster Cairo Day Tour 8 Hours + Dahshure, transport , Cairo City Day Tour, per_group ,tour,63 €, 8-hour city tour , Coaster , 8-14 pax
+Coaster Cairo Sound & Light Show, transport ,Cairo S&L Transfer, per_group ,transfer ,56 €,2 hours, Coaster , 8-14 pax
+Coaster Cairo Dinner Nile Cruise, transport ,Cairo Dinner Transfer, per_group ,transfer ,56 €,2-4 hours, Coaster , 8-14 pax
+Coaster Cairo Outside Dinner, transport ,Cairo Outside Dinner Transfer, per_group ,transfer ,56 €,2 hours, Coaster , 8-14 pax
+Coaster Cairo to Alexandria transfer, transport ,Cairo–Alexandria Transfer, per_group ,transfer ,134 €,3-4 hours, Coaster , 8-14 pax
+Coaster Cairo to Alexandria Roundtrip, transport ,Cairo–Alexandria Roundtrip, per_group ,tour,145 €,9-10 hours, Coaster , 8-14 pax
+Coaster Cairo to Alexandria Overnight, transport ,Cairo–Alexandria Overnight, per_group ,tour,225 €,48 hours, Coaster , 8-14 pax
+Coaster Cairo to Al Fayoum transfer, transport ,Cairo–Fayoum Transfer, per_group ,transfer ,134 €,3-4 hours, Coaster , 8-14 pax
+Coaster Cairo to Al Fayoum Roundtrip, transport ,Cairo–Fayoum Roundtrip, per_group ,tour,145 €,9-10 hours, Coaster , 8-14 pax
+Coaster Cairo to Al Fayoum Overnight, transport ,Cairo–Fayoum Overnight, per_group ,tour,225 €,48 hours, Coaster , 8-14 pax
+Coaster Cairo to Ras Sudr transfer, transport ,Cairo–Ras Sudr Transfer, per_group ,transfer ,134 €,3-4 hours, Coaster , 8-14 pax
+Coaster Cairo to Ras Sudr Roundtrip, transport ,Cairo–Ras Sudr Roundtrip, per_group ,tour,145 €,9-10 hours, Coaster , 8-14 pax
+Coaster Cairo to Ras Sudr Overnight, transport ,Cairo–Ras Sudr Overnight, per_group ,tour,225 €,48 hours, Coaster , 8-14 pax
+Coaster Cairo to Ismailia transfer, transport ,Cairo–Ismailia Transfer, per_group ,transfer ,125 €,3-4 hours, Coaster , 8-14 pax
+Coaster Cairo to Ismailia Roundtrip, transport ,Cairo–Ismailia Roundtrip, per_group ,tour,140 €,9-10 hours, Coaster , 8-14 pax
+Coaster Cairo to Ismailia Overnight, transport ,Cairo–Ismailia Overnight, per_group ,tour,220 €,48 hours, Coaster , 8-14 pax
+Coaster Cairo to Ain Sokhna transfer, transport ,Cairo–Ain Sokhna Transfer, per_group ,transfer ,125 €,3-4 hours, Coaster , 8-14 pax
+Coaster Cairo to Ain Sokhna Roundtrip, transport ,Cairo–Ain Sokhna Roundtrip, per_group ,tour,140 €,9-10 hours, Coaster , 8-14 pax
+Coaster Cairo to Ain Sokhna Overnight, transport ,Cairo–Ain Sokhna Overnight, per_group ,tour,220 €,48 hours, Coaster , 8-14 pax
+Coaster Cairo to Hurghada transfer, transport ,Cairo–Hurghada Transfer, per_group ,transfer ,219 €,3-4 hours, Coaster , 8-14 pax
+Coaster Cairo to Hurghada Overnight, transport ,Cairo–Hurghada Overnight, per_group ,tour,299 €,48 hours, Coaster , 8-14 pax
+Coaster Cairo to Sharm El-Sheikh transfer, transport ,Cairo–Sharm El-Sheikh Transfer, per_group ,transfer ,230 €,3-4 hours, Coaster , 8-14 pax
+Coaster Cairo to Sharm El-Sheikh Overnight, transport ,Cairo–Sharm El-Sheikh Overnight, per_group ,tour,310 €,48 hours, Coaster , 8-14 pax
+Coaster Cairo to Marsa Alam transfer, transport ,Cairo–Marsa Alam Transfer, per_group ,transfer ,329 €,3-4 hours, Coaster , 8-14 pax
+Coaster Cairo to Marsa Alam Overnight, transport ,Cairo–Marsa Alam Overnight, per_group ,tour,409 €,48 hours, Coaster , 8-14 pax
+Coaster Cairo to Marsa Matrouh transfer, transport ,Cairo–Marsa Matrouh Transfer, per_group ,transfer ,219 €,3-4 hours, Coaster , 8-14 pax
+Coaster Cairo to Marsa Matrouh Overnight, transport ,Cairo–Marsa Matrouh Overnight, per_group ,tour,299 €,48 hours, Coaster , 8-14 pax
+Coaster Cairo to Al-Minya transfer, transport ,Cairo–Al-Minya Transfer, per_group ,transfer ,150 €,3-4 hours, Coaster , 8-14 pax
+Coaster Cairo to  Al-Minya Roundtrip, transport ,Cairo–Al-Minya Roundtrip, per_group ,tour,170 €,9-10 hours, Coaster , 8-14 pax
+Coaster Cairo to  Al-Minya Overnight, transport ,Cairo–Al-Minya Overnight, per_group ,tour,280 €,48 hours, Coaster , 8-14 pax
+Coaster Cairo to Bahariya Oasis transfer, transport ,Cairo–Bahariya Oasis Transfer, per_group ,transfer ,329 €,3-4 hours, Coaster , 8-14 pax
+Coaster Cairo to Bahariya Oasis  Roundtrip, transport ,Cairo–Bahariya Oasis Roundtrip, per_group ,tour,380 €,9-10 hours, Coaster , 8-14 pax
+Coaster Cairo to Bahariya Oasis  Overnight, transport ,Cairo–Bahariya Oasis Overnight, per_group ,tour,409 €,48 hours, Coaster , 8-14 pax
+Coaster Cairo to Siwa Oasis transfer, transport ,Cairo–Siwa Oasis Transfer, per_group ,transfer ,329 €,3-4 hours, Coaster , 8-14 pax
+Coaster Cairo to Siwa Oasis  Roundtrip, transport ,Cairo–Siwa Oasis Roundtrip, per_group ,tour,380 €,9-10 hours, Coaster , 8-14 pax
+Coaster Cairo to Siwa Oasis  Overnight, transport ,Cairo–Siwa Oasis Overnight, per_group ,tour,409 €,48 hours, Coaster , 8-14 pax
+Coach Cairo Airport Pickup , transport , Cairo Airport-Hotel , per_group ,transfer ,78 €, One-way airport pickup , Coach , 15-38 pax
+Coach Cairo Airport Dropoff , transport , Hotel-Cairo Airport , per_group ,transfer ,78 €, One-way airport dropoff , Coach , 15-38 pax
+Coach Cairo Airport Roundtrip , transport , Cairo Airport-Hotel-Airport , per_group ,transfer ,186 €, Round-trip airport service , Coach , 15-38 pax
+Coach Giza Station Pickup , transport , Cairo Station-Hotel , per_group ,transfer ,78 €, One-way airport pickup , Coach , 15-38 pax
+Coach Giza Station Dropoff , transport , Hotel-Cairo Station , per_group ,transfer ,78 €, One-way airport dropoff , Coach , 15-38 pax
+Coach Cairo Day Tour 4 Hours , transport , Cairo City Day Tour, per_group ,tour,85 €, 4-hour city tour , Coach , 15-38 pax
+Coach Cairo Day Tour 8 Hours , transport , Cairo City Day Tour, per_group ,tour,120 €, 8-hour city tour , Coach , 15-38 pax
+Coach Cairo Day Tour 12 Hours , transport , Cairo City Day Tour, per_group ,tour,205 €, 12-hour city tour , Coach , 15-38 pax
+Coach Cairo Day Tour 8 Hours + Dahshure, transport , Cairo City Day Tour, per_group ,tour,130 €, 8-hour city tour , Coach , 15-38 pax
+Coach Cairo Sound & Light Show, transport ,Cairo S&L Transfer, per_group ,transfer ,78 €,2 hours, Coach , 15-38 pax
+Coach Cairo Dinner Nile Cruise, transport ,Cairo Dinner Transfer, per_group ,transfer ,78 €,2-4 hours, Coach , 15-38 pax
+Coach Cairo Outside Dinner, transport ,Cairo Outside Dinner Transfer, per_group ,transfer ,78 €,2 hours, Coach , 15-38 pax
+Coach Cairo to Alexandria transfer, transport ,Cairo–Alexandria Transfer, per_group ,transfer ,237 €,3-4 hours, Coach , 15-38 pax
+Coach Cairo to Alexandria Roundtrip, transport ,Cairo–Alexandria Roundtrip, per_group ,tour,256 €,9-10 hours, Coach , 15-38 pax
+Coach Cairo to Alexandria Overnight, transport ,Cairo–Alexandria Overnight, per_group ,tour,396 €,48 hours, Coach , 15-38 pax
+Coach Cairo to Al Fayoum transfer, transport ,Cairo–Fayoum Transfer, per_group ,transfer ,237 €,3-4 hours, Coach , 15-38 pax
+Coach Cairo to Al Fayoum Roundtrip, transport ,Cairo–Fayoum Roundtrip, per_group ,tour,256 €,9-10 hours, Coach , 15-38 pax
+Coach Cairo to Al Fayoum Overnight, transport ,Cairo–Fayoum Overnight, per_group ,tour,396 €,48 hours, Coach , 15-38 pax
+Coach Cairo to Ras Sudr transfer, transport ,Cairo–Ras Sudr Transfer, per_group ,transfer ,237 €,3-4 hours, Coach , 15-38 pax
+Coach Cairo to Ras Sudr Roundtrip, transport ,Cairo–Ras Sudr Roundtrip, per_group ,tour,256 €,9-10 hours, Coach , 15-38 pax
+Coach Cairo to Ras Sudr Overnight, transport ,Cairo–Ras Sudr Overnight, per_group ,tour,396 €,48 hours, Coach , 15-38 pax
+Coach Cairo to Ismailia transfer, transport ,Cairo–Ismailia Transfer, per_group ,transfer ,181 €,3-4 hours, Coach , 15-38 pax
+Coach Cairo to Ismailia Roundtrip, transport ,Cairo–Ismailia Roundtrip, per_group ,tour,237 €,9-10 hours, Coach , 15-38 pax
+Coach Cairo to Ismailia Overnight, transport ,Cairo–Ismailia Overnight, per_group ,tour,377 €,48 hours, Coach , 15-38 pax
+Coach Cairo to Ain Sokhna transfer, transport ,Cairo–Ain Sokhna Transfer, per_group ,transfer ,181 €,3-4 hours, Coach , 15-38 pax
+Coach Cairo to Ain Sokhna Roundtrip, transport ,Cairo–Ain Sokhna Roundtrip, per_group ,tour,237 €,9-10 hours, Coach , 15-38 pax
+Coach Cairo to Ain Sokhna Overnight, transport ,Cairo–Ain Sokhna Overnight, per_group ,tour,377 €,48 hours, Coach , 15-38 pax
+Coach Cairo to Hurghada transfer, transport ,Cairo–Hurghada Transfer, per_group ,transfer ,375 €,3-4 hours, Coach , 15-38 pax
+Coach Cairo to Hurghada Overnight, transport ,Cairo–Hurghada Overnight, per_group ,tour,515 €,48 hours, Coach , 15-38 pax
+Coach Cairo to Sharm El-Sheikh transfer, transport ,Cairo–Sharm El-Sheikh Transfer, per_group ,transfer ,400 €,3-4 hours, Coach , 15-38 pax
+Coach Cairo to Sharm El-Sheikh Overnight, transport ,Cairo–Sharm El-Sheikh Overnight, per_group ,tour,540 €,48 hours, Coach , 15-38 pax
+Coach Cairo to Marsa Alam transfer, transport ,Cairo–Marsa Alam Transfer, per_group ,transfer ,528 €,3-4 hours, Coach , 15-38 pax
+Coach Cairo to Marsa Alam Overnight, transport ,Cairo–Marsa Alam Overnight, per_group ,tour,668 €,48 hours, Coach , 15-38 pax
+Coach Cairo to Marsa Matrouh transfer, transport ,Cairo–Marsa Matrouh Transfer, per_group ,transfer ,375 €,3-4 hours, Coach , 15-38 pax
+Coach Cairo to Marsa Matrouh Overnight, transport ,Cairo–Marsa Matrouh Overnight, per_group ,tour,515 €,48 hours, Coach , 15-38 pax
+Coach Cairo to Al-Minya transfer, transport ,Cairo–Al-Minya Transfer, per_group ,transfer ,237 €,3-4 hours, Coach , 15-38 pax
+Coach Cairo to  Al-Minya Roundtrip, transport ,Cairo–Al-Minya Roundtrip, per_group ,tour,256 €,9-10 hours, Coach , 15-38 pax
+Coach Cairo to  Al-Minya Overnight, transport ,Cairo–Al-Minya Overnight, per_group ,tour,396 €,48 hours, Coach , 15-38 pax
+Coach Cairo to Bahariya Oasis transfer, transport ,Cairo–Bahariya Oasis Transfer, per_group ,transfer ,528 €,3-4 hours, Coach , 15-38 pax
+Coach Cairo to Bahariya Oasis  Roundtrip, transport ,Cairo–Bahariya Oasis Roundtrip, per_group ,tour,600 €,9-10 hours, Coach , 15-38 pax
+Coach Cairo to Bahariya Oasis  Overnight, transport ,Cairo–Bahariya Oasis Overnight, per_group ,tour,668 €,48 hours, Coach , 15-38 pax
+Coach Cairo to Siwa Oasis transfer, transport ,Cairo–Siwa Oasis Transfer, per_group ,transfer ,528 €,3-4 hours, Coach , 15-38 pax
+Coach Cairo to Siwa Oasis  Roundtrip, transport ,Cairo–Siwa Oasis Roundtrip, per_group ,tour,600 €,9-10 hours, Coach , 15-38 pax
+Coach Cairo to Siwa Oasis Overnight, transport ,Cairo–Siwa Oasis Overnight, per_group ,tour,668 €,48 hours, Coach , 15-38 pax
+Sedan Luxor Airport Pickup , transport ,Luxor Airport-Hotel , per_group ,transfer ,13 €, One-way airport pickup , Sedan , 1-2 pax
+Sedan Luxor Airport Dropoff , transport ,Hotel-Luxor Airport , per_group ,transfer ,13 €, One-way airport dropoff , Sedan , 1-2 pax
+Sedan Luxor Airport Roundtrip , transport ,Luxor Airport-Hotel-Airport , per_group ,transfer ,55 €, Round-trip airport service , Sedan , 1-2 pax
+Sedan Luxor Airport Pickup to West Bank, transport ,Luxor Airport-West Bank Hotel , per_group ,transfer ,24 €, One-way airport pickup , Sedan , 1-2 pax
+Sedan Luxor Airport Dropoff From West Bank, transport ,West Bank Hotel -Luxor Airport , per_group ,transfer ,24 €, One-way airport dropoff , Sedan , 1-2 pax
+Sedan Luxor Airport Roundtrip West Bank, transport ,Luxor Airport-West Bank Hotel-Airport , per_group ,transfer ,56 €, Round-trip airport service , Sedan , 1-2 pax
+Sedan Station Pickup , transport ,Luxor Station-Hotel , per_group ,transfer ,8 €, One-way airport pickup , Sedan , 1-2 pax
+Sedan Station Dropoff , transport ,Hotel-Luxor Station , per_group ,transfer ,8 €, One-way airport dropoff , Sedan , 1-2 pax
+Sedan Station Pickup to West Bank, transport ,Luxor Station West Bank Hotel , per_group ,transfer ,58 €, One-way airport pickup , Sedan , 1-2 pax
+Sedan Station Dropoff From West Bank, transport ,Luxor Station- West Bank Hotel , per_group ,transfer ,58 €, One-way airport dropoff , Sedan , 1-2 pax
+Sedan Luxor (Karnak & Luxor Temples), transport ,Luxor City Day Tour, per_group ,tour,19 €, 4-hour city tour , Sedan , 1-2 pax
+Sedan Luxor (West Bank 3 Stops), transport ,Luxor City Day Tour, per_group ,tour,21 €, 12-hour city tour , Sedan , 1-2 pax
+Sedan Luxor (East and West Bank), transport ,Luxor City Day Tour, per_group ,tour,42 €, 8-hour city tour , Sedan , 1-2 pax
+Sedan Luxor (Full Day West Bank), transport ,Luxor City Day Tour, per_group ,tour,21 €, 8-hour city tour , Sedan , 1-2 pax
+Sedan Luxor (Luxor Museum), transport ,Luxor City Day Tour, per_group ,tour,13 €, 8-hour city tour , Sedan , 1-2 pax
+Sedan Luxor Outside Dinner, transport ,Luxor Dinner Transfer, per_group ,transfer ,14 €,2 hours, Sedan , 1-2 pax
+Sedan Luxor City Transfer, transport ,Luxor Dinner Transfer, per_group ,transfer ,5 €,2 hours, Sedan , 1-2 pax
+Sedan Luxor Sound & light Show Return Transfer, transport ,Luxor S&L Transfer, per_group ,transfer ,8 €,3 hours, Sedan , 1-2 pax
+Sedan Luxor to Dendera Transfer, transport ,Luxor - Dendera  Day Tour, per_group ,transfer ,45 €,3 hours, Sedan , 1-2 pax
+Sedan Luxor to Dendera & Abydos Transfer, transport ,Luxor - Dendera & Abydos Day Tour, per_group ,transfer ,70 €,3 hours, Sedan , 1-2 pax
+Sedan Luxor to Aswan transfer, transport ,Luxor - Aswan City Transfer, per_group ,transfer ,79 €,3-4 hours, Sedan , 1-2 pax
+Sedan Luxor to Aswan Roundtrip, transport ,Luxor - Aswan Over Day Tour, per_group ,tour,86 €,9-10 hours, Sedan , 1-2 pax
+Sedan Luxor to Aswan Overnight, transport ,Luxor - Aswan Day Tour (Overnight), per_group ,tour,107 €,48 hours, Sedan , 1-2 pax
+Sedan Luxor to Marsa Alam transfer, transport ,Luxor - Marsa Alam Transfer, per_group ,transfer ,115 €,3-4 hours, Sedan , 1-2 pax
+Sedan Luxor to Hurghada transfer, transport ,Luxor - Hurghada Transfer, per_group ,transfer ,95 €,3-4 hours, Sedan , 1-2 pax
+Sedan Luxor to Hurghada Roundtrip, transport ,Luxor - Hurghada Over Day Tour, per_group ,tour,119 €,9-10 hours, Sedan , 1-2 pax
+Sedan Luxor to Hurghada Overnight, transport ,Luxor - Hurghada Day Tour (Overnight), per_group ,tour,138 €,48 hours, Sedan , 1-2 pax
+Hiace Luxor Airport Pickup , transport ,Luxor Airport-Hotel , per_group ,transfer ,22 €, One-way airport pickup , Hiace , 3-7 pax
+Hiace Luxor Airport Dropoff , transport ,Hotel-Luxor Airport , per_group ,transfer ,22 €, One-way airport dropoff , Hiace , 3-7 pax
+Hiace Luxor Airport Roundtrip , transport ,Luxor Airport-Hotel-Airport , per_group ,transfer ,88 €, Round-trip airport service , Hiace , 3-7 pax
+Hiace Luxor Airport Pickup to West Bank, transport ,Luxor Airport-West Bank Hotel , per_group ,transfer ,11 €, One-way airport pickup , Hiace , 3-7 pax
+Hiace Luxor Airport Dropoff From West Bank, transport ,West Bank Hotel -Luxor Airport , per_group ,transfer ,11 €, One-way airport dropoff , Hiace , 3-7 pax
+Hiace Luxor Airport Roundtrip West Bank, transport ,Luxor Airport-West Bank Hotel-Airport , per_group ,transfer ,80 €, Round-trip airport service , Hiace , 3-7 pax
+Hiace Station Pickup , transport ,Luxor Station-Hotel , per_group ,transfer ,15 €, One-way airport pickup , Hiace , 3-7 pax
+Hiace Station Dropoff , transport ,Hotel-Luxor Station , per_group ,transfer ,15 €, One-way airport dropoff , Hiace , 3-7 pax
+Hiace Station Pickup to West Bank, transport ,Luxor Station West Bank Hotel , per_group ,transfer ,15 €, One-way airport pickup , Hiace , 3-7 pax
+Hiace Station Dropoff From West Bank, transport ,Luxor Station- West Bank Hotel , per_group ,transfer ,15 €, One-way airport dropoff , Hiace , 3-7 pax
+Hiace Luxor (Karnak & Luxor Temples), transport ,Luxor City Day Tour, per_group ,tour,18 €, 4-hour city tour , Hiace , 3-7 pax
+Hiace Luxor (West Bank 3 Stops), transport ,Luxor City Day Tour, per_group ,tour,21 €, 12-hour city tour , Hiace , 3-7 pax
+Hiace Luxor (East and West Bank), transport ,Luxor City Day Tour, per_group ,tour,70 €, 8-hour city tour , Hiace , 3-7 pax
+Hiace Luxor (Full Day West Bank), transport ,Luxor City Day Tour, per_group ,tour,60 €, 8-hour city tour , Hiace , 3-7 pax
+Hiace Luxor (Luxor Museum), transport ,Luxor City Day Tour, per_group ,tour,18 €, 8-hour city tour , Hiace , 3-7 pax
+Hiace Luxor Outside Dinner, transport ,Luxor Dinner Transfer, per_group ,transfer ,20 €,2 hours, Hiace , 3-7 pax
+Hiace Luxor City Transfer, transport ,Luxor Dinner Transfer, per_group ,transfer ,11 €,2 hours, Hiace , 3-7 pax
+Hiace Luxor Sound & light Show Return Transfer, transport ,Luxor S&L Transfer, per_group ,transfer ,18 €,3 hours, Hiace , 3-7 pax
+Hiace Luxor to Dendera Transfer, transport ,Luxor - Dendera  Day Tour, per_group ,transfer ,60 €,3 hours, Hiace , 3-7 pax
+Hiace Luxor to Dendera & Abydos Transfer, transport ,Luxor - Dendera & Abydos Day Tour, per_group ,transfer ,95 €,3 hours, Hiace , 3-7 pax
+Hiace Luxor to Aswan transfer, transport ,Luxor - Aswan City Transfer, per_group ,transfer ,95 €,3-4 hours, Hiace , 3-7 pax
+Hiace Luxor to Aswan Roundtrip, transport ,Luxor - Aswan Over Day Tour, per_group ,tour,100 €,9-10 hours, Hiace , 3-7 pax
+Hiace Luxor to Aswan Overnight, transport ,Luxor - Aswan Day Tour (Overnight), per_group ,tour,133 €,48 hours, Hiace , 3-7 pax
+Hiace Luxor to Marsa Alam transfer, transport ,Luxor - Marsa Alam Transfer, per_group ,transfer ,119 €,3-4 hours, Hiace , 3-7 pax
+Hiace Luxor to Hurghada transfer, transport ,Luxor - Hurghada Transfer, per_group ,transfer ,114 €,3-4 hours, Hiace , 3-7 pax
+Hiace Luxor to Hurghada Roundtrip, transport ,Luxor - Hurghada Over Day Tour, per_group ,tour,138 €,9-10 hours, Hiace , 3-7 pax
+Hiace Luxor to Hurghada Overnight, transport ,Luxor - Hurghada Day Tour (Overnight), per_group ,tour,171 €,48 hours, Hiace , 3-7 pax
+Coaster Luxor Airport Pickup , transport ,Luxor Airport-Hotel , per_group ,transfer ,26 €, One-way airport pickup , Coaster , 8-14 pax
+Coaster Luxor Airport Dropoff , transport ,Hotel-Luxor Airport , per_group ,transfer ,26 €, One-way airport dropoff , Coaster , 8-14 pax
+Coaster Luxor Airport Roundtrip , transport ,Luxor Airport-Hotel-Airport , per_group ,transfer ,121 €, Round-trip airport service , Coaster , 8-14 pax
+Coaster Luxor Airport Pickup to West Bank, transport ,Luxor Airport-West Bank Hotel , per_group ,transfer ,19 €, One-way airport pickup , Coaster , 8-14 pax
+Coaster Luxor Airport Dropoff From West Bank, transport ,West Bank Hotel -Luxor Airport , per_group ,transfer ,19 €, One-way airport dropoff , Coaster , 8-14 pax
+Coaster Luxor Airport Roundtrip West Bank, transport ,Luxor Airport-West Bank Hotel-Airport , per_group ,transfer ,38 €, Round-trip airport service , Coaster , 8-14 pax
+Coaster Station Pickup , transport ,Luxor Station-Hotel , per_group ,transfer ,11 €, One-way airport pickup , Coaster , 8-14 pax
+Coaster Station Dropoff , transport ,Hotel-Luxor Station , per_group ,transfer ,11 €, One-way airport dropoff , Coaster , 8-14 pax
+Coaster Station Pickup to West Bank, transport ,Luxor Station West Bank Hotel , per_group ,transfer ,11 €, One-way airport pickup , Coaster , 8-14 pax
+Coaster Station Dropoff From West Bank, transport ,Luxor Station- West Bank Hotel , per_group ,transfer ,11 €, One-way airport dropoff , Coaster , 8-14 pax
+Coaster Luxor (Karnak & Luxor Temples), transport ,Luxor City Day Tour, per_group ,tour,26 €, 4-hour city tour , Coaster , 8-14 pax
+Coaster Luxor (West Bank 3 Stops), transport ,Luxor City Day Tour, per_group ,tour,30 €, 12-hour city tour , Coaster , 8-14 pax
+Coaster Luxor (East and West Bank), transport ,Luxor City Day Tour, per_group ,tour,101 €, 8-hour city tour , Coaster , 8-14 pax
+Coaster Luxor (Full Day West Bank), transport ,Luxor City Day Tour, per_group ,tour,78 €, 8-hour city tour , Coaster , 8-14 pax
+Coaster Luxor (Luxor Museum), transport ,Luxor City Day Tour, per_group ,tour,18 €, 8-hour city tour , Coaster , 8-14 pax
+Coaster Luxor Outside Dinner, transport ,Luxor Dinner Transfer, per_group ,transfer ,39 €,2 hours, Coaster , 8-14 pax
+Coaster Luxor City Transfer, transport ,Luxor Dinner Transfer, per_group ,transfer ,18 €,2 hours, Coaster , 8-14 pax
+Coaster Luxor Sound & light Show Return Transfer, transport ,Luxor S&L Transfer, per_group ,transfer ,19 €,3 hours, Coaster , 8-14 pax
+Coaster Luxor to Dendera Transfer, transport ,Luxor - Dendera  Day Tour, per_group ,transfer ,57 €,3 hours, Coaster , 8-14 pax
+Coaster Luxor to Dendera & Abydos Transfer, transport ,Luxor - Dendera & Abydos Day Tour, per_group ,transfer ,136 €,3 hours, Coaster , 8-14 pax
+Coaster Luxor to Aswan transfer, transport ,Luxor - Aswan City Transfer, per_group ,transfer ,136 €,3-4 hours, Coaster , 8-14 pax
+Coaster Luxor to Aswan Roundtrip, transport ,Luxor - Aswan Over Day Tour, per_group ,tour,154 €,9-10 hours, Coaster , 8-14 pax
+Coaster Luxor to Aswan Overnight, transport ,Luxor - Aswan Day Tour (Overnight), per_group ,tour,222 €,48 hours, Coaster , 8-14 pax
+Coaster Luxor to Marsa Alam transfer, transport ,Luxor - Marsa Alam Day Tour (Overnight), per_group ,tour,217 €,48 hours, Coaster , 8-14 pax
+Coaster Luxor to Hurghada transfer, transport ,Luxor - Hurghada Transfer, per_group ,transfer ,165 €,3-4 hours, Coaster , 8-14 pax
+Coaster Luxor to Hurghada Roundtrip, transport ,Luxor - Hurghada Over Day Tour, per_group ,tour,214 €,9-10 hours, Coaster , 8-14 pax
+Coaster Luxor to Hurghada Overnight, transport ,Luxor - Hurghada Day Tour (Overnight), per_group ,tour,280 €,48 hours, Coaster , 8-14 pax
+Coach Luxor Airport Pickup , transport ,Luxor Airport-Hotel , per_group ,transfer ,41 €, One-way airport pickup ,Coach, 15-38 pax
+Coach Luxor Airport Dropoff , transport ,Hotel-Luxor Airport , per_group ,transfer ,41 €, One-way airport dropoff ,Coach, 15-38 pax
+Coach Luxor Airport Roundtrip , transport ,Luxor Airport-Hotel-Airport , per_group ,transfer ,291 €, Round-trip airport service ,Coach, 15-38 pax
+Coach Luxor Airport Pickup to West Bank, transport ,Luxor Airport-West Bank Hotel , per_group ,transfer ,59 €, One-way airport pickup ,Coach, 15-38 pax
+Coach Luxor Airport Dropoff From West Bank, transport ,West Bank Hotel -Luxor Airport , per_group ,transfer ,59 €, One-way airport dropoff ,Coach, 15-38 pax
+Coach Luxor Airport Roundtrip West Bank, transport ,Luxor Airport-West Bank Hotel-Airport , per_group ,transfer ,284 €, Round-trip airport service ,Coach, 15-38 pax
+Coach Station Pickup , transport ,Luxor Station-Hotel , per_group ,transfer ,31 €, One-way airport pickup ,Coach, 15-38 pax
+Coach Station Dropoff , transport ,Hotel-Luxor Station , per_group ,transfer ,31 €, One-way airport dropoff ,Coach, 15-38 pax
+Coach Station Pickup to West Bank, transport ,Luxor Station West Bank Hotel , per_group ,transfer ,31 €, One-way airport pickup ,Coach, 15-38 pax
+Coach Station Dropoff From West Bank, transport ,Luxor Station- West Bank Hotel , per_group ,transfer ,31 €, One-way airport dropoff ,Coach, 15-38 pax
+Coach Luxor (Karnak & Luxor Temples), transport ,Luxor City Day Tour, per_group ,tour,64 €, 4-hour city tour ,Coach, 15-38 pax
+Coach Luxor (West Bank 3 Stops), transport ,Luxor City Day Tour, per_group ,tour,75 €, 12-hour city tour ,Coach, 15-38 pax
+Coach Luxor (East and West Bank), transport ,Luxor City Day Tour, per_group ,tour,256 €, 8-hour city tour ,Coach, 15-38 pax
+Coach Luxor (Full Day West Bank), transport ,Luxor City Day Tour, per_group ,tour,190 €, 8-hour city tour ,Coach, 15-38 pax
+Coach Luxor (Luxor Museum), transport ,Luxor City Day Tour, per_group ,tour,40 €, 8-hour city tour ,Coach, 15-38 pax
+Coach Luxor Outside Dinner, transport ,Luxor Dinner Transfer, per_group ,transfer ,42 €,2 hours,Coach, 15-38 pax
+Coach Luxor City Transfer, transport ,Luxor Dinner Transfer, per_group ,transfer ,40 €,2 hours,Coach, 15-38 pax
+Coach Luxor Sound & light Show Return Transfer, transport ,Luxor S&L Transfer, per_group ,transfer ,49 €,3 hours,Coach, 15-38 pax
+Coach Luxor to Dendera Transfer, transport ,Luxor - Dendera  Day Tour, per_group ,transfer ,144 €,3 hours,Coach, 15-38 pax
+Coach Luxor to Dendera & Abydos Transfer, transport ,Luxor - Dendera & Abydos Day Tour, per_group ,transfer ,282 €,3 hours,Coach, 15-38 pax
+Coach Luxor to Aswan transfer, transport ,Luxor - Aswan City Transfer, per_group ,transfer ,272 €,3-4 hours,Coach, 15-38 pax
+Coach Luxor to Aswan Roundtrip, transport ,Luxor - Aswan Over Day Tour, per_group ,tour,325 €,9-10 hours,Coach, 15-38 pax
+Coach Luxor to Aswan Overnight, transport ,Luxor - Aswan Day Tour (Overnight), per_group ,tour,405 €,48 hours,Coach, 15-38 pax
+Coach Luxor to Marsa Alam transfer, transport ,Luxor - Marsa Alam Transfer, per_group ,transfer ,402 €,3-4 hours,Coach, 15-38 pax
+Coach Luxor to Hurghada transfer, transport ,Luxor - Hurghada Transfer, per_group ,transfer ,327 €,3-4 hours,Coach, 15-38 pax
+Coach Luxor to Hurghada Roundtrip, transport ,Luxor - Hurghada Over Day Tour, per_group ,tour,477 €,9-10 hours,Coach, 15-38 pax
+Coach Luxor to Hurghada Overnight, transport ,Luxor - Hurghada Day Tour (Overnight), per_group ,tour,550 €,48 hours,Coach, 15-38 pax
+Sedan Hurghada Airport Pickup , transport ,Hurghada Airport Pickup, per_group ,transfer ,19 €, One-way airport pickup , Sedan , 1-2 pax
+Sedan Hurghada Airport Dropoff , transport ,Hurghada Airport Dropoff, per_group ,transfer ,19 €, One-way airport dropoff , Sedan , 1-2 pax
+Sedan Hurghada (Hurghada Museum), transport ,Hurghada Museum, per_group ,tour,21 €, 8-hour city tour , Sedan , 1-2 pax
+Sedan Hurghada Outside Dinner, transport ,Outside Dinner, per_group ,transfer ,21 €,2 hours, Sedan , 1-2 pax
+Sedan Hurghada City Transfer, transport ,City Transfer, per_group ,transfer ,21 €,2 hours, Sedan , 1-2 pax
+Sedan Hurghada to Dendera & Abydos Transfer, transport ,Hurghada to Dendera & Abydos Transfer, per_group ,tour,125 €,3 hours, Sedan , 1-2 pax
+Sedan Hurghada to Cairo transfer, transport ,Hurghada to Cairo Transfer, per_group ,transfer ,120 €,3-4 hours, Sedan , 1-2 pax
+Sedan Hurghada to Cairo Roundtrip, transport ,Hurghada to Cairo Roundtrip, per_group ,tour,143 €,9-10 hours, Sedan , 1-2 pax
+Sedan Hurghada to Cairo Overnight, transport ,Hurghada to Cairo Overnight, per_group ,tour,202 €,48 hours, Sedan , 1-2 pax
+Sedan Hurghada to Luxor Transfer, transport ,Hurghada to Luxor Transfer, per_group ,transfer ,120 €,3-4 hours, Sedan , 1-2 pax
+Sedan Hurghada to Luxor Roundtrip, transport ,Hurghada to Luxor Roundtrip, per_group ,tour,143 €,9-10 hours, Sedan , 1-2 pax
+Sedan Hurghada to Luxor Overnight, transport ,Hurghada to Luxor Overnight, per_group ,tour,173 €,48 hours, Sedan , 1-2 pax
+Hiace Hurghada Airport Pickup, transport ,Hurghada Airport Pickup, per_group ,transfer ,21 €, One-way airport pickup ,Hiace, 3-7 pax
+Hiace Hurghada Airport Dropoff, transport ,Hurghada Airport Dropoff, per_group ,transfer ,21 €, One-way airport dropoff ,Hiace, 3-7 pax
+Hiace Hurghada (Hurghada Museum), transport ,Hurghada Museum, per_group ,tour,26 €, 8-hour city tour ,Hiace, 3-7 pax
+Hiace Hurghada Outside Dinner, transport ,Outside Dinner, per_group ,transfer ,26 €,2 hours,Hiace, 3-7 pax
+Hiace Hurghada City Transfer, transport ,City Transfer, per_group ,transfer ,26 €,2 hours,Hiace, 3-7 pax
+Hiace Hurghada to Dendera & Abydos Transfer, transport ,Hurghada to Dendera & Abydos Transfer, per_group ,tour,145 €,3 hours,Hiace, 3-7 pax
+Hiace Hurghada to Cairo transfer, transport ,Hurghada to Cairo Transfer, per_group ,transfer ,151 €,3-4 hours,Hiace, 3-7 pax
+Hiace Hurghada to Cairo Roundtrip, transport ,Hurghada to Cairo  Roundtrip, per_group ,tour,177 €,9-10 hours,Hiace, 3-7 pax
+Hiace Hurghada to Cairo Overnight, transport ,Hurghada to Cairo Overnight, per_group ,tour,265 €,48 hours,Hiace, 3-7 pax
+Hiace Hurghada to Luxor Transfer, transport ,Hurghada to Luxor Transfer, per_group ,transfer ,145 €,3-4 hours,Hiace, 3-7 pax
+Hiace Hurghada to Luxor Roundtrip, transport ,Hurghada to Luxor Roundtrip, per_group ,tour,155 €,9-10 hours,Hiace, 3-7 pax
+Hiace Hurghada to Luxor Overnight, transport ,Hurghada to Luxor Overnight, per_group ,tour,237 €,48 hours,Hiace, 3-7 pax
+Coaster Hurghada Airport Pickup, transport ,Hurghada Airport Pickup, per_group ,transfer ,35 €, One-way airport pickup ,Coaster, 8-14 pax
+Coaster Hurghada Airport Dropoff, transport ,Hurghada Airport Dropoff, per_group ,transfer ,35 €, One-way airport dropoff ,Coaster, 8-14 pax
+Coaster Hurghada (Hurghada Museum), transport ,Hurghada Museum, per_group ,tour,40 €, 8-hour city tour ,Coaster, 8-14 pax
+Coaster Hurghada Outside Dinner, transport ,Outside Dinner, per_group ,transfer ,40 €,2 hours,Coaster, 8-14 pax
+Coaster Hurghada City Transfer, transport ,City Transfer, per_group ,transfer ,40 €,2 hours,Coaster, 8-14 pax
+Coaster Hurghada to Dendera & Abydos Transfer, transport ,Hurghada to Dendera & Abydos Transfer, per_group ,tour,188 €,3 hours,Coaster, 8-14 pax
+Coaster Hurghada to Cairo transfer, transport ,Hurghada to Cairo Transfer, per_group ,transfer ,190 €,3-4 hours,Coaster, 8-14 pax
+Coaster Hurghada to Cairo Roundtrip, transport ,Hurghada to Cairo Roundtrip, per_group ,tour,230 €,9-10 hours,Coaster, 8-14 pax
+Coaster Hurghada to Cairo Overnight, transport ,Hurghada to Cairo Overnight, per_group ,tour,334 €,48 hours,Coaster, 8-14 pax
+Coaster Hurghada to Luxor Transfer, transport ,Hurghada to Luxor Transfer, per_group ,transfer ,188 €,3-4 hours,Coaster, 8-14 pax
+Coaster Hurghada to Luxor Roundtrip, transport ,Hurghada to Luxor Roundtrip, per_group ,tour,201 €,9-10 hours,Coaster, 8-14 pax
+Coaster Hurghada to Luxor Overnight, transport ,Hurghada to Luxor Overnight, per_group ,tour,308 €,48 hours,Coaster, 8-14 pax
+Coach Hurghada Airport Pickup, transport ,Hurghada Airport Pickup, per_group ,transfer ,42 €, One-way airport pickup ,Coach, 15-38 pax
+Coach Hurghada Airport Dropoff, transport ,Hurghada Airport Dropoff, per_group ,transfer ,42 €, One-way airport dropoff ,Coach, 15-38 pax
+Coach Hurghada (Hurghada Museum), transport ,Hurghada Museum, per_group ,tour,51 €, 8-hour city tour ,Coach, 15-38 pax
+Coach Hurghada Outside Dinner, transport ,Outside Dinner, per_group ,transfer ,51 €,2 hours,Coach, 15-38 pax
+Coach Hurghada City Transfer, transport ,City Transfer, per_group ,transfer ,51 €,2 hours,Coach, 15-38 pax
+Coach Hurghada to Dendera & Abydos Transfer, transport ,Hurghada to Dendera & Abydos Transfer, per_group ,tour,230 €,3 hours,Coach, 15-38 pax
+Coach Hurghada to Cairo transfer, transport ,Hurghada to Cairo Transfer, per_group ,transfer ,245 €,3-4 hours,Coach, 15-38 pax
+Coach Hurghada to Cairo Roundtrip, transport ,Hurghada to Cairo Roundtrip, per_group ,tour,290 €,9-10 hours,Coach, 15-38 pax
+Coach Hurghada to Cairo Overnight, transport ,Hurghada to Cairo Overnight, per_group ,tour,407 €,48 hours,Coach, 15-38 pax
+Coach Hurghada to Luxor Transfer, transport ,Hurghada to Luxor Transfer, per_group ,transfer ,230 €,3-4 hours,Coach, 15-38 pax
+Coach Hurghada to Luxor Roundtrip, transport ,Hurghada to Luxor Roundtrip, per_group ,tour,250 €,9-10 hours,Coach, 15-38 pax
+Coach Hurghada to Luxor Overnight, transport ,Hurghada to Luxor Overnight, per_group ,tour,375 €,48 hours,Coach, 15-38 pax
+Sedan Sharm El-Sheikh Airport Pickup , transport ,Sharm El-Sheikh Airport-Hotel , per_group ,transfer ,0 €, One-way airport pickup , Sedan , 1-2 pax
+Sedan Sharm El-Sheikh Airport Dropoff , transport ,Hotel-Sharm El-Sheikh Airport , per_group ,transfer ,0 €, One-way airport dropoff , Sedan , 1-2 pax
+Sedan Sharm El-Sheikh Airport Roundtrip , transport ,Sharm El-Sheikh Airport-Hotel-Airport , per_group ,transfer ,0 €, Round-trip airport service , Sedan , 1-2 pax
+Sedan Sharm El-Sheikh Outside Dinner, transport ,Sharm El-Sheikh Dinner Transfer, per_group ,transfer ,0 €,2 hours, Sedan , 1-2 pax
+Sedan Sharm El-Sheikh City Transfer, transport ,Sharm El-Sheikh Dinner Transfer, per_group ,transfer ,0 €,2 hours, Sedan , 1-2 pax

@@ -114,12 +114,16 @@ export const users = pgTable("users", {
 export const prices = pgTable("prices", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   service_name: text("service_name").notNull(),
-  category: text("category"), // e.g., "Hotel", "Transport", "Tour Guide", etc.
-  description: text("description"),
-  unit_type: text("unit_type").notNull(), // "per_person", "per_group", "per_night", "per_day", "flat_rate"
+  category: text("category"), // e.g., "transport", "accommodation", "tour guide", etc.
+  route_name: text("route_name"), // e.g., "Alexandria Airport Pickup", "Cairo Day Tour"
+  cost_basis: text("cost_basis").notNull(), // "per_person", "per_group", "per_night", "per_day", "flat_rate"
+  unit: text("unit"), // e.g., "transfer", "tour", "night", etc.
   unit_price: real("unit_price").notNull(),
-  currency: text("currency").notNull().default("USD"), // "USD" or "EUR"
-  location: text("location"), // e.g., "Cairo", "Luxor", etc.
+  currency: text("currency").notNull().default("EUR"), // "USD" or "EUR"
+  notes: text("notes"), // Additional notes or description
+  vehicle_type: text("vehicle_type"), // e.g., "Sedan", "Hiace", "Coaster", "Coach"
+  passenger_capacity: text("passenger_capacity"), // e.g., "1-2 pax", "3-7 pax"
+  location: text("location"), // e.g., "Alexandria", "Cairo", "Luxor", etc.
   is_active: boolean("is_active").default(true),
   created_at: timestamp("created_at").defaultNow(),
   updated_at: timestamp("updated_at").defaultNow(),
@@ -186,17 +190,17 @@ export type InsertPrice = z.infer<typeof insertPriceSchema>;
 export type InsertQuotation = z.infer<typeof insertQuotationSchema>;
 export type InsertCsvUpload = z.infer<typeof insertCsvUploadSchema>;
 
-// CSV row schema for validation
+// CSV row schema for validation (matches Alexandria CSV format)
 export const csvRowSchema = z.object({
   service_name: z.string().min(1, "Service name is required"),
   category: z.string().optional(),
-  description: z.string().optional(),
-  unit_type: z.enum(["per_person", "per_group", "per_night", "per_day", "flat_rate"], {
-    errorMap: () => ({ message: "Unit type must be one of: per_person, per_group, per_night, per_day, flat_rate" })
-  }),
-  unit_price: z.coerce.number().positive("Unit price must be positive"),
-  currency: z.enum(["USD", "EUR"]).default("USD"),
-  location: z.string().optional(),
+  route_name: z.string().optional(),
+  cost_basis: z.string().min(1, "Cost basis is required"), // per_person, per_group, etc.
+  unit: z.string().optional(), // transfer, tour, night, etc.
+  base_cost: z.string().min(1, "Base cost is required"), // Will parse "20 €" format
+  notes: z.string().optional(),
+  vehicle_type: z.string().optional(),
+  passenger_capacity: z.string().optional(),
 });
 
 export type CsvRow = z.infer<typeof csvRowSchema>;

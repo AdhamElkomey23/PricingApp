@@ -26,10 +26,14 @@ interface Price {
   id: string;
   service_name: string;
   category: string | null;
-  description: string | null;
-  unit_type: string;
+  route_name: string | null;
+  cost_basis: string;
+  unit: string | null;
   unit_price: number;
   currency: string;
+  notes: string | null;
+  vehicle_type: string | null;
+  passenger_capacity: string | null;
   location: string | null;
   is_active: boolean;
   created_at: string;
@@ -184,7 +188,8 @@ export default function DatabasePage() {
   // Filter prices
   const filteredPrices = prices.filter(price => {
     const matchesSearch = price.service_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         price.description?.toLowerCase().includes(searchTerm.toLowerCase());
+                         price.route_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         price.notes?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = !categoryFilter || price.category === categoryFilter;
     const matchesCurrency = !currencyFilter || price.currency === currencyFilter;
     return matchesSearch && matchesCategory && matchesCurrency;
@@ -218,11 +223,13 @@ export default function DatabasePage() {
           <FileText className="h-4 w-4" />
           <AlertDescription>
             <strong>CSV Format:</strong> Your CSV file should include these columns: 
-            <code className="mx-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">
-              service_name, category, description, unit_type, unit_price, currency, location
+            <code className="mx-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs">
+              Service Name, Category, Route Name, Cost Basis, Unit, Base Cost, Notes, Vehicle Type, Passenger Capacity
             </code>
             <br/>
-            <strong>Unit Types:</strong> per_person, per_group, per_night, per_day, flat_rate
+            <strong>Example Base Cost:</strong> "20 €" or "45 $" (currency will be auto-detected)
+            <br/>
+            <strong>Cost Basis:</strong> per_person, per_group, per_night, per_day, flat_rate
           </AlertDescription>
         </Alert>
 
@@ -265,7 +272,7 @@ export default function DatabasePage() {
 
                   <div className="text-sm text-gray-600 dark:text-gray-400">
                     <a
-                      href="data:text/csv;charset=utf-8,service_name,category,description,unit_type,unit_price,currency,location%0AAirport Transfer,Transport,Transfer from Cairo Airport,per_group,45,USD,Cairo%0AHotel Night,Accommodation,Standard hotel room,per_night,80,USD,Cairo"
+                      href="data:text/csv;charset=utf-8,Service Name,Category,Route Name,Cost Basis,Unit,Base Cost,Notes,Vehicle Type,Passenger Capacity%0ASedan Alexandria Airport Pickup,transport,Alexandria Airport Pickup,per_group,transfer,20 €,One-way airport pickup,Sedan,1-2 pax%0AHiace Cairo Day Tour 8 Hours,transport,Cairo Day Tour 8 Hours,per_group,tour,69 €,8-hour city tour,Hiace,3-7 pax"
                       download="pricing_template.csv"
                       className="text-blue-600 dark:text-blue-400 hover:underline"
                       data-testid="link-download-template"
@@ -414,10 +421,12 @@ export default function DatabasePage() {
                         <TableRow>
                           <TableHead>Service Name</TableHead>
                           <TableHead>Category</TableHead>
-                          <TableHead>Unit Type</TableHead>
+                          <TableHead>Cost Basis</TableHead>
+                          <TableHead>Unit</TableHead>
                           <TableHead>Price</TableHead>
+                          <TableHead>Vehicle</TableHead>
                           <TableHead>Location</TableHead>
-                          <TableHead>Description</TableHead>
+                          <TableHead>Notes</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -429,17 +438,23 @@ export default function DatabasePage() {
                             <TableCell data-testid={`text-category-${price.id}`}>
                               {price.category || '-'}
                             </TableCell>
-                            <TableCell data-testid={`text-unit-type-${price.id}`}>
-                              <Badge variant="outline">{price.unit_type}</Badge>
+                            <TableCell data-testid={`text-cost-basis-${price.id}`}>
+                              <Badge variant="outline">{price.cost_basis}</Badge>
+                            </TableCell>
+                            <TableCell data-testid={`text-unit-${price.id}`}>
+                              {price.unit || '-'}
                             </TableCell>
                             <TableCell className="font-semibold" data-testid={`text-price-${price.id}`}>
                               {price.currency} {price.unit_price.toFixed(2)}
                             </TableCell>
+                            <TableCell data-testid={`text-vehicle-${price.id}`}>
+                              {price.vehicle_type ? `${price.vehicle_type} (${price.passenger_capacity})` : '-'}
+                            </TableCell>
                             <TableCell data-testid={`text-location-${price.id}`}>
                               {price.location || '-'}
                             </TableCell>
-                            <TableCell className="max-w-xs truncate" data-testid={`text-description-${price.id}`}>
-                              {price.description || '-'}
+                            <TableCell className="max-w-xs truncate" data-testid={`text-notes-${price.id}`}>
+                              {price.notes || '-'}
                             </TableCell>
                           </TableRow>
                         ))}

@@ -202,19 +202,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Process each record
       for (let i = 0; i < records.length; i++) {
-        const record = records[i];
+        const record = records[i] as any;
         try {
-          // Validate and transform CSV row
-          const validatedRow = csvRowSchema.parse(record);
+          // Normalize column names (trim spaces)
+          const normalizedRecord: any = {};
+          for (const [key, value] of Object.entries(record)) {
+            normalizedRecord[key.trim()] = value;
+          }
+
+          // Map CSV columns to expected schema
+          const mappedRecord = {
+            service_name: normalizedRecord['Service Name'],
+            category: normalizedRecord['Category'],
+            route_name: normalizedRecord['Route Name'],
+            cost_basis: normalizedRecord['Cost Basis'],
+            unit: normalizedRecord['Unit'],
+            base_cost: normalizedRecord['Base Cost'],
+            notes: normalizedRecord['Notes'],
+            vehicle_type: normalizedRecord['Vehicle Type'],
+            passenger_capacity: normalizedRecord['Passenger Capacity']
+          };
+
+          // Validate CSV row
+          const validatedRow = csvRowSchema.parse(mappedRecord);
           
+          // Parse base_cost to extract unit_price and currency
+          // Format: "20 €" or "96 €" or "." (missing)
+          let unitPrice = 0;
+          let currency = 'EUR';
+          
+          const baseCostStr = validatedRow.base_cost.trim();
+          if (baseCostStr && baseCostStr !== '.') {
+            // Remove currency symbols and parse number
+            const priceMatch = baseCostStr.match(/([0-9.]+)\s*([€$])/);
+            if (priceMatch) {
+              unitPrice = parseFloat(priceMatch[1]);
+              currency = priceMatch[2] === '€' ? 'EUR' : 'USD';
+            } else {
+              // Try to parse as plain number
+              const parsed = parseFloat(baseCostStr);
+              if (!isNaN(parsed)) {
+                unitPrice = parsed;
+              }
+            }
+          }
+
+          // Extract location from service_name or route_name
+          const locationMatch = (validatedRow.service_name || validatedRow.route_name || '').match(/(Alexandria|Cairo|Luxor|Aswan|Marsa Matrouh|Bahariya Oasis|Siwa Oasis)/i);
+          const location = locationMatch ? locationMatch[1] : null;
+
           pricesToCreate.push({
             service_name: validatedRow.service_name,
             category: validatedRow.category || null,
-            description: validatedRow.description || null,
-            unit_type: validatedRow.unit_type,
-            unit_price: validatedRow.unit_price,
-            currency: validatedRow.currency,
-            location: validatedRow.location || null,
+            route_name: validatedRow.route_name || null,
+            cost_basis: validatedRow.cost_basis,
+            unit: validatedRow.unit || null,
+            unit_price: unitPrice,
+            currency: currency,
+            notes: validatedRow.notes || null,
+            vehicle_type: validatedRow.vehicle_type || null,
+            passenger_capacity: validatedRow.passenger_capacity || null,
+            location: location,
             is_active: true
           });
           

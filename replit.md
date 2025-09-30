@@ -10,6 +10,15 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (September 30, 2025)
 
+**Database Schema Update for Alexandria Format:**
+- Updated prices table schema to match Alexandria CSV format
+- New fields: route_name, cost_basis, unit, notes, vehicle_type, passenger_capacity
+- Removed old fields: description, unit_type
+- CSV format now accepts: "Service Name, Category, Route Name, Cost Basis, Unit, Base Cost, Notes, Vehicle Type, Passenger Capacity"
+- Base Cost parsing: Automatically extracts price and currency from formats like "20 €" or "45 $"
+- Location auto-detection: Extracts city/region from service name or route name (Alexandria, Cairo, Luxor, Aswan, etc.)
+- Default currency changed from USD to EUR to match Alexandria pricing
+
 **Database Simplification:**
 - Removed complex multi-table pricing structure (service_categories, service_items, pricing_rates, tours, tour_versions, tour_services, excel_uploads)
 - Implemented streamlined 4-table schema: users, prices, quotations, csv_uploads

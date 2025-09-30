@@ -202,6 +202,7 @@ export const csvRowSchema = z.object({
   notes: z.string().optional(),
   vehicle_type: z.string().optional(),
   passenger_capacity: z.string().optional(),
+  location: z.string().optional(), // For multi-city uploads
 });
 
 export type CsvRow = z.infer<typeof csvRowSchema>;

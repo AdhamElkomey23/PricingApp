@@ -160,7 +160,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const city = req.body.city;
     
     if (!city) {
-      return res.status(400).json({ error: 'City is required' });
+      return res.status(400).json({ error: 'Upload type is required' });
     }
 
     const uploadData = {
@@ -168,7 +168,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       original_filename: req.file.originalname,
       file_path: req.file.path,
       file_size: req.file.size,
-      city: city,
+      city: city, // This will be "multi-city" for bulk uploads or a specific city name
       status: 'pending' as const,
       uploaded_by: req.body.uploaded_by || null
     };
@@ -227,7 +227,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             base_cost: normalizedRecord['Base Cost'],
             notes: normalizedRecord['Notes'],
             vehicle_type: normalizedRecord['Vehicle Type'],
-            passenger_capacity: normalizedRecord['Passenger Capacity']
+            passenger_capacity: normalizedRecord['Passenger Capacity'],
+            location: normalizedRecord['Location']
           };
 
           // Validate CSV row
@@ -254,9 +255,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           }
 
-          // Use city from upload record as location
-          // This ensures all prices from this CSV are tagged with the assigned city
-          const location = upload.city;
+          // Determine location based on upload type
+          let location;
+          if (upload.city === 'multi-city') {
+            // For multi-city uploads, use the Location column from CSV
+            location = validatedRow.location || null;
+          } else {
+            // For single-city uploads, use the assigned city
+            location = upload.city;
+          }
 
           pricesToCreate.push({
             service_name: validatedRow.service_name,

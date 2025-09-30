@@ -239,8 +239,8 @@ export default function DatabasePage() {
 
     if (!selectedCity.trim()) {
       toast({
-        title: "City Required",
-        description: "Please select a city before uploading",
+        title: "Upload Type Required",
+        description: "Please select an upload type before uploading",
         variant: "destructive",
       });
       return;
@@ -343,12 +343,14 @@ export default function DatabasePage() {
           <AlertDescription>
             <strong>CSV Format:</strong> Your CSV file should include these columns: 
             <code className="mx-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs">
-              Service Name, Category, Route Name, Cost Basis, Unit, Base Cost, Notes, Vehicle Type, Passenger Capacity
+              Service Name, Category, Route Name, Cost Basis, Unit, Base Cost, Notes, Vehicle Type, Passenger Capacity, Location
             </code>
             <br/>
             <strong>Example Base Cost:</strong> "20 €" or "45 $" (currency will be auto-detected)
             <br/>
             <strong>Cost Basis:</strong> per_person, per_group, per_night, per_day, flat_rate
+            <br/>
+            <strong>Location:</strong> Required for multi-city uploads (e.g., "Alexandria", "Cairo", "Luxor")
           </AlertDescription>
         </Alert>
 
@@ -372,7 +374,7 @@ export default function DatabasePage() {
                   {/* City Selection */}
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      Assign to City
+                      Upload Type
                     </label>
                     <select
                       className="w-full border rounded-md px-3 py-2 bg-background text-foreground"
@@ -380,17 +382,23 @@ export default function DatabasePage() {
                       onChange={(e) => setSelectedCity(e.target.value)}
                       data-testid="select-city"
                     >
-                      <option value="">Select a city...</option>
-                      <option value="Alexandria">Alexandria</option>
-                      <option value="Cairo">Cairo</option>
-                      <option value="Luxor">Luxor</option>
-                      <option value="Aswan">Aswan</option>
-                      <option value="Hurghada">Hurghada</option>
-                      <option value="Sharm El-Sheikh">Sharm El-Sheikh</option>
-                      <option value="Marsa Matrouh">Marsa Matrouh</option>
-                      <option value="Bahariya Oasis">Bahariya Oasis</option>
-                      <option value="Siwa Oasis">Siwa Oasis</option>
+                      <option value="">Select upload type...</option>
+                      <option value="multi-city">Multi-City (uses Location column from CSV)</option>
+                      <option value="Alexandria">Single City: Alexandria</option>
+                      <option value="Cairo">Single City: Cairo</option>
+                      <option value="Luxor">Single City: Luxor</option>
+                      <option value="Aswan">Single City: Aswan</option>
+                      <option value="Hurghada">Single City: Hurghada</option>
+                      <option value="Sharm El-Sheikh">Single City: Sharm El-Sheikh</option>
+                      <option value="Marsa Matrouh">Single City: Marsa Matrouh</option>
+                      <option value="Bahariya Oasis">Single City: Bahariya Oasis</option>
+                      <option value="Siwa Oasis">Single City: Siwa Oasis</option>
                     </select>
+                    {selectedCity === "multi-city" && (
+                      <div className="text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950 p-2 rounded">
+                        <strong>Multi-City Mode:</strong> Your CSV should include a "Location" column with city names. Each record will be assigned to its respective city.
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-4">
@@ -415,7 +423,7 @@ export default function DatabasePage() {
 
                   <div className="text-sm text-gray-600 dark:text-gray-400">
                     <a
-                      href="data:text/csv;charset=utf-8,Service Name,Category,Route Name,Cost Basis,Unit,Base Cost,Notes,Vehicle Type,Passenger Capacity%0ASedan Alexandria Airport Pickup,transport,Alexandria Airport Pickup,per_group,transfer,20 €,One-way airport pickup,Sedan,1-2 pax%0AHiace Cairo Day Tour 8 Hours,transport,Cairo Day Tour 8 Hours,per_group,tour,69 €,8-hour city tour,Hiace,3-7 pax"
+                      href="data:text/csv;charset=utf-8,Service Name,Category,Route Name,Cost Basis,Unit,Base Cost,Notes,Vehicle Type,Passenger Capacity,Location%0ASedan Alexandria Airport Pickup,transport,Alexandria Airport Pickup,per_group,transfer,20 €,One-way airport pickup,Sedan,1-2 pax,Alexandria%0AHiace Cairo Day Tour 8 Hours,transport,Cairo Day Tour 8 Hours,per_group,tour,69 €,8-hour city tour,Hiace,3-7 pax,Cairo"
                       download="pricing_template.csv"
                       className="text-blue-600 dark:text-blue-400 hover:underline"
                       data-testid="link-download-template"

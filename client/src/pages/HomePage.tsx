@@ -4,7 +4,7 @@ import { ThemeProvider } from "next-themes";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Database, MapPin, Plus, Moon, Sun } from "lucide-react";
+import { Database, MapPin, Plus, Moon, Sun, Sparkles } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export default function HomePage() {
@@ -50,7 +50,7 @@ export default function HomePage() {
             </div>
 
             {/* Navigation Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* New Tour Card */}
               <Link href="/new">
                 <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-2 hover:border-primary">
@@ -115,6 +115,29 @@ export default function HomePage() {
                     </Badge>
                     <p className="text-sm text-muted-foreground">
                       Add services, update pricing rates, and manage service categories
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
+
+              {/* AI Chatbot Card */}
+              <Link href="/chatbot">
+                <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-2 hover:border-primary">
+                  <CardHeader className="text-center pb-4">
+                    <div className="mx-auto mb-4 p-3 bg-purple-500/10 rounded-full w-fit">
+                      <Sparkles className="h-8 w-8 text-purple-500" />
+                    </div>
+                    <CardTitle className="text-xl">AI Assistant</CardTitle>
+                    <CardDescription>
+                      Chat with AI database helper
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <Badge variant="default" className="mb-3 bg-purple-500">
+                      AI Powered
+                    </Badge>
+                    <p className="text-sm text-muted-foreground">
+                      Ask questions, search prices, update data using natural language
                     </p>
                   </CardContent>
                 </Card>

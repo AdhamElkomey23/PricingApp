@@ -8,6 +8,7 @@ import HomePage from "@/pages/HomePage";
 import DatabasePage from "@/pages/DatabasePage";
 import ToursPage from "@/pages/ToursPage";
 import NewTourPage from "@/pages/NewTourPage";
+import ChatbotPage from "@/pages/ChatbotPage";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -17,6 +18,7 @@ function Router() {
       <Route path="/database" component={DatabasePage} />
       <Route path="/tours" component={ToursPage} />
       <Route path="/new" component={NewTourPage} />
+      <Route path="/chatbot" component={ChatbotPage} />
       <Route component={NotFound} />
     </Switch>
   );

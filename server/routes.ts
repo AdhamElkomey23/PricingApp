@@ -13,6 +13,7 @@ import {
 } from "@shared/schema";
 import { z } from "zod";
 import { randomUUID } from "crypto";
+import { processUserQuery } from "./aiAssistant";
 
 // Configure multer for file uploads
 const uploadDir = path.join(process.cwd(), 'uploads');
@@ -387,6 +388,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ error: 'Quotation not found' });
     }
     res.status(204).send();
+  }));
+
+  // ========== AI Chatbot ==========
+  app.post('/api/chatbot', asyncHandler(async (req: Request, res: Response) => {
+    const { message, conversationHistory } = req.body;
+    
+    // Validate API key is present
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).json({ 
+        error: 'OpenAI API key not configured',
+        reply: 'Sorry, the AI assistant is not configured properly. Please contact the administrator.'
+      });
+    }
+    
+    // Validate message
+    if (!message || typeof message !== 'string' || message.trim().length === 0) {
+      return res.status(400).json({ 
+        error: 'Invalid message',
+        reply: 'Please provide a valid message.'
+      });
+    }
+
+    if (message.length > 5000) {
+      return res.status(400).json({ 
+        error: 'Message too long',
+        reply: 'Please keep your message under 5000 characters.'
+      });
+    }
+
+    // Validate conversation history
+    let validatedHistory: Array<{ role: "user" | "assistant" | "system"; content: string }> = [];
+    if (conversationHistory && Array.isArray(conversationHistory)) {
+      validatedHistory = conversationHistory
+        .filter((msg: any) => 
+          msg && 
+          typeof msg === 'object' && 
+          (msg.role === 'user' || msg.role === 'assistant' || msg.role === 'system') &&
+          typeof msg.content === 'string'
+        )
+        .slice(-10); // Keep only last 10 messages for context
+    }
+
+    try {
+      const result = await processUserQuery(message, validatedHistory);
+      res.json(result);
+    } catch (error: any) {
+      console.error('Chatbot error:', error);
+      res.status(500).json({ 
+        error: 'Internal server error',
+        reply: `I encountered an error while processing your request: ${error.message}. Please try rephrasing your question.`
+      });
+    }
   }));
 
   // ========== Health Check ==========

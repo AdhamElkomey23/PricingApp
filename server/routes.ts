@@ -6,12 +6,10 @@ import fs from "fs/promises";
 import { parse } from 'csv-parse/sync';
 import { storage } from "./storage";
 import { 
-  insertServiceCategorySchema,
-  insertServiceItemSchema,
-  insertPricingRateSchema,
-  insertTourSchema,
-  insertTourVersionSchema,
-  insertExcelUploadSchema
+  insertPriceSchema,
+  insertCsvUploadSchema,
+  csvRowSchema,
+  type CsvRow
 } from "@shared/schema";
 import { z } from "zod";
 import { randomUUID } from "crypto";
@@ -31,12 +29,11 @@ const upload = multer({
     }
   }),
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['.xlsx', '.xls', '.csv'];
     const ext = path.extname(file.originalname).toLowerCase();
-    if (allowedTypes.includes(ext)) {
+    if (ext === '.csv') {
       cb(null, true);
     } else {
-      cb(new Error('Only Excel (.xlsx, .xls) and CSV files are allowed'));
+      cb(new Error('Only CSV files are allowed'));
     }
   },
   limits: {
@@ -79,348 +76,85 @@ const validateBody = (schema: z.ZodSchema) => {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // ========== Service Categories API ==========
+  // ========== Prices API ==========
 
-  // Get all service categories
-  app.get('/api/pricing/categories', asyncHandler(async (req: Request, res: Response) => {
-    const categories = await storage.getServiceCategories();
-    res.json(categories);
-  }));
-
-  // Get single service category
-  app.get('/api/pricing/categories/:id', asyncHandler(async (req: Request, res: Response) => {
-    const category = await storage.getServiceCategory(req.params.id);
-    if (!category) {
-      return res.status(404).json({ error: 'Service category not found' });
-    }
-    res.json(category);
-  }));
-
-  // Create service category
-  app.post('/api/pricing/categories', validateBody(insertServiceCategorySchema), asyncHandler(async (req: Request, res: Response) => {
-    const category = await storage.createServiceCategory(req.body);
-    res.status(201).json(category);
-  }));
-
-  // Update service category
-  app.put('/api/pricing/categories/:id', validateBody(insertServiceCategorySchema.partial()), asyncHandler(async (req: Request, res: Response) => {
-    const category = await storage.updateServiceCategory(req.params.id, req.body);
-    if (!category) {
-      return res.status(404).json({ error: 'Service category not found' });
-    }
-    res.json(category);
-  }));
-
-  // Delete service category (soft delete)
-  app.delete('/api/pricing/categories/:id', asyncHandler(async (req: Request, res: Response) => {
-    const success = await storage.deleteServiceCategory(req.params.id);
-    if (!success) {
-      return res.status(404).json({ error: 'Service category not found' });
-    }
-    res.status(204).send();
-  }));
-
-  // ========== Service Items API ==========
-
-  // Get all service items (optionally filtered by category)
-  app.get('/api/pricing/services', asyncHandler(async (req: Request, res: Response) => {
-    const categoryId = req.query.categoryId as string;
-    const services = await storage.getServiceItems(categoryId);
-    res.json(services);
-  }));
-
-  // Get single service item
-  app.get('/api/pricing/services/:id', asyncHandler(async (req: Request, res: Response) => {
-    const service = await storage.getServiceItem(req.params.id);
-    if (!service) {
-      return res.status(404).json({ error: 'Service item not found' });
-    }
-    res.json(service);
-  }));
-
-  // Create service item
-  app.post('/api/pricing/services', validateBody(insertServiceItemSchema), asyncHandler(async (req: Request, res: Response) => {
-    const service = await storage.createServiceItem(req.body);
-    res.status(201).json(service);
-  }));
-
-  // Update service item
-  app.put('/api/pricing/services/:id', validateBody(insertServiceItemSchema.partial()), asyncHandler(async (req: Request, res: Response) => {
-    const service = await storage.updateServiceItem(req.params.id, req.body);
-    if (!service) {
-      return res.status(404).json({ error: 'Service item not found' });
-    }
-    res.json(service);
-  }));
-
-  // Delete service item (soft delete)
-  app.delete('/api/pricing/services/:id', asyncHandler(async (req: Request, res: Response) => {
-    const success = await storage.deleteServiceItem(req.params.id);
-    if (!success) {
-      return res.status(404).json({ error: 'Service item not found' });
-    }
-    res.status(204).send();
-  }));
-
-  // ========== Pricing Rates API ==========
-
-  // Get pricing rates with optional filters
-  app.get('/api/pricing/rates', asyncHandler(async (req: Request, res: Response) => {
+  // Get all prices with optional filters
+  app.get('/api/prices', asyncHandler(async (req: Request, res: Response) => {
     const filters = {
-      serviceId: req.query.serviceId as string,
+      serviceName: req.query.serviceName as string,
+      category: req.query.category as string,
       currency: req.query.currency as string,
-      profile: req.query.profile as string,
-      effectiveDate: req.query.effectiveDate as string,
+      location: req.query.location as string,
+      isActive: req.query.isActive ? req.query.isActive === 'true' : undefined,
     };
-    const rates = await storage.getPricingRates(filters);
-    res.json(rates);
+    const pricesList = await storage.getPrices(filters);
+    res.json(pricesList);
   }));
 
-  // Get single pricing rate
-  app.get('/api/pricing/rates/:id', asyncHandler(async (req: Request, res: Response) => {
-    const rate = await storage.getPricingRate(req.params.id);
-    if (!rate) {
-      return res.status(404).json({ error: 'Pricing rate not found' });
+  // Get single price
+  app.get('/api/prices/:id', asyncHandler(async (req: Request, res: Response) => {
+    const price = await storage.getPrice(req.params.id);
+    if (!price) {
+      return res.status(404).json({ error: 'Price not found' });
     }
-    res.json(rate);
+    res.json(price);
   }));
 
-  // Create pricing rate
-  app.post('/api/pricing/rates', validateBody(insertPricingRateSchema), asyncHandler(async (req: Request, res: Response) => {
-    const rate = await storage.createPricingRate(req.body);
-    res.status(201).json(rate);
+  // Create price
+  app.post('/api/prices', validateBody(insertPriceSchema), asyncHandler(async (req: Request, res: Response) => {
+    const price = await storage.createPrice(req.body);
+    res.status(201).json(price);
   }));
 
-  // Update pricing rate
-  app.put('/api/pricing/rates/:id', validateBody(insertPricingRateSchema.partial()), asyncHandler(async (req: Request, res: Response) => {
-    const rate = await storage.updatePricingRate(req.params.id, req.body);
-    if (!rate) {
-      return res.status(404).json({ error: 'Pricing rate not found' });
+  // Update price
+  app.put('/api/prices/:id', validateBody(insertPriceSchema.partial()), asyncHandler(async (req: Request, res: Response) => {
+    const price = await storage.updatePrice(req.params.id, req.body);
+    if (!price) {
+      return res.status(404).json({ error: 'Price not found' });
     }
-    res.json(rate);
+    res.json(price);
   }));
 
-  // Delete pricing rate (soft delete)
-  app.delete('/api/pricing/rates/:id', asyncHandler(async (req: Request, res: Response) => {
-    const success = await storage.deletePricingRate(req.params.id);
+  // Delete price (soft delete)
+  app.delete('/api/prices/:id', asyncHandler(async (req: Request, res: Response) => {
+    const success = await storage.deletePrice(req.params.id);
     if (!success) {
-      return res.status(404).json({ error: 'Pricing rate not found' });
+      return res.status(404).json({ error: 'Price not found' });
     }
     res.status(204).send();
   }));
 
-  // Bulk upsert pricing rates (for Excel import)
-  app.post('/api/pricing/rates/bulk', asyncHandler(async (req: Request, res: Response) => {
-    const ratesData = req.body.rates;
-    if (!Array.isArray(ratesData)) {
-      return res.status(400).json({ error: 'rates must be an array' });
-    }
-
-    const results = {
-      created: 0,
-      updated: 0,
-      errors: [] as any[]
-    };
-
-    for (const rateData of ratesData) {
-      try {
-        const validatedData = insertPricingRateSchema.parse(rateData);
-        const rate = await storage.createPricingRate(validatedData);
-        results.created++;
-      } catch (error) {
-        results.errors.push({ data: rateData, error: error.message });
-      }
-    }
-
-    res.json(results);
+  // Bulk create prices
+  app.post('/api/prices/bulk', validateBody(z.object({ prices: z.array(insertPriceSchema) })), asyncHandler(async (req: Request, res: Response) => {
+    const created = await storage.bulkCreatePrices(req.body.prices);
+    res.status(201).json({ 
+      message: `Successfully created ${created.length} prices`,
+      prices: created
+    });
   }));
 
-  // Import transportation data
-  app.post('/api/import/transportation', asyncHandler(async (req: Request, res: Response) => {
-    const { transportationData } = await import('./importTransportationData');
+  // ========== CSV Uploads API ==========
 
-    const results = {
-      categoriesCreated: 0,
-      servicesCreated: 0,
-      ratesCreated: 0,
-      errors: [] as any[]
-    };
-
-    try {
-      // Create or get transport category
-      let transportCategory = await storage.getServiceCategoryByName('Transportation');
-      if (!transportCategory) {
-        transportCategory = await storage.createServiceCategory({
-          name: 'Transportation',
-          description: 'Transportation services including airport transfers, tours and intercity travel'
-        });
-        results.categoriesCreated++;
-      }
-
-      // Process each transportation service
-      for (const data of transportationData) {
-        try {
-          // Create service item
-          const serviceItem = await storage.createServiceItem({
-            category_id: transportCategory.id,
-            name: data.serviceName,
-            description: data.notes,
-            unit_type: data.costBasis,
-            default_quantity: 1
-          });
-          results.servicesCreated++;
-
-          // Create pricing rate for EUR
-          await storage.createPricingRate({
-            service_id: serviceItem.id,
-            currency: 'EUR' as any,
-            profile: 'Base' as any,
-            unit_price: data.baseCost,
-            effective_from: new Date(),
-            is_active: true
-          });
-          results.ratesCreated++;
-
-          // Create pricing rate for USD (converted at 1.08 rate)
-          await storage.createPricingRate({
-            service_id: serviceItem.id,
-            currency: 'USD' as any,
-            profile: 'Base' as any,
-            unit_price: Math.round(data.baseCost * 1.08 * 100) / 100,
-            effective_from: new Date(),
-            is_active: true
-          });
-          results.ratesCreated++;
-
-        } catch (error) {
-          results.errors.push({ service: data.serviceName, error: error.message });
-        }
-      }
-
-      res.json(results);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }));
-
-  // ========== Tours API ==========
-
-  // Get all tours with optional filters
-  app.get('/api/tours', asyncHandler(async (req: Request, res: Response) => {
-    const filters = {
-      status: req.query.status as string,
-      createdBy: req.query.createdBy as string,
-    };
-    const tours = await storage.getTours(filters);
-    res.json(tours);
-  }));
-
-  // Get single tour
-  app.get('/api/tours/:id', asyncHandler(async (req: Request, res: Response) => {
-    const tour = await storage.getTour(req.params.id);
-    if (!tour) {
-      return res.status(404).json({ error: 'Tour not found' });
-    }
-    res.json(tour);
-  }));
-
-  // Create tour
-  app.post('/api/tours', validateBody(insertTourSchema), asyncHandler(async (req: Request, res: Response) => {
-    const tour = await storage.createTour(req.body);
-    res.status(201).json(tour);
-  }));
-
-  // Update tour
-  app.put('/api/tours/:id', validateBody(insertTourSchema.partial()), asyncHandler(async (req: Request, res: Response) => {
-    const tour = await storage.updateTour(req.params.id, req.body);
-    if (!tour) {
-      return res.status(404).json({ error: 'Tour not found' });
-    }
-    res.json(tour);
-  }));
-
-  // Update tour name
-  app.patch('/api/tours/:id/name', validateBody(z.object({ name: z.string().min(1) })), asyncHandler(async (req: Request, res: Response) => {
-    const tour = await storage.updateTour(req.params.id, { name: req.body.name });
-    if (!tour) {
-      return res.status(404).json({ error: 'Tour not found' });
-    }
-    res.json(tour);
-  }));
-
-  // Delete tour
-  app.delete('/api/tours/:id', asyncHandler(async (req: Request, res: Response) => {
-    const success = await storage.deleteTour(req.params.id);
-    if (!success) {
-      return res.status(404).json({ error: 'Tour not found' });
-    }
-    res.status(204).send();
-  }));
-
-  // ========== Tour Versions API ==========
-
-  // Get all versions for a tour
-  app.get('/api/tours/:tourId/versions', asyncHandler(async (req: Request, res: Response) => {
-    const versions = await storage.getTourVersions(req.params.tourId);
-    res.json(versions);
-  }));
-
-  // Get latest version for a tour
-  app.get('/api/tours/:tourId/versions/latest', asyncHandler(async (req: Request, res: Response) => {
-    const version = await storage.getLatestTourVersion(req.params.tourId);
-    if (!version) {
-      return res.status(404).json({ error: 'No versions found for this tour' });
-    }
-    res.json(version);
-  }));
-
-  // Get single tour version
-  app.get('/api/tours/:tourId/versions/:versionId', asyncHandler(async (req: Request, res: Response) => {
-    const version = await storage.getTourVersion(req.params.versionId);
-    if (!version || version.tour_id !== req.params.tourId) {
-      return res.status(404).json({ error: 'Tour version not found' });
-    }
-    res.json(version);
-  }));
-
-  // Create new tour version
-  app.post('/api/tours/:tourId/versions', validateBody(insertTourVersionSchema), asyncHandler(async (req: Request, res: Response) => {
-    const versionData = { ...req.body, tour_id: req.params.tourId };
-    const version = await storage.createTourVersion(versionData);
-    res.status(201).json(version);
-  }));
-
-  // ========== Excel Uploads API ==========
-
-  // Get all excel uploads
-  app.get('/api/uploads', asyncHandler(async (req: Request, res: Response) => {
+  // Get all CSV uploads
+  app.get('/api/csv-uploads', asyncHandler(async (req: Request, res: Response) => {
     const uploadedBy = req.query.uploadedBy as string;
-    const uploads = await storage.getExcelUploads(uploadedBy);
+    const uploads = await storage.getCsvUploads(uploadedBy);
     res.json(uploads);
   }));
 
-  // Get single excel upload
-  app.get('/api/uploads/:id', asyncHandler(async (req: Request, res: Response) => {
-    const upload = await storage.getExcelUpload(req.params.id);
+  // Get single CSV upload
+  app.get('/api/csv-uploads/:id', asyncHandler(async (req: Request, res: Response) => {
+    const upload = await storage.getCsvUpload(req.params.id);
     if (!upload) {
       return res.status(404).json({ error: 'Upload not found' });
     }
     res.json(upload);
   }));
 
-  // Upload Excel file
-  app.post('/api/uploads', upload.single('file'), asyncHandler(async (req: Request, res: Response) => {
+  // Upload CSV file
+  app.post('/api/csv-uploads', upload.single('file'), asyncHandler(async (req: Request, res: Response) => {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
-    }
-
-    // Handle uploaded_by - set to null if user doesn't exist
-    let uploadedBy = null;
-    if (req.body.uploaded_by) {
-      const user = await storage.getUserByUsername(req.body.uploaded_by);
-      if (user) {
-        uploadedBy = user.id;
-      }
     }
 
     const uploadData = {
@@ -429,129 +163,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
       file_path: req.file.path,
       file_size: req.file.size,
       status: 'pending' as const,
-      uploaded_by: uploadedBy
+      uploaded_by: req.body.uploaded_by || null
     };
 
-    const upload = await storage.createExcelUpload(uploadData);
-    res.status(201).json(upload);
+    const csvUpload = await storage.createCsvUpload(uploadData);
+    res.status(201).json(csvUpload);
   }));
 
-  // Update upload status (for processing)
-  app.patch('/api/uploads/:id/status', validateBody(z.object({ 
-    status: z.enum(['pending', 'processing', 'completed', 'failed']),
-    error_log: z.string().optional(),
-    records_processed: z.number().int().optional(),
-    records_failed: z.number().int().optional()
-  })), asyncHandler(async (req: Request, res: Response) => {
-    const updateData = {
-      ...req.body,
-      processed_at: req.body.status === 'completed' || req.body.status === 'failed' 
-        ? new Date().toISOString()
-        : undefined
-    };
-
-    const upload = await storage.updateExcelUpload(req.params.id, updateData);
-    if (!upload) {
-      return res.status(404).json({ error: 'Upload not found' });
-    }
-    res.json(upload);
-  }));
-
-  // Process uploaded Excel file
-  app.post('/api/uploads/:id/process', asyncHandler(async (req: Request, res: Response) => {
-    const upload = await storage.getExcelUpload(req.params.id);
+  // Process uploaded CSV file
+  app.post('/api/csv-uploads/:id/process', asyncHandler(async (req: Request, res: Response) => {
+    const upload = await storage.getCsvUpload(req.params.id);
     if (!upload) {
       return res.status(404).json({ error: 'Upload not found' });
     }
 
     if (upload.status !== 'pending') {
-      return res.status(400).json({ error: 'Upload has already been processed' });
+      return res.status(400).json({ error: 'Upload has already been processed or is currently processing' });
     }
 
     // Update status to processing
-    await storage.updateExcelUpload(req.params.id, { status: 'processing' });
+    await storage.updateCsvUpload(req.params.id, { status: 'processing' });
 
     try {
       const fileContent = await fs.readFile(upload.file_path, 'utf-8');
-      let records: any[] = [];
       let recordsProcessed = 0;
       let recordsFailed = 0;
+      const errors: Array<{row: number, data: any, error: string}> = [];
 
-      if (upload.original_filename.toLowerCase().endsWith('.csv')) {
-        // Parse CSV
-        records = parse(fileContent, {
-          columns: true,
-          skip_empty_lines: true,
-          trim: true
-        });
+      // Parse CSV
+      const records = parse(fileContent, {
+        columns: true,
+        skip_empty_lines: true,
+        trim: true,
+        cast: true
+      });
 
-        // Process transportation data if it matches the expected format
-        for (const record of records) {
-          try {
-            if (record['Service Name'] && record['Base Cost']) {
-              // Extract cost and currency
-              const costStr = record['Base Cost'].toString();
-              const costMatch = costStr.match(/(\d+(?:\.\d+)?)\s*([€$]|EUR|USD)/i);
+      const pricesToCreate: any[] = [];
 
-              if (costMatch) {
-                const cost = parseFloat(costMatch[1]);
-                const currencySymbol = costMatch[2];
-                let currency = 'EUR';
-
-                if (currencySymbol === '$' || currencySymbol.toUpperCase() === 'USD') {
-                  currency = 'USD';
-                }
-
-                // Create service and rates (similar to transportation import)
-                let transportCategory = await storage.getServiceCategoryByName('Transportation');
-                if (!transportCategory) {
-                  transportCategory = await storage.createServiceCategory({
-                    name: 'Transportation',
-                    description: 'Transportation services from CSV upload'
-                  });
-                }
-
-                const serviceItem = await storage.createServiceItem({
-                  category_id: transportCategory.id,
-                  name: record['Service Name'],
-                  description: record['Notes'] || '',
-                  unit_type: record['Cost Basis'] || 'per_group',
-                  default_quantity: 1
-                });
-
-                await storage.createPricingRate({
-                  service_id: serviceItem.id,
-                  currency: currency as any,
-                  profile: 'Base' as any,
-                  unit_price: cost,
-                  effective_from: new Date(),
-                  is_active: true
-                });
-
-                recordsProcessed++;
-              }
-            }
-          } catch (error) {
-            recordsFailed++;
-            console.error('Failed to process record:', record, error);
-          }
+      // Process each record
+      for (let i = 0; i < records.length; i++) {
+        const record = records[i];
+        try {
+          // Validate and transform CSV row
+          const validatedRow = csvRowSchema.parse(record);
+          
+          pricesToCreate.push({
+            service_name: validatedRow.service_name,
+            category: validatedRow.category || null,
+            description: validatedRow.description || null,
+            unit_type: validatedRow.unit_type,
+            unit_price: validatedRow.unit_price,
+            currency: validatedRow.currency,
+            location: validatedRow.location || null,
+            is_active: true
+          });
+          
+          recordsProcessed++;
+        } catch (error) {
+          recordsFailed++;
+          const errorMessage = error instanceof z.ZodError 
+            ? error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')
+            : error.message;
+          errors.push({ 
+            row: i + 2, // +2 because row 1 is headers and arrays are 0-indexed
+            data: record, 
+            error: errorMessage 
+          });
         }
       }
 
-      await storage.updateExcelUpload(req.params.id, {
+      // Bulk insert valid prices
+      if (pricesToCreate.length > 0) {
+        await storage.bulkCreatePrices(pricesToCreate);
+      }
+
+      // Update upload status
+      await storage.updateCsvUpload(req.params.id, {
         status: 'completed',
         processed_at: new Date().toISOString(),
         records_processed: recordsProcessed,
-        records_failed: recordsFailed
+        records_failed: recordsFailed,
+        error_log: errors.length > 0 ? JSON.stringify(errors, null, 2) : null
       });
 
       res.json({ 
-        message: 'Processing completed successfully',
+        message: 'Processing completed',
         recordsProcessed,
-        recordsFailed
+        recordsFailed,
+        errors: errors.length > 0 ? errors : undefined
       });
     } catch (error) {
-      await storage.updateExcelUpload(req.params.id, {
+      await storage.updateCsvUpload(req.params.id, {
         status: 'failed',
         processed_at: new Date().toISOString(),
         error_log: error.message
@@ -561,9 +263,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   }));
 
-  // Delete upload and associated file
-  app.delete('/api/uploads/:id', asyncHandler(async (req: Request, res: Response) => {
-    const upload = await storage.getExcelUpload(req.params.id);
+  // Delete CSV upload and associated file
+  app.delete('/api/csv-uploads/:id', asyncHandler(async (req: Request, res: Response) => {
+    const upload = await storage.getCsvUpload(req.params.id);
     if (!upload) {
       return res.status(404).json({ error: 'Upload not found' });
     }
@@ -575,11 +277,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.warn('Failed to delete file:', upload.file_path, error);
     }
 
-    const success = await storage.deleteExcelUpload(req.params.id);
+    const success = await storage.deleteCsvUpload(req.params.id);
     if (!success) {
       return res.status(404).json({ error: 'Upload not found' });
     }
 
+    res.status(204).send();
+  }));
+
+  // ========== Quotations API ==========
+
+  // Get all quotations
+  app.get('/api/quotations', asyncHandler(async (req: Request, res: Response) => {
+    const userId = req.query.userId as string;
+    const quotationsList = await storage.getQuotations(userId);
+    res.json(quotationsList);
+  }));
+
+  // Get single quotation
+  app.get('/api/quotations/:id', asyncHandler(async (req: Request, res: Response) => {
+    const quotation = await storage.getQuotation(req.params.id);
+    if (!quotation) {
+      return res.status(404).json({ error: 'Quotation not found' });
+    }
+    res.json(quotation);
+  }));
+
+  // Create quotation
+  app.post('/api/quotations', asyncHandler(async (req: Request, res: Response) => {
+    const quotation = await storage.createQuotation(req.body);
+    res.status(201).json(quotation);
+  }));
+
+  // Update quotation
+  app.put('/api/quotations/:id', asyncHandler(async (req: Request, res: Response) => {
+    const quotation = await storage.updateQuotation(req.params.id, req.body);
+    if (!quotation) {
+      return res.status(404).json({ error: 'Quotation not found' });
+    }
+    res.json(quotation);
+  }));
+
+  // Delete quotation
+  app.delete('/api/quotations/:id', asyncHandler(async (req: Request, res: Response) => {
+    const success = await storage.deleteQuotation(req.params.id);
+    if (!success) {
+      return res.status(404).json({ error: 'Quotation not found' });
+    }
     res.status(204).send();
   }));
 

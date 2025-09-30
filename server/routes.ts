@@ -219,11 +219,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
           
           recordsProcessed++;
-        } catch (error) {
+        } catch (error: any) {
           recordsFailed++;
           const errorMessage = error instanceof z.ZodError 
             ? error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')
-            : error.message;
+            : error?.message || 'Unknown error';
           errors.push({ 
             row: i + 2, // +2 because row 1 is headers and arrays are 0-indexed
             data: record, 
@@ -240,7 +240,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Update upload status
       await storage.updateCsvUpload(req.params.id, {
         status: 'completed',
-        processed_at: new Date().toISOString(),
+        processed_at: new Date() as any,
         records_processed: recordsProcessed,
         records_failed: recordsFailed,
         error_log: errors.length > 0 ? JSON.stringify(errors, null, 2) : null
@@ -252,14 +252,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         recordsFailed,
         errors: errors.length > 0 ? errors : undefined
       });
-    } catch (error) {
+    } catch (error: any) {
       await storage.updateCsvUpload(req.params.id, {
         status: 'failed',
-        processed_at: new Date().toISOString(),
-        error_log: error.message
+        processed_at: new Date() as any,
+        error_log: error?.message || 'Unknown error'
       });
 
-      res.status(500).json({ error: 'Processing failed', message: error.message });
+      res.status(500).json({ error: 'Processing failed', message: error?.message || 'Unknown error' });
     }
   }));
 

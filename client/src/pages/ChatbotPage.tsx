@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "wouter";
-import { Send, Bot, User, Loader2, ArrowLeft, Sparkles } from "lucide-react";
+import { Send, Bot, User, Loader2, ArrowLeft, Sparkles, Trash2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -12,15 +12,49 @@ interface Message {
   role: "user" | "assistant";
   content: string;
   data?: any;
+  timestamp?: number;
 }
 
-export default function ChatbotPage() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content: "Hello! I'm your AI assistant for managing the pricing database. I can help you search for prices, create new entries, update existing ones, or answer questions about your data. What would you like to do?",
-    },
-  ]);
+interface ChatbotPageProps {
+  embedded?: boolean;
+}
+
+const CHAT_HISTORY_KEY = "chatbot_conversation_history";
+
+// Load chat history from localStorage
+const loadChatHistory = (): Message[] => {
+  try {
+    const saved = localStorage.getItem(CHAT_HISTORY_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed : getDefaultMessages();
+    }
+  } catch (error) {
+    console.warn("Failed to load chat history:", error);
+  }
+  return getDefaultMessages();
+};
+
+// Save chat history to localStorage
+const saveChatHistory = (messages: Message[]) => {
+  try {
+    localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
+  } catch (error) {
+    console.warn("Failed to save chat history:", error);
+  }
+};
+
+// Get default welcome messages
+const getDefaultMessages = (): Message[] => [
+  {
+    role: "assistant",
+    content: "Hello! I'm your AI assistant for managing the pricing database. I can help you search for prices, create new entries, update existing ones, or answer questions about your data. What would you like to do?",
+    timestamp: Date.now(),
+  },
+];
+
+export default function ChatbotPage({ embedded = false }: ChatbotPageProps) {
+  const [messages, setMessages] = useState<Message[]>(loadChatHistory);
   const [inputValue, setInputValue] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +75,7 @@ export default function ChatbotPage() {
           role: "assistant",
           content: data.reply,
           data: data.data,
+          timestamp: Date.now(),
         },
       ]);
     },
@@ -50,6 +85,7 @@ export default function ChatbotPage() {
         {
           role: "assistant",
           content: `Sorry, I encountered an error: ${error.message}. Please try again.`,
+          timestamp: Date.now(),
         },
       ]);
     },
@@ -66,6 +102,7 @@ export default function ChatbotPage() {
       {
         role: "user",
         content: userMessage,
+        timestamp: Date.now(),
       },
     ]);
 
@@ -79,11 +116,24 @@ export default function ChatbotPage() {
     }
   };
 
+  // Save messages to localStorage whenever they change
+  useEffect(() => {
+    saveChatHistory(messages);
+  }, [messages]);
+
+  // Auto-scroll to bottom when messages change
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Clear chat history
+  const clearHistory = () => {
+    const defaultMessages = getDefaultMessages();
+    setMessages(defaultMessages);
+    saveChatHistory(defaultMessages);
+  };
 
   const renderDataTable = (data: any) => {
     if (!data || typeof data !== 'object') return null;
@@ -134,29 +184,52 @@ export default function ChatbotPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="border-b border-border bg-card">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center gap-4">
-          <Link href="/" data-testid="link-home">
-            <Button variant="ghost" size="sm" data-testid="button-back">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Home
-            </Button>
-          </Link>
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Sparkles className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-xl font-semibold">AI Assistant</h1>
-              <p className="text-xs text-muted-foreground">Pricing Database Helper</p>
+    <div className={embedded ? "h-full bg-background" : "min-h-screen bg-background"}>
+      {!embedded && (
+        <div className="border-b border-border bg-card">
+          <div className="max-w-5xl mx-auto px-4 py-4 flex items-center gap-4">
+            <Link href="/" data-testid="link-home">
+              <Button variant="ghost" size="sm" data-testid="button-back">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </Link>
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                <Sparkles className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <h1 className="text-xl font-semibold">AI Assistant</h1>
+                <p className="text-xs text-muted-foreground">Pricing Database Helper</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      <div className="max-w-5xl mx-auto px-4 py-6">
-        <Card className="h-[calc(100vh-200px)] flex flex-col">
+      <div className={embedded ? "h-full p-4" : "max-w-5xl mx-auto px-4 py-6"}>
+        <Card className={`flex flex-col ${embedded ? "h-full" : "h-[calc(100vh-200px)]"}`}>
+          {embedded && (
+            <div className="border-b border-border p-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Sparkles className="h-3 w-3 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-semibold">AI Assistant</h2>
+                  <p className="text-xs text-muted-foreground">Pricing Database Helper</p>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearHistory}
+                className="text-muted-foreground hover:text-destructive"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
           <ScrollArea className="flex-1 p-4" ref={scrollRef}>
             <div className="space-y-4">
               {messages.map((message, index) => (
@@ -225,12 +298,29 @@ export default function ChatbotPage() {
                 )}
               </Button>
             </div>
-            <div className="mt-2 text-xs text-muted-foreground">
-              <p>
-                Try asking: "Show me all prices", "Create a new price for Cairo transfers",
-                "How many prices do we have?", "Update the price of Alexandria tour"
-              </p>
-            </div>
+            {!embedded && (
+              <div className="mt-2 text-xs text-muted-foreground">
+                <p>
+                  Try asking: "Show me all prices", "Create a new price for Cairo transfers",
+                  "How many prices do we have?", "Update the price of Alexandria tour"
+                </p>
+              </div>
+            )}
+            {embedded && (
+              <div className="mt-2 flex items-center justify-between">
+                <div className="text-xs text-muted-foreground">
+                  Chat history is automatically saved
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearHistory}
+                  className="text-xs text-muted-foreground hover:text-destructive"
+                >
+                  Clear History
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

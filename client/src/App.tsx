@@ -10,6 +10,7 @@ import ToursPage from "@/pages/ToursPage";
 import NewTourPage from "@/pages/NewTourPage";
 import ChatbotPage from "@/pages/ChatbotPage";
 import NotFound from "@/pages/not-found";
+import FloatingChatButton from "@/components/FloatingChatButton";
 
 function Router() {
   return (
@@ -30,6 +31,7 @@ function App() {
       <TooltipProvider>
         <Toaster />
         <Router />
+        <FloatingChatButton />
       </TooltipProvider>
     </QueryClientProvider>
   );

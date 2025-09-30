@@ -17,7 +17,8 @@ import {
   XCircle, 
   Clock, 
   FileText,
-  Trash2
+  Trash2,
+  Edit
 } from "lucide-react";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -62,6 +63,8 @@ export default function DatabasePage() {
   const [currencyFilter, setCurrencyFilter] = useState<string>("");
   const [locationFilter, setLocationFilter] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("");
+  const [editingPrice, setEditingPrice] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Partial<Price>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -146,6 +149,50 @@ export default function DatabasePage() {
     }
   });
 
+  // Delete price mutation
+  const deletePriceMutation = useMutation({
+    mutationFn: async (priceId: string) => {
+      return await apiRequest(`/api/prices/${priceId}`, 'DELETE');
+    },
+    onSuccess: () => {
+      toast({
+        title: "Price Deleted",
+        description: "Price record has been deleted successfully.",
+      });
+      refetchPrices();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Delete Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Update price mutation
+  const updatePriceMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Partial<Price> }) => {
+      return await apiRequest(`/api/prices/${id}`, 'PUT', data);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Price Updated",
+        description: "Price record has been updated successfully.",
+      });
+      setEditingPrice(null);
+      setEditForm({});
+      refetchPrices();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Update Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  });
+
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -199,19 +246,44 @@ export default function DatabasePage() {
     return <Badge variant={variant} data-testid={`badge-status-${status}`}>{status}</Badge>;
   };
 
+  const handleEditPrice = (price: Price) => {
+    setEditingPrice(price.id);
+    setEditForm({
+      service_name: price.service_name,
+      route_name: price.route_name,
+      cost_basis: price.cost_basis,
+      unit: price.unit,
+      unit_price: price.unit_price,
+      currency: price.currency,
+      notes: price.notes,
+      vehicle_type: price.vehicle_type,
+      passenger_capacity: price.passenger_capacity,
+      location: price.location,
+    });
+  };
+
+  const handleSavePrice = () => {
+    if (editingPrice && editForm) {
+      updatePriceMutation.mutate({ id: editingPrice, data: editForm });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingPrice(null);
+    setEditForm({});
+  };
+
   // Filter prices
   const filteredPrices = prices.filter(price => {
     const matchesSearch = price.service_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          price.route_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          price.notes?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !categoryFilter || price.category === categoryFilter;
     const matchesCurrency = !currencyFilter || price.currency === currencyFilter;
     const matchesLocation = !locationFilter || price.location === locationFilter;
-    return matchesSearch && matchesCategory && matchesCurrency && matchesLocation;
+    return matchesSearch && matchesCurrency && matchesLocation;
   });
 
-  // Get unique categories, currencies, and locations
-  const categories = Array.from(new Set(prices.map(p => p.category).filter(Boolean)));
+  // Get unique currencies and locations
   const currencies = Array.from(new Set(prices.map(p => p.currency)));
   const locations = Array.from(new Set(prices.map(p => p.location).filter(Boolean)));
 
@@ -282,6 +354,8 @@ export default function DatabasePage() {
                       <option value="Cairo">Cairo</option>
                       <option value="Luxor">Luxor</option>
                       <option value="Aswan">Aswan</option>
+                      <option value="Hurghada">Hurghada</option>
+                      <option value="Sharm El-Sheikh">Sharm El-Sheikh</option>
                       <option value="Marsa Matrouh">Marsa Matrouh</option>
                       <option value="Bahariya Oasis">Bahariya Oasis</option>
                       <option value="Siwa Oasis">Siwa Oasis</option>
@@ -434,17 +508,7 @@ export default function DatabasePage() {
                       <option key={loc} value={loc || ''}>{loc || 'Unknown'}</option>
                     ))}
                   </select>
-                  <select
-                    className="border rounded-md px-3 py-2 bg-background text-foreground"
-                    value={categoryFilter}
-                    onChange={(e) => setCategoryFilter(e.target.value)}
-                    data-testid="select-category-filter"
-                  >
-                    <option value="">All Categories</option>
-                    {categories.map(cat => (
-                      <option key={cat} value={cat || ''}>{cat || 'Uncategorized'}</option>
-                    ))}
-                  </select>
+                  
                   <select
                     className="border rounded-md px-3 py-2 bg-background text-foreground"
                     value={currencyFilter}
@@ -473,41 +537,175 @@ export default function DatabasePage() {
                       <TableHeader>
                         <TableRow>
                           <TableHead>Service Name</TableHead>
-                          <TableHead>Category</TableHead>
                           <TableHead>Cost Basis</TableHead>
                           <TableHead>Unit</TableHead>
                           <TableHead>Price</TableHead>
                           <TableHead>Vehicle</TableHead>
                           <TableHead>Location</TableHead>
                           <TableHead>Notes</TableHead>
+                          <TableHead>Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {filteredPrices.map((price) => (
                           <TableRow key={price.id} data-testid={`row-price-${price.id}`}>
                             <TableCell className="font-medium" data-testid={`text-service-${price.id}`}>
-                              {price.service_name}
-                            </TableCell>
-                            <TableCell data-testid={`text-category-${price.id}`}>
-                              {price.category || '-'}
+                              {editingPrice === price.id ? (
+                                <Input
+                                  value={editForm.service_name || ''}
+                                  onChange={(e) => setEditForm({ ...editForm, service_name: e.target.value })}
+                                  className="w-full"
+                                />
+                              ) : (
+                                price.service_name
+                              )}
                             </TableCell>
                             <TableCell data-testid={`text-cost-basis-${price.id}`}>
-                              <Badge variant="outline">{price.cost_basis}</Badge>
+                              {editingPrice === price.id ? (
+                                <select
+                                  value={editForm.cost_basis || ''}
+                                  onChange={(e) => setEditForm({ ...editForm, cost_basis: e.target.value })}
+                                  className="border rounded px-2 py-1 text-sm bg-background"
+                                >
+                                  <option value="per_person">per_person</option>
+                                  <option value="per_group">per_group</option>
+                                  <option value="per_night">per_night</option>
+                                  <option value="per_day">per_day</option>
+                                  <option value="flat_rate">flat_rate</option>
+                                </select>
+                              ) : (
+                                <Badge variant="outline">{price.cost_basis}</Badge>
+                              )}
                             </TableCell>
                             <TableCell data-testid={`text-unit-${price.id}`}>
-                              {price.unit || '-'}
+                              {editingPrice === price.id ? (
+                                <Input
+                                  value={editForm.unit || ''}
+                                  onChange={(e) => setEditForm({ ...editForm, unit: e.target.value })}
+                                  className="w-full"
+                                />
+                              ) : (
+                                price.unit || '-'
+                              )}
                             </TableCell>
                             <TableCell className="font-semibold" data-testid={`text-price-${price.id}`}>
-                              {price.currency} {price.unit_price.toFixed(2)}
+                              {editingPrice === price.id ? (
+                                <div className="flex gap-1">
+                                  <select
+                                    value={editForm.currency || 'EUR'}
+                                    onChange={(e) => setEditForm({ ...editForm, currency: e.target.value })}
+                                    className="border rounded px-1 py-1 text-sm bg-background w-16"
+                                  >
+                                    <option value="EUR">EUR</option>
+                                    <option value="USD">USD</option>
+                                    <option value="EGP">EGP</option>
+                                  </select>
+                                  <Input
+                                    type="number"
+                                    step="0.01"
+                                    value={editForm.unit_price || ''}
+                                    onChange={(e) => setEditForm({ ...editForm, unit_price: parseFloat(e.target.value) })}
+                                    className="w-20"
+                                  />
+                                </div>
+                              ) : (
+                                `${price.currency} ${price.unit_price.toFixed(2)}`
+                              )}
                             </TableCell>
                             <TableCell data-testid={`text-vehicle-${price.id}`}>
-                              {price.vehicle_type ? `${price.vehicle_type} (${price.passenger_capacity})` : '-'}
+                              {editingPrice === price.id ? (
+                                <div className="space-y-1">
+                                  <Input
+                                    value={editForm.vehicle_type || ''}
+                                    onChange={(e) => setEditForm({ ...editForm, vehicle_type: e.target.value })}
+                                    placeholder="Vehicle Type"
+                                    className="w-full text-xs"
+                                  />
+                                  <Input
+                                    value={editForm.passenger_capacity || ''}
+                                    onChange={(e) => setEditForm({ ...editForm, passenger_capacity: e.target.value })}
+                                    placeholder="Capacity"
+                                    className="w-full text-xs"
+                                  />
+                                </div>
+                              ) : (
+                                price.vehicle_type ? `${price.vehicle_type} (${price.passenger_capacity})` : '-'
+                              )}
                             </TableCell>
                             <TableCell data-testid={`text-location-${price.id}`}>
-                              {price.location || '-'}
+                              {editingPrice === price.id ? (
+                                <select
+                                  value={editForm.location || ''}
+                                  onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
+                                  className="border rounded px-2 py-1 text-sm bg-background"
+                                >
+                                  <option value="">Select City</option>
+                                  <option value="Alexandria">Alexandria</option>
+                                  <option value="Cairo">Cairo</option>
+                                  <option value="Luxor">Luxor</option>
+                                  <option value="Aswan">Aswan</option>
+                                  <option value="Hurghada">Hurghada</option>
+                                  <option value="Sharm El-Sheikh">Sharm El-Sheikh</option>
+                                  <option value="Marsa Matrouh">Marsa Matrouh</option>
+                                  <option value="Bahariya Oasis">Bahariya Oasis</option>
+                                  <option value="Siwa Oasis">Siwa Oasis</option>
+                                </select>
+                              ) : (
+                                price.location || '-'
+                              )}
                             </TableCell>
-                            <TableCell className="max-w-xs truncate" data-testid={`text-notes-${price.id}`}>
-                              {price.notes || '-'}
+                            <TableCell className="max-w-xs" data-testid={`text-notes-${price.id}`}>
+                              {editingPrice === price.id ? (
+                                <Input
+                                  value={editForm.notes || ''}
+                                  onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
+                                  className="w-full"
+                                />
+                              ) : (
+                                <div className="truncate">{price.notes || '-'}</div>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {editingPrice === price.id ? (
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    size="sm"
+                                    onClick={handleSavePrice}
+                                    disabled={updatePriceMutation.isPending}
+                                    data-testid={`button-save-${price.id}`}
+                                  >
+                                    Save
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={handleCancelEdit}
+                                    data-testid={`button-cancel-${price.id}`}
+                                  >
+                                    Cancel
+                                  </Button>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleEditPrice(price)}
+                                    data-testid={`button-edit-${price.id}`}
+                                  >
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => deletePriceMutation.mutate(price.id)}
+                                    disabled={deletePriceMutation.isPending}
+                                    data-testid={`button-delete-${price.id}`}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              )}
                             </TableCell>
                           </TableRow>
                         ))}

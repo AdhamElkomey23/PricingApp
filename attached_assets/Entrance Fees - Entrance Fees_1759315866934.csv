@@ -1,0 +1,133 @@
+city,site name,net_pp,price
+Cairo,Saladin Citadel,550,€10.00
+,Baron Palace,220,€4.00
+,Moez Street,220,€4.00
+,Sultan Hassan & Al-Rifa’i Mosque,220,€4.00
+,Beit El-Suhaimi,220,€4.00
+,Bab Zuweila,100,€1.82
+,Mohamed Abu El-Dahab Collection,100,€1.82
+,Mevlevi Tekke,100,€1.82
+,Qubbat Al-Ghouri & House,150,€2.73
+,Al-Ghouri Wekala,100,€1.82
+,Ali Labib House,100,€1.82
+,Al-Harawi House,100,€1.82
+,Obelisk of Senusret I in Matareya,100,€1.82
+,Mary's Tree,120,€2.18
+,Egyptian Museum in Tahrir,550,€10.00
+,Museum of Islamic Art,340,€6.18
+,Coptic Museum,280,€5.09
+,Muhammad Ali Palace in Manial,220,€4.00
+,Royal Carriages Museum,300,€5.45
+,NMEC (National Museum of Egyptian Civilization),500,€9.09
+,Al-Ghouri Complex,150,€2.73
+,"Sabil and Book of Qaitbay, Saliba Street",100,€1.82
+,Egyptian Museum Audio Guide,75,€1.36
+,Giza Pyramids Area,700,€12.73
+,Khufu Pyramid Interior,1000,€18.18
+,Khafre Pyramid (Giza),280,€5.09
+,Menkaure Pyramid (Giza),280,€5.09
+,Great Sphinx (Private Visit Only),200,€3.64
+,Tomb of Meresankh III,200,€3.64
+,Workers' Tombs (Minimum 5 Tickets),500,€9.09
+,Saqqara Archaeological Area,600,€10.91
+,"Noble Tombs, New Kingdom Cemetery, Bubasteion",400,€7.27
+,Serapeum,340,€6.18
+,Tomb of Mereruka,200,€3.64
+,Saqqara General Tombs Ticket,280,€5.09
+,Southern Tomb,300,€5.45
+,Dahshur Archaeological Area,200,€3.64
+,Mit Rahina Archaeological Area,200,€3.64
+,Step Pyramid of Zoser (Southern Interior),280,€5.09
+,Grand Egyptian Museum(GEM),1200,€21.82
+,Merruka Cemetery,200,€3.64
+Alexandria,Qaitbay Citadel,200,€3.64
+,Pompey's Pillar,200,€3.64
+,Kom El Dikka (Roman Theatre),200,€3.64
+,Kom El Shoqafa Catacombs,200,€3.64
+,Mustafa Kamel Tombs,100,€1.82
+,Anfushi Tombs,100,€1.82
+,Shatby Archaeological Cemetery,100,€1.82
+,Underwater Antiquities in Eastern Harbour,180,€3.27
+,Alexandria National Museum,220,€4.00
+,Royal Jewellery Museum,220,€4.00
+,Graeco-Roman Museum,400,€7.27
+Luxor,Karnak Temple (Includes Avenue of Sphinxes),600,€10.91
+,Luxor Temple (Includes Avenue of Sphinxes),500,€9.09
+,Valley of the Kings,750,€13.64
+,Tomb of Tutankhamun,700,€12.73
+,Tomb of Ramesses VI,220,€4.00
+,Tomb of Seti I,2000,€36.36
+,Tomb of Ay,200,€3.64
+,Temple of Hatshepsut,440,€8.00
+,Ramesseum Temple,220,€4.00
+,Tomb of Ramose,120,€2.18
+,Tomb of Pashedu,120,€2.18
+,Deir el-Medina,220,€4.00
+,Medinet Habu Temple,220,€4.00
+,Valley of the Queens,220,€4.00
+,Tomb of Nefertari,2500,€45.45
+,Tomb of Menna and Nakht,200,€3.64
+,Carter House & Replica of Tutankhamun Tomb,220,€4.00
+,Temple of Seti I,200,€3.64
+,Tomb of Userhat and Khonsu,120,€2.18
+,Al-Assasif Tombs,200,€3.64
+,Qurnet Murai Tombs,120,€2.18
+,Sheikh Abd el-Qurna Tombs,120,€2.18
+,El-Khokha Tombs,120,€2.18
+,Tombs of Roy and Shuroy,120,€2.18
+,Deir Shelwit and Temple of Isis,100,€1.82
+,Temple of Merneptah,100,€1.82
+,Luxor Museum,400,€7.27
+,Mummification Museum,220,€4.00
+Fayoum,Lahun Pyramid,150,€2.73
+,Hawara Pyramid,150,€2.73
+,Karanis (Kom Aushim),150,€2.73
+,Kom Oshim Museum,150,€2.73
+,Qarun Temple,150,€2.73
+,Medinet Madi (Madi City),150,€2.73
+Aswan,Philae Temple,550,€10.00
+,Panorama of Philae Temples,200,€3.64
+,Temple of Isis,150,€2.73
+,Elephantine Island,200,€3.64
+,Suhail Island,100,€1.82
+,Kalabsha Temple,200,€3.64
+,Nubian Museum,400,€7.27
+,Unfinished Obelisk,220,€4.00
+,Kom Ombo Temple (includes Crocodile Museum),450,€8.18
+,Amada Area,150,€2.73
+,Abu Simbel Temple,750,€13.64
+,Abu Simbel Sound & Light on 22 Oct and 2 Feb,1200,€21.82
+,Wadi El Seboua,120,€2.18
+,Mount Chain,100,€1.82
+,El Kab Tombs,220,€4.00
+AL MINYA,Al Ashmunein and Tuna Al-Gabal,200,€3.64
+,Beni Hassan Tombs,200,€3.64
+,Fraser Tombs,100,€1.82
+,Frayzer Tomb,100,€1.82
+,Malawi Museum,120,€2.18
+,Tell el-Amarna,200,€3.64
+,Royal Tombs of Amarna,120,€2.18
+,Sultan’s Corner,100,€1.82
+SIWA,Hibis Temple,180,€3.27
+,Al-Ghweita Temple,100,€1.82
+,Dush Temple,100,€1.82
+,Al-Zayyan Temple,100,€1.82
+,El-Bagawat Cemetery,120,€2.18
+,New Valley Museum,150,€2.73
+,Temple of the Frog,100,€1.82
+,Al-Mualla Temple,100,€1.82
+,Qasr el-Ghueita (Tsar’s Castle),100,€1.82
+,Stone Monastery,100,€1.82
+,Ezbet Bashandi,100,€1.82
+,Qasr City (Palace City),100,€1.82
+MATROUH,Temple of Revelation in Siwa,120,€2.18
+,Mountain of the Dead,120,€2.18
+,The Mastaba Column,120,€2.18
+,Matrouh Museum,120,€2.18
+,Rommel Cave Museum,120,€2.18
+Qena,Dendera Temple,300,€5.45
+Qena,Dendera Temple Panorama,100,€1.82
+SHG,Sohag National Museum,150,€2.73
+SHG,Sheikh Hamad,150,€2.73
+HUR,Hurghada Museum,200,€3.64
+SSH,Sharm El Sheikh Museum,200,€3.64

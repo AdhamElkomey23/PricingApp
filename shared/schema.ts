@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { pgTable, text, varchar, integer, real, boolean, jsonb, timestamp, pgEnum } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
 // Service definition
@@ -145,7 +145,7 @@ export const entranceFees = pgTable("entrance_fees", {
   site_name: text("site_name").notNull(),
   net_pp: integer("net_pp").notNull(), // Net price per person in Egyptian pounds
   price: text("price").notNull(), // Display price (e.g., "€10.00")
-  unit_price: real("unit_price").notNull(), // Extracted numeric price
+  unit_price: real("unit_price").notNull(),
   currency: text("currency").notNull().default("EUR"),
   is_active: boolean("is_active").default(true),
   created_at: timestamp("created_at").defaultNow(),
@@ -182,12 +182,6 @@ export const insertPriceSchema = createInsertSchema(prices).omit({
   updated_at: true,
 });
 
-export const insertQuotationSchema = createInsertSchema(quotations).omit({
-  id: true,
-  created_at: true,
-  updated_at: true,
-});
-
 export const insertEntranceFeeSchema = createInsertSchema(entranceFees).omit({
   id: true,
   created_at: true,
@@ -210,7 +204,6 @@ export type CsvUpload = typeof csvUploads.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type InsertPrice = z.infer<typeof insertPriceSchema>;
 export type InsertEntranceFee = z.infer<typeof insertEntranceFeeSchema>;
-export type InsertQuotation = z.infer<typeof insertQuotationSchema>;
 export type InsertCsvUpload = z.infer<typeof insertCsvUploadSchema>;
 
 // CSV row schema for validation (matches Alexandria CSV format)
@@ -237,3 +230,28 @@ export const entranceFeesCsvRowSchema = z.object({
 
 export type CsvRow = z.infer<typeof csvRowSchema>;
 export type EntranceFeesCsvRow = z.infer<typeof entranceFeesCsvRowSchema>;
+
+// Tour quotation schema
+export const quotationSchema = pgTable("quotations", {
+  id: text("id").primaryKey().notNull(),
+  tourName: text("tour_name").notNull(),
+  clientName: text("client_name"),
+  numDays: integer("num_days").notNull(),
+  numPeople: integer("num_people").notNull(),
+  startDate: text("start_date"),
+  itineraryText: text("itinerary_text"),
+  analysisResult: text("analysis_result"), // JSON stringified
+  totalCost: real("total_cost"),
+  currency: text("currency").default("EUR"),
+  status: text("status", { enum: ["draft", "active", "archived", "invoiced"] }).default("draft"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  userId: text("user_id"), // For future user management
+});
+
+export type Quotation = typeof quotationSchema.$inferSelect;
+export type InsertQuotation = typeof quotationSchema.$inferInsert;
+
+// Add validation schemas
+export const insertQuotationSchema = createInsertSchema(quotationSchema);
+export const selectQuotationSchema = createSelectSchema(quotationSchema);

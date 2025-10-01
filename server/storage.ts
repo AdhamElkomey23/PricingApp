@@ -17,6 +17,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, like, or } from "drizzle-orm";
+import { randomUUID } from "crypto"; // Assuming crypto is available for randomUUID
 
 export interface IStorage {
   // User methods
@@ -255,40 +256,89 @@ export class DatabaseStorage implements IStorage {
 
   // Quotation methods
   async getQuotations(userId?: string): Promise<QuotationRecord[]> {
-    if (userId) {
-      return await db.select().from(quotations)
-        .where(eq(quotations.user_id, userId))
-        .orderBy(desc(quotations.created_at));
-    }
+    try {
+      let query = db.select().from(quotations);
 
-    return await db.select().from(quotations).orderBy(desc(quotations.created_at));
+      if (userId) {
+        query = query.where(eq(quotations.user_id, userId));
+      }
+
+      const result = await query.orderBy(desc(quotations.created_at));
+      return result;
+    } catch (error) {
+      console.error('Error fetching quotations:', error);
+      throw error;
+    }
   }
 
   async getQuotation(id: string): Promise<QuotationRecord | undefined> {
-    const [quotation] = await db.select().from(quotations).where(eq(quotations.id, id));
-    return quotation || undefined;
+    try {
+      const [result] = await db
+        .select()
+        .from(quotations)
+        .where(eq(quotations.id, id))
+        .limit(1);
+
+      return result || undefined;
+    } catch (error) {
+      console.error('Error fetching quotation:', error);
+      throw error;
+    }
   }
 
   async createQuotation(quotation: InsertQuotation): Promise<QuotationRecord> {
-    const [created] = await db
-      .insert(quotations)
-      .values(quotation)
-      .returning();
-    return created;
+    try {
+      const quotationData = {
+        ...quotation,
+        id: quotation.id || randomUUID(), // Ensure ID is generated if not provided
+        created_at: new Date(),
+        updated_at: new Date()
+      };
+
+      const [result] = await db
+        .insert(quotations)
+        .values(quotationData)
+        .returning();
+
+      return result;
+    } catch (error) {
+      console.error('Error creating quotation:', error);
+      throw error;
+    }
   }
 
   async updateQuotation(id: string, quotation: Partial<InsertQuotation>): Promise<QuotationRecord | undefined> {
-    const [updated] = await db
-      .update(quotations)
-      .set({ ...quotation, updated_at: new Date() })
-      .where(eq(quotations.id, id))
-      .returning();
-    return updated || undefined;
+    try {
+      const updateData = {
+        ...quotation,
+        updated_at: new Date()
+      };
+
+      const [result] = await db
+        .update(quotations)
+        .set(updateData)
+        .where(eq(quotations.id, id))
+        .returning();
+
+      return result || undefined;
+    } catch (error) {
+      console.error('Error updating quotation:', error);
+      throw error;
+    }
   }
 
   async deleteQuotation(id: string): Promise<boolean> {
-    const result = await db.delete(quotations).where(eq(quotations.id, id));
-    return result.rowCount !== null && result.rowCount > 0;
+    try {
+      const result = await db
+        .delete(quotations)
+        .where(eq(quotations.id, id))
+        .returning();
+
+      return result.length > 0;
+    } catch (error) {
+      console.error('Error deleting quotation:', error);
+      throw error;
+    }
   }
 
   // CSV Upload methods

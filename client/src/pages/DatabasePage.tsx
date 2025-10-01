@@ -41,6 +41,19 @@ interface Price {
   updated_at: string;
 }
 
+interface EntranceFee {
+  id: string;
+  city: string;
+  site_name: string;
+  net_pp: number;
+  price: string;
+  unit_price: number;
+  currency: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 interface CsvUpload {
   id: string;
   filename: string;
@@ -63,14 +76,22 @@ export default function DatabasePage() {
   const [currencyFilter, setCurrencyFilter] = useState<string>("");
   const [locationFilter, setLocationFilter] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("");
+  const [uploadType, setUploadType] = useState<string>("prices");
   const [editingPrice, setEditingPrice] = useState<string | null>(null);
+  const [editingEntranceFee, setEditingEntranceFee] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<Price>>({});
+  const [editEntranceFeeForm, setEditEntranceFeeForm] = useState<Partial<EntranceFee>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   // Fetch prices
   const { data: prices = [], isLoading: pricesLoading, refetch: refetchPrices } = useQuery<Price[]>({
     queryKey: ['/api/prices'],
+  });
+
+  // Fetch entrance fees
+  const { data: entranceFees = [], isLoading: entranceFeesLoading, refetch: refetchEntranceFees } = useQuery<EntranceFee[]>({
+    queryKey: ['/api/entrance-fees'],
   });
 
   // Fetch CSV uploads
@@ -247,7 +268,28 @@ export default function DatabasePage() {
     }
 
     try {
-      const upload = await uploadMutation.mutateAsync({ file, city: selectedCity });
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('city', selectedCity);
+      formData.append('uploadType', uploadType);
+      
+      const response = await fetch('/api/csv-uploads', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Upload failed');
+      }
+
+      await response.json();
+      refetchUploads();
+      setSelectedCity("");
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      
       toast({
         title: "File Uploaded",
         description: "Your CSV file has been uploaded. Click 'Process' to import the data.",
@@ -357,7 +399,8 @@ export default function DatabasePage() {
         <Tabs defaultValue="upload" className="space-y-6">
           <TabsList data-testid="tabs-navigation">
             <TabsTrigger value="upload" data-testid="tab-upload">CSV Upload</TabsTrigger>
-            <TabsTrigger value="prices" data-testid="tab-prices">View Prices ({prices.length})</TabsTrigger>
+            <TabsTrigger value="prices" data-testid="tab-prices">Transportation/Services ({prices.length})</TabsTrigger>
+            <TabsTrigger value="entrance-fees" data-testid="tab-entrance-fees">Entrance Fees ({entranceFees.length})</TabsTrigger>
           </TabsList>
 
           {/* Upload Tab */}
@@ -371,10 +414,26 @@ export default function DatabasePage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
+                  {/* Data Type Selection */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                      Data Type
+                    </label>
+                    <select
+                      className="w-full border rounded-md px-3 py-2 bg-background text-foreground"
+                      value={uploadType}
+                      onChange={(e) => setUploadType(e.target.value)}
+                      data-testid="select-upload-type"
+                    >
+                      <option value="prices">Transportation/Services Pricing</option>
+                      <option value="entrance-fees">Entrance Fees</option>
+                    </select>
+                  </div>
+
                   {/* City Selection */}
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      Upload Type
+                      {uploadType === 'entrance-fees' ? 'City/Region' : 'Upload Type'}
                     </label>
                     <select
                       className="w-full border rounded-md px-3 py-2 bg-background text-foreground"
@@ -382,17 +441,39 @@ export default function DatabasePage() {
                       onChange={(e) => setSelectedCity(e.target.value)}
                       data-testid="select-city"
                     >
-                      <option value="">Select upload type...</option>
-                      <option value="multi-city">Multi-City (uses Location column from CSV)</option>
-                      <option value="Alexandria">Single City: Alexandria</option>
-                      <option value="Cairo">Single City: Cairo</option>
-                      <option value="Luxor">Single City: Luxor</option>
-                      <option value="Aswan">Single City: Aswan</option>
-                      <option value="Hurghada">Single City: Hurghada</option>
-                      <option value="Sharm El-Sheikh">Single City: Sharm El-Sheikh</option>
-                      <option value="Marsa Matrouh">Single City: Marsa Matrouh</option>
-                      <option value="Bahariya Oasis">Single City: Bahariya Oasis</option>
-                      <option value="Siwa Oasis">Single City: Siwa Oasis</option>
+                      <option value="">
+                        {uploadType === 'entrance-fees' ? 'Select city/region...' : 'Select upload type...'}
+                      </option>
+                      {uploadType === 'entrance-fees' ? (
+                        <>
+                          <option value="multi-city">All Cities (uses city column from CSV)</option>
+                          <option value="Cairo">Cairo</option>
+                          <option value="Alexandria">Alexandria</option>
+                          <option value="Luxor">Luxor</option>
+                          <option value="Aswan">Aswan</option>
+                          <option value="Fayoum">Fayoum</option>
+                          <option value="AL MINYA">Al Minya</option>
+                          <option value="SIWA">Siwa</option>
+                          <option value="MATROUH">Matrouh</option>
+                          <option value="Qena">Qena</option>
+                          <option value="SHG">Sohag</option>
+                          <option value="HUR">Hurghada</option>
+                          <option value="SSH">Sharm El Sheikh</option>
+                        </>
+                      ) : (
+                        <>
+                          <option value="multi-city">Multi-City (uses Location column from CSV)</option>
+                          <option value="Alexandria">Single City: Alexandria</option>
+                          <option value="Cairo">Single City: Cairo</option>
+                          <option value="Luxor">Single City: Luxor</option>
+                          <option value="Aswan">Single City: Aswan</option>
+                          <option value="Hurghada">Single City: Hurghada</option>
+                          <option value="Sharm El-Sheikh">Single City: Sharm El-Sheikh</option>
+                          <option value="Marsa Matrouh">Single City: Marsa Matrouh</option>
+                          <option value="Bahariya Oasis">Single City: Bahariya Oasis</option>
+                          <option value="Siwa Oasis">Single City: Siwa Oasis</option>
+                        </>
+                      )}
                     </select>
                     {selectedCity === "multi-city" && (
                       <div className="text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950 p-2 rounded">
@@ -422,15 +503,27 @@ export default function DatabasePage() {
                   </div>
 
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    <a
-                      href="data:text/csv;charset=utf-8,Service Name,Category,Route Name,Cost Basis,Unit,Base Cost,Notes,Vehicle Type,Passenger Capacity,Location%0ASedan Alexandria Airport Pickup,transport,Alexandria Airport Pickup,per_group,transfer,20 €,One-way airport pickup,Sedan,1-2 pax,Alexandria%0AHiace Cairo Day Tour 8 Hours,transport,Cairo Day Tour 8 Hours,per_group,tour,69 €,8-hour city tour,Hiace,3-7 pax,Cairo"
-                      download="pricing_template.csv"
-                      className="text-blue-600 dark:text-blue-400 hover:underline"
-                      data-testid="link-download-template"
-                    >
-                      <Download className="inline h-4 w-4 mr-1" />
-                      Download Sample CSV Template
-                    </a>
+                    {uploadType === 'entrance-fees' ? (
+                      <a
+                        href="data:text/csv;charset=utf-8,city,site name,net_pp,price%0ACairo,Saladin Citadel,550,€10.00%0ACairo,Baron Palace,220,€4.00%0AAlexandria,Qaitbay Citadel,200,€3.64"
+                        download="entrance_fees_template.csv"
+                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                        data-testid="link-download-template"
+                      >
+                        <Download className="inline h-4 w-4 mr-1" />
+                        Download Entrance Fees CSV Template
+                      </a>
+                    ) : (
+                      <a
+                        href="data:text/csv;charset=utf-8,Service Name,Category,Route Name,Cost Basis,Unit,Base Cost,Notes,Vehicle Type,Passenger Capacity,Location%0ASedan Alexandria Airport Pickup,transport,Alexandria Airport Pickup,per_group,transfer,20 €,One-way airport pickup,Sedan,1-2 pax,Alexandria%0AHiace Cairo Day Tour 8 Hours,transport,Cairo Day Tour 8 Hours,per_group,tour,69 €,8-hour city tour,Hiace,3-7 pax,Cairo"
+                        download="pricing_template.csv"
+                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                        data-testid="link-download-template"
+                      >
+                        <Download className="inline h-4 w-4 mr-1" />
+                        Download Pricing CSV Template
+                      </a>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -745,6 +838,102 @@ export default function DatabasePage() {
                                   </Button>
                                 </div>
                               )}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Entrance Fees Tab */}
+          <TabsContent value="entrance-fees" className="space-y-4">
+            <Card data-testid="card-entrance-fees">
+              <CardHeader>
+                <CardTitle>Entrance Fees Database</CardTitle>
+                <CardDescription>All entrance fees for museums, monuments, and archaeological sites</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Filters */}
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <Input
+                      placeholder="Search by site name..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      data-testid="input-search-entrance-fees"
+                    />
+                  </div>
+                  <select
+                    className="border rounded-md px-3 py-2 bg-background text-foreground"
+                    value={locationFilter}
+                    onChange={(e) => setLocationFilter(e.target.value)}
+                    data-testid="select-city-filter"
+                  >
+                    <option value="">All Cities</option>
+                    {Array.from(new Set(entranceFees.map(ef => ef.city).filter(Boolean))).map(city => (
+                      <option key={city} value={city}>{city}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Entrance Fees Table */}
+                {entranceFeesLoading ? (
+                  <div className="text-center py-4" data-testid="loading-entrance-fees">Loading entrance fees...</div>
+                ) : entranceFees.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500 dark:text-gray-400" data-testid="text-no-entrance-fees">
+                    No entrance fees in database. Upload a CSV file to add entrance fees data.
+                  </div>
+                ) : (
+                  <div className="rounded-md border">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>City</TableHead>
+                          <TableHead>Site Name</TableHead>
+                          <TableHead>Net per Person (EGP)</TableHead>
+                          <TableHead>Price</TableHead>
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {entranceFees
+                          .filter(ef => 
+                            ef.site_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                            (!locationFilter || ef.city === locationFilter)
+                          )
+                          .map((entranceFee) => (
+                          <TableRow key={entranceFee.id} data-testid={`row-entrance-fee-${entranceFee.id}`}>
+                            <TableCell data-testid={`text-city-${entranceFee.id}`}>
+                              <Badge variant="outline">{entranceFee.city}</Badge>
+                            </TableCell>
+                            <TableCell className="font-medium" data-testid={`text-site-${entranceFee.id}`}>
+                              {entranceFee.site_name}
+                            </TableCell>
+                            <TableCell data-testid={`text-net-${entranceFee.id}`}>
+                              {entranceFee.net_pp} EGP
+                            </TableCell>
+                            <TableCell className="font-semibold" data-testid={`text-price-${entranceFee.id}`}>
+                              {entranceFee.price}
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => {
+                                  // Delete entrance fee mutation would go here
+                                  toast({
+                                    title: "Feature Coming Soon",
+                                    description: "Edit functionality will be added in the next update.",
+                                  });
+                                }}
+                                data-testid={`button-delete-entrance-fee-${entranceFee.id}`}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}

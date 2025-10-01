@@ -138,6 +138,20 @@ export const quotations = pgTable("quotations", {
   updated_at: timestamp("updated_at").defaultNow(),
 });
 
+// Entrance Fees table
+export const entranceFees = pgTable("entrance_fees", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  city: text("city").notNull(),
+  site_name: text("site_name").notNull(),
+  net_pp: integer("net_pp").notNull(), // Net price per person in Egyptian pounds
+  price: text("price").notNull(), // Display price (e.g., "€10.00")
+  unit_price: real("unit_price").notNull(), // Extracted numeric price
+  currency: text("currency").notNull().default("EUR"),
+  is_active: boolean("is_active").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
 // CSV Uploads table (tracks CSV file uploads)
 export const csvUploads = pgTable("csv_uploads", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -174,6 +188,12 @@ export const insertQuotationSchema = createInsertSchema(quotations).omit({
   updated_at: true,
 });
 
+export const insertEntranceFeeSchema = createInsertSchema(entranceFees).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+});
+
 export const insertCsvUploadSchema = createInsertSchema(csvUploads).omit({
   id: true,
   created_at: true,
@@ -183,11 +203,13 @@ export const insertCsvUploadSchema = createInsertSchema(csvUploads).omit({
 
 export type User = typeof users.$inferSelect;
 export type Price = typeof prices.$inferSelect;
+export type EntranceFee = typeof entranceFees.$inferSelect;
 export type QuotationRecord = typeof quotations.$inferSelect;
 export type CsvUpload = typeof csvUploads.$inferSelect;
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type InsertPrice = z.infer<typeof insertPriceSchema>;
+export type InsertEntranceFee = z.infer<typeof insertEntranceFeeSchema>;
 export type InsertQuotation = z.infer<typeof insertQuotationSchema>;
 export type InsertCsvUpload = z.infer<typeof insertCsvUploadSchema>;
 
@@ -205,4 +227,13 @@ export const csvRowSchema = z.object({
   location: z.string().optional(), // For multi-city uploads
 });
 
+// CSV row schema for entrance fees validation
+export const entranceFeesCsvRowSchema = z.object({
+  city: z.string().min(1, "City is required"),
+  site_name: z.string().min(1, "Site name is required"),
+  net_pp: z.union([z.string(), z.number()]).transform(val => typeof val === 'string' ? parseInt(val) : val),
+  price: z.string().min(1, "Price is required"),
+});
+
 export type CsvRow = z.infer<typeof csvRowSchema>;
+export type EntranceFeesCsvRow = z.infer<typeof entranceFeesCsvRowSchema>;

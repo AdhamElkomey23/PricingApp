@@ -7,8 +7,11 @@ import {
   type InsertQuotation,
   type CsvUpload,
   type InsertCsvUpload,
+  type EntranceFee,
+  type InsertEntranceFee,
   users,
   prices,
+  entranceFees,
   quotations,
   csvUploads
 } from "@shared/schema";
@@ -34,6 +37,18 @@ export interface IStorage {
   updatePrice(id: string, price: Partial<InsertPrice>): Promise<Price | undefined>;
   deletePrice(id: string): Promise<boolean>;
   bulkCreatePrices(pricesList: InsertPrice[]): Promise<Price[]>;
+
+  // Entrance Fee methods
+  getEntranceFees(filters?: {
+    city?: string;
+    siteName?: string;
+    isActive?: boolean;
+  }): Promise<EntranceFee[]>;
+  getEntranceFee(id: string): Promise<EntranceFee | undefined>;
+  createEntranceFee(entranceFee: InsertEntranceFee): Promise<EntranceFee>;
+  updateEntranceFee(id: string, entranceFee: Partial<InsertEntranceFee>): Promise<EntranceFee | undefined>;
+  deleteEntranceFee(id: string): Promise<boolean>;
+  bulkCreateEntranceFees(entranceFeesData: InsertEntranceFee[]): Promise<EntranceFee[]>;
 
   // Quotation methods
   getQuotations(userId?: string): Promise<QuotationRecord[]>;
@@ -138,12 +153,73 @@ export class DatabaseStorage implements IStorage {
 
   async bulkCreatePrices(pricesList: InsertPrice[]): Promise<Price[]> {
     if (pricesList.length === 0) return [];
-    
+
     const created = await db
       .insert(prices)
       .values(pricesList)
       .returning();
     return created;
+  }
+
+  // Entrance Fee methods
+  async getEntranceFees(filters?: {
+    city?: string;
+    siteName?: string;
+    isActive?: boolean;
+  }): Promise<EntranceFee[]> {
+    let query = db.select().from(entranceFees);
+
+    const conditions = [];
+    if (filters?.city) {
+      conditions.push(like(entranceFees.city, `%${filters.city}%`));
+    }
+    if (filters?.siteName) {
+      conditions.push(like(entranceFees.site_name, `%${filters.siteName}%`));
+    }
+    if (filters?.isActive !== undefined) {
+      conditions.push(eq(entranceFees.is_active, filters.isActive));
+    }
+
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions));
+    }
+
+    return await query.orderBy(entranceFees.city, entranceFees.site_name);
+  }
+
+  async getEntranceFee(id: string): Promise<EntranceFee | undefined> {
+    const [entranceFee] = await db.select().from(entranceFees)
+      .where(eq(entranceFees.id, id));
+    return entranceFee || undefined;
+  }
+
+  async createEntranceFee(entranceFee: InsertEntranceFee): Promise<EntranceFee> {
+    const [created] = await db.insert(entranceFees)
+      .values(entranceFee)
+      .returning();
+    return created;
+  }
+
+  async updateEntranceFee(id: string, entranceFee: Partial<InsertEntranceFee>): Promise<EntranceFee | undefined> {
+    const [updated] = await db.update(entranceFees)
+      .set({ ...entranceFee, updated_at: new Date() })
+      .where(eq(entranceFees.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async deleteEntranceFee(id: string): Promise<boolean> {
+    const result = await db.update(entranceFees)
+      .set({ is_active: false })
+      .where(eq(entranceFees.id, id));
+    return result.rowCount !== null && result.rowCount > 0;
+  }
+
+  async bulkCreateEntranceFees(entranceFeesData: InsertEntranceFee[]): Promise<EntranceFee[]> {
+    if (entranceFeesData.length === 0) return [];
+    return await db.insert(entranceFees)
+      .values(entranceFeesData)
+      .returning();
   }
 
   // Quotation methods

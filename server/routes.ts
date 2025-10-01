@@ -7,9 +7,12 @@ import { parse } from 'csv-parse/sync';
 import { storage } from "./storage";
 import { 
   insertPriceSchema,
+  insertEntranceFeeSchema,
   insertCsvUploadSchema,
   csvRowSchema,
-  type CsvRow
+  entranceFeesCsvRowSchema,
+  type CsvRow,
+  type EntranceFeesCsvRow
 } from "@shared/schema";
 import { z } from "zod";
 import { randomUUID } from "crypto";
@@ -136,6 +139,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   }));
 
+  // ========== Entrance Fees API ==========
+
+  // Get all entrance fees with optional filters
+  app.get('/api/entrance-fees', asyncHandler(async (req: Request, res: Response) => {
+    const filters = {
+      city: req.query.city as string,
+      siteName: req.query.siteName as string,
+      isActive: req.query.isActive ? req.query.isActive === 'true' : undefined,
+    };
+    const entranceFeesList = await storage.getEntranceFees(filters);
+    res.json(entranceFeesList);
+  }));
+
+  // Get single entrance fee
+  app.get('/api/entrance-fees/:id', asyncHandler(async (req: Request, res: Response) => {
+    const entranceFee = await storage.getEntranceFee(req.params.id);
+    if (!entranceFee) {
+      return res.status(404).json({ error: 'Entrance fee not found' });
+    }
+    res.json(entranceFee);
+  }));
+
+  // Create entrance fee
+  app.post('/api/entrance-fees', validateBody(insertEntranceFeeSchema), asyncHandler(async (req: Request, res: Response) => {
+    const entranceFee = await storage.createEntranceFee(req.body);
+    res.status(201).json(entranceFee);
+  }));
+
+  // Update entrance fee
+  app.put('/api/entrance-fees/:id', validateBody(insertEntranceFeeSchema.partial()), asyncHandler(async (req: Request, res: Response) => {
+    const entranceFee = await storage.updateEntranceFee(req.params.id, req.body);
+    if (!entranceFee) {
+      return res.status(404).json({ error: 'Entrance fee not found' });
+    }
+    res.json(entranceFee);
+  }));
+
+  // Delete entrance fee (soft delete)
+  app.delete('/api/entrance-fees/:id', asyncHandler(async (req: Request, res: Response) => {
+    const success = await storage.deleteEntranceFee(req.params.id);
+    if (!success) {
+      return res.status(404).json({ error: 'Entrance fee not found' });
+    }
+    res.status(204).send();
+  }));
+
+  // Bulk create entrance fees
+  app.post('/api/entrance-fees/bulk', validateBody(z.object({ entranceFees: z.array(insertEntranceFeeSchema) })), asyncHandler(async (req: Request, res: Response) => {
+    const created = await storage.bulkCreateEntranceFees(req.body.entranceFees);
+    res.status(201).json({ 
+      message: `Successfully created ${created.length} entrance fees`,
+      entranceFees: created
+    });
+  }));
+
   // ========== CSV Uploads API ==========
 
   // Get all CSV uploads
@@ -161,6 +219,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     const city = req.body.city;
+    const uploadType = req.body.uploadType || 'prices'; // 'prices' or 'entrance-fees'
     
     if (!city) {
       return res.status(400).json({ error: 'Upload type is required' });
@@ -171,7 +230,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       original_filename: req.file.originalname,
       file_path: req.file.path,
       file_size: req.file.size,
-      city: city, // This will be "multi-city" for bulk uploads or a specific city name
+      city: uploadType === 'entrance-fees' ? `entrance-fees-${city}` : city, // Prefix for entrance fees
       status: 'pending' as const,
       uploaded_by: req.body.uploaded_by || null
     };
@@ -209,6 +268,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       const pricesToCreate: any[] = [];
+      const entranceFeesToCreate: any[] = [];
+      const isEntranceFeesUpload = upload.city.startsWith('entrance-fees-');
 
       // Process each record
       for (let i = 0; i < records.length; i++) {
@@ -220,68 +281,104 @@ export async function registerRoutes(app: Express): Promise<Server> {
             normalizedRecord[key.trim()] = value;
           }
 
-          // Map CSV columns to expected schema
-          const mappedRecord = {
-            service_name: normalizedRecord['Service Name'],
-            category: normalizedRecord['Category'],
-            route_name: normalizedRecord['Route Name'],
-            cost_basis: normalizedRecord['Cost Basis'],
-            unit: normalizedRecord['Unit'],
-            base_cost: normalizedRecord['Base Cost'],
-            notes: normalizedRecord['Notes'],
-            vehicle_type: normalizedRecord['Vehicle Type'],
-            passenger_capacity: normalizedRecord['Passenger Capacity'],
-            location: normalizedRecord['Location']
-          };
+          if (isEntranceFeesUpload) {
+            // Process entrance fees CSV
+            const mappedRecord = {
+              city: normalizedRecord['city'] || upload.city.replace('entrance-fees-', ''),
+              site_name: normalizedRecord['site name'],
+              net_pp: normalizedRecord['net_pp'],
+              price: normalizedRecord['price']
+            };
 
-          // Validate CSV row
-          const validatedRow = csvRowSchema.parse(mappedRecord);
-          
-          // Parse base_cost to extract unit_price and currency
-          // Format: "20 €" or "96 €" or "." (missing)
-          let unitPrice = 0;
-          let currency = 'EUR';
-          
-          const baseCostStr = validatedRow.base_cost.trim();
-          if (baseCostStr && baseCostStr !== '.') {
-            // Remove currency symbols and parse number
-            const priceMatch = baseCostStr.match(/([0-9.]+)\s*([€$])/);
-            if (priceMatch) {
-              unitPrice = parseFloat(priceMatch[1]);
-              currency = priceMatch[2] === '€' ? 'EUR' : 'USD';
-            } else {
-              // Try to parse as plain number
-              const parsed = parseFloat(baseCostStr);
-              if (!isNaN(parsed)) {
-                unitPrice = parsed;
+            // Validate entrance fees CSV row
+            const validatedRow = entranceFeesCsvRowSchema.parse(mappedRecord);
+            
+            // Parse price to extract unit_price and currency
+            let unitPrice = 0;
+            let currency = 'EUR';
+            
+            const priceStr = validatedRow.price.trim();
+            if (priceStr) {
+              const priceMatch = priceStr.match(/([€$])([0-9.]+)/);
+              if (priceMatch) {
+                currency = priceMatch[1] === '€' ? 'EUR' : 'USD';
+                unitPrice = parseFloat(priceMatch[2]);
               }
             }
-          }
 
-          // Determine location based on upload type
-          let location;
-          if (upload.city === 'multi-city') {
-            // For multi-city uploads, use the Location column from CSV
-            location = validatedRow.location || null;
+            entranceFeesToCreate.push({
+              city: validatedRow.city,
+              site_name: validatedRow.site_name,
+              net_pp: validatedRow.net_pp,
+              price: validatedRow.price,
+              unit_price: unitPrice,
+              currency: currency,
+              is_active: true
+            });
           } else {
-            // For single-city uploads, use the assigned city
-            location = upload.city;
-          }
+            // Process regular prices CSV
+            const mappedRecord = {
+              service_name: normalizedRecord['Service Name'],
+              category: normalizedRecord['Category'],
+              route_name: normalizedRecord['Route Name'],
+              cost_basis: normalizedRecord['Cost Basis'],
+              unit: normalizedRecord['Unit'],
+              base_cost: normalizedRecord['Base Cost'],
+              notes: normalizedRecord['Notes'],
+              vehicle_type: normalizedRecord['Vehicle Type'],
+              passenger_capacity: normalizedRecord['Passenger Capacity'],
+              location: normalizedRecord['Location']
+            };
 
-          pricesToCreate.push({
-            service_name: validatedRow.service_name,
-            category: validatedRow.category || null,
-            route_name: validatedRow.route_name || null,
-            cost_basis: validatedRow.cost_basis,
-            unit: validatedRow.unit || null,
-            unit_price: unitPrice,
-            currency: currency,
-            notes: validatedRow.notes || null,
-            vehicle_type: validatedRow.vehicle_type || null,
-            passenger_capacity: validatedRow.passenger_capacity || null,
-            location: location,
-            is_active: true
-          });
+            // Validate CSV row
+            const validatedRow = csvRowSchema.parse(mappedRecord);
+          
+          // Parse base_cost to extract unit_price and currency
+            // Format: "20 €" or "96 €" or "." (missing)
+            let unitPrice = 0;
+            let currency = 'EUR';
+            
+            const baseCostStr = validatedRow.base_cost.trim();
+            if (baseCostStr && baseCostStr !== '.') {
+              // Remove currency symbols and parse number
+              const priceMatch = baseCostStr.match(/([0-9.]+)\s*([€$])/);
+              if (priceMatch) {
+                unitPrice = parseFloat(priceMatch[1]);
+                currency = priceMatch[2] === '€' ? 'EUR' : 'USD';
+              } else {
+                // Try to parse as plain number
+                const parsed = parseFloat(baseCostStr);
+                if (!isNaN(parsed)) {
+                  unitPrice = parsed;
+                }
+              }
+            }
+
+            // Determine location based on upload type
+            let location;
+            if (upload.city === 'multi-city') {
+              // For multi-city uploads, use the Location column from CSV
+              location = validatedRow.location || null;
+            } else {
+              // For single-city uploads, use the assigned city
+              location = upload.city;
+            }
+
+            pricesToCreate.push({
+              service_name: validatedRow.service_name,
+              category: validatedRow.category || null,
+              route_name: validatedRow.route_name || null,
+              cost_basis: validatedRow.cost_basis,
+              unit: validatedRow.unit || null,
+              unit_price: unitPrice,
+              currency: currency,
+              notes: validatedRow.notes || null,
+              vehicle_type: validatedRow.vehicle_type || null,
+              passenger_capacity: validatedRow.passenger_capacity || null,
+              location: location,
+              is_active: true
+            });
+          }
           
           recordsProcessed++;
         } catch (error: any) {
@@ -297,8 +394,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Bulk insert valid prices
-      if (pricesToCreate.length > 0) {
+      // Bulk insert valid data
+      if (isEntranceFeesUpload && entranceFeesToCreate.length > 0) {
+        await storage.bulkCreateEntranceFees(entranceFeesToCreate);
+      } else if (!isEntranceFeesUpload && pricesToCreate.length > 0) {
         await storage.bulkCreatePrices(pricesToCreate);
       }
 

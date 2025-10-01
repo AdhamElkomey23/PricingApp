@@ -1,10 +1,9 @@
-
 import { Link } from "wouter";
 import { ThemeProvider } from "next-themes";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Database, MapPin, Plus, Moon, Sun, Sparkles } from "lucide-react";
+import { Database, MapPin, Plus, Moon, Sun, Sparkles, Settings } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export default function HomePage() {
@@ -25,7 +24,7 @@ export default function HomePage() {
                   Professional travel planning and pricing management system
                 </p>
               </div>
-              
+
               <Button
                 variant="outline"
                 size="icon"
@@ -142,6 +141,29 @@ export default function HomePage() {
                   </CardContent>
                 </Card>
               </Link>
+
+              {/* Settings Card */}
+              <Link href="/settings">
+                <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-0 hover:border-primary hover:border-2">
+                  <CardHeader className="text-center pb-4">
+                    <div className="mx-auto mb-4 p-3 bg-gray-500/10 rounded-full w-fit">
+                      <Settings className="h-8 w-8 text-gray-500" />
+                    </div>
+                    <CardTitle className="text-xl">Settings</CardTitle>
+                    <CardDescription>
+                      Manage API keys and application preferences
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <Badge variant="secondary" className="mb-3">
+                      Configuration
+                    </Badge>
+                    <p className="text-sm text-muted-foreground">
+                      Set up your API keys, customize appearance, and manage user settings
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
             </div>
 
             {/* Quick Stats or Recent Activity */}
@@ -154,7 +176,7 @@ export default function HomePage() {
                   </div>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardContent className="pt-6">
                   <div className="text-center">
@@ -163,7 +185,7 @@ export default function HomePage() {
                   </div>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardContent className="pt-6">
                   <div className="text-center">

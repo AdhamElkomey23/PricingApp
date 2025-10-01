@@ -9,6 +9,7 @@ import DatabasePage from "@/pages/DatabasePage";
 import ToursPage from "@/pages/ToursPage";
 import NewTourPage from "@/pages/NewTourPage";
 import ChatbotPage from "@/pages/ChatbotPage";
+import SettingsPage from "@/pages/SettingsPage";
 import NotFound from "@/pages/not-found";
 import FloatingChatButton from "@/components/FloatingChatButton";
 
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/tours" component={ToursPage} />
       <Route path="/new" component={NewTourPage} />
       <Route path="/chatbot" component={ChatbotPage} />
+      <Route path="/settings" component={SettingsPage} />
       <Route component={NotFound} />
     </Switch>
   );

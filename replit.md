@@ -8,9 +8,43 @@ The Egypt Itinerary Operations App is a professional web application designed to
 
 Preferred communication style: Simple, everyday language.
 
-## Recent Changes (September 30, 2025)
+## Recent Changes
 
-**AI Chatbot Assistant (Latest):**
+**Complete Workflow Redesign (October 1, 2025 - Latest):**
+- Completely redesigned the itinerary analysis workflow from scratch for reliability and accuracy
+- New streamlined workflow:
+  1. Paste complete itinerary text
+  2. AI automatically identifies and categorizes all services
+  3. System matches prices from database with smart fuzzy matching
+  4. Clear display of priced services and missing prices with helpful hints
+  5. Automatic pricing breakdown per person and per group
+- Service categorization system:
+  - Transportation (cars, flights, trains, boats, transfers)
+  - Guides & Personnel (tour guides, drivers, representatives)
+  - Entrance Fees (museum tickets, site admissions)
+  - Accommodation (hotels, cruises, resorts)
+  - Meals (breakfast, lunch, dinner)
+  - Optional Extras (shows, activities)
+- Intelligent price matching:
+  - 60%+ confidence threshold for automatic matching
+  - Considers service category, location, cost basis, and keywords
+  - Clear confidence scores displayed for all matches
+- Missing price detection:
+  - Identifies services without pricing data
+  - Provides actionable hints for each missing price
+  - Shows exactly what to add to the database
+- Structured output:
+  - Services organized by day with clear categorization
+  - Per-person and per-group totals calculated automatically
+  - Breakdown by service category
+  - Completion percentage tracking
+- Implementation:
+  - New `newItineraryAnalyzer.ts` backend service with reliable AI extraction
+  - Simplified `NewItineraryAnalyzer.tsx` component with clear UI
+  - Uses OpenAI GPT-4o for consistent service extraction
+  - Temperature set to 0.3 for reliable, consistent results
+
+**AI Chatbot Assistant (September 30, 2025):**
 - Implemented intelligent AI-powered chatbot using OpenAI GPT-5 for natural language database management
 - Features:
   - Search prices using conversational queries

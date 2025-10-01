@@ -15,6 +15,7 @@ import { z } from "zod";
 import { randomUUID } from "crypto";
 import { processUserQuery } from "./aiAssistant";
 import { aiParser } from "./aiItineraryParser";
+import { newAnalyzer } from "./newItineraryAnalyzer";
 
 // Configure multer for file uploads
 const uploadDir = path.join(process.cwd(), 'uploads');
@@ -426,17 +427,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     try {
-      const analysisResult = await aiParser.analyzeItinerary(itineraryText, numPeople, numDays);
+      // Use the new reliable analyzer
+      const analysisResult = await newAnalyzer.analyzeItinerary(itineraryText, numPeople, numDays);
       
       res.json({
         success: true,
-        data: analysisResult,
-        summary: {
-          totalServices: analysisResult.priceMatches.length,
-          servicesWithPrices: analysisResult.priceMatches.filter(m => m.priceFound).length,
-          missingPricesCount: analysisResult.missingPrices.length,
-          averageConfidence: analysisResult.priceMatches.reduce((sum, m) => sum + m.confidence, 0) / analysisResult.priceMatches.length
-        }
+        data: analysisResult
       });
     } catch (error: any) {
       console.error('Itinerary analysis error:', error);

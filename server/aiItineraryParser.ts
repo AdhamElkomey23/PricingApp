@@ -118,7 +118,7 @@ Return a JSON object with this exact structure:
 }`;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-4o",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt }
@@ -199,7 +199,7 @@ Return JSON: {
 
     try {
       const response = await openai.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-4o",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt }
@@ -273,7 +273,7 @@ Return JSON array of recommendation strings.`;
 
     try {
       const response = await openai.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-4o",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt }

@@ -3,7 +3,18 @@ import { storage } from "./storage";
 import type { InsertPrice } from "@shared/schema";
 
 // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+let openai: OpenAI | null = null;
+
+function getOpenAI(): OpenAI {
+  if (!openai) {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error("OpenAI API key is not configured. The chatbot feature requires an OPENAI_API_KEY environment variable.");
+    }
+    openai = new OpenAI({ apiKey });
+  }
+  return openai;
+}
 
 interface ChatMessage {
   role: "user" | "assistant" | "system";
@@ -21,7 +32,7 @@ export async function processUserQuery(userMessage: string, conversationHistory:
 }> {
   try {
     // Step 1: Determine what action the user wants
-    const actionResponse = await openai.chat.completions.create({
+    const actionResponse = await getOpenAI().chat.completions.create({
       model: "gpt-5",
       messages: [
         {
@@ -111,7 +122,7 @@ Be concise but helpful. If there are multiple results, summarize them clearly.`,
       { role: "user", content: userMessage },
     ];
 
-    const finalResponse = await openai.chat.completions.create({
+    const finalResponse = await getOpenAI().chat.completions.create({
       model: "gpt-5",
       messages: responseMessages,
     });

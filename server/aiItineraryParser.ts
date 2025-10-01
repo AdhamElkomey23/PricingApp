@@ -3,7 +3,18 @@ import OpenAI from "openai";
 import { storage } from "./storage";
 import type { ParsedItinerary, DailyBreakdown, Service } from "@shared/schema";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+let openai: OpenAI | null = null;
+
+function getOpenAI(): OpenAI {
+  if (!openai) {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error("OpenAI API key is not configured. The AI itinerary parser requires an OPENAI_API_KEY environment variable.");
+    }
+    openai = new OpenAI({ apiKey });
+  }
+  return openai;
+}
 
 interface ServiceMatch {
   service: Service;
@@ -117,7 +128,7 @@ Return a JSON object with this exact structure:
   "missing_info": ["missing1", "missing2"]
 }`;
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-4o",
       messages: [
         { role: "system", content: systemPrompt },
@@ -198,7 +209,7 @@ Return JSON: {
 }`;
 
     try {
-      const response = await openai.chat.completions.create({
+      const response = await getOpenAI().chat.completions.create({
         model: "gpt-4o",
         messages: [
           { role: "system", content: systemPrompt },
@@ -272,7 +283,7 @@ ${missingPrices.join('\n')}
 Return JSON array of recommendation strings.`;
 
     try {
-      const response = await openai.chat.completions.create({
+      const response = await getOpenAI().chat.completions.create({
         model: "gpt-4o",
         messages: [
           { role: "system", content: systemPrompt },

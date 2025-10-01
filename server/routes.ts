@@ -14,6 +14,7 @@ import {
 import { z } from "zod";
 import { randomUUID } from "crypto";
 import { processUserQuery } from "./aiAssistant";
+import { aiParser } from "./aiItineraryParser";
 
 // Configure multer for file uploads
 const uploadDir = path.join(process.cwd(), 'uploads');
@@ -388,6 +389,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ error: 'Quotation not found' });
     }
     res.status(204).send();
+  }));
+
+  // ========== AI Itinerary Analysis ==========
+  app.post('/api/analyze-itinerary', asyncHandler(async (req: Request, res: Response) => {
+    const { itineraryText, numPeople, numDays } = req.body;
+    
+    // Validate input
+    if (!itineraryText || typeof itineraryText !== 'string' || itineraryText.trim().length < 50) {
+      return res.status(400).json({ 
+        error: 'Invalid itinerary text',
+        message: 'Please provide a detailed itinerary text (minimum 50 characters)'
+      });
+    }
+
+    if (!numPeople || numPeople < 1 || numPeople > 100) {
+      return res.status(400).json({ 
+        error: 'Invalid number of people',
+        message: 'Number of people must be between 1 and 100'
+      });
+    }
+
+    if (!numDays || numDays < 1 || numDays > 30) {
+      return res.status(400).json({ 
+        error: 'Invalid number of days',
+        message: 'Number of days must be between 1 and 30'
+      });
+    }
+
+    // Check if OpenAI API key is configured
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).json({ 
+        error: 'AI service not configured',
+        message: 'OpenAI API key is not configured. Please contact the administrator.'
+      });
+    }
+
+    try {
+      const analysisResult = await aiParser.analyzeItinerary(itineraryText, numPeople, numDays);
+      
+      res.json({
+        success: true,
+        data: analysisResult,
+        summary: {
+          totalServices: analysisResult.priceMatches.length,
+          servicesWithPrices: analysisResult.priceMatches.filter(m => m.priceFound).length,
+          missingPricesCount: analysisResult.missingPrices.length,
+          averageConfidence: analysisResult.priceMatches.reduce((sum, m) => sum + m.confidence, 0) / analysisResult.priceMatches.length
+        }
+      });
+    } catch (error: any) {
+      console.error('Itinerary analysis error:', error);
+      res.status(500).json({ 
+        error: 'Analysis failed',
+        message: `Failed to analyze itinerary: ${error.message}`
+      });
+    }
   }));
 
   // ========== AI Chatbot ==========

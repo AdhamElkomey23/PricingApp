@@ -53,7 +53,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* New Tour Card */}
               <Link href="/new">
-                <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-2 hover:border-primary">
+                <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-0 hover:border-primary hover:border-2">
                   <CardHeader className="text-center pb-4">
                     <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-full w-fit">
                       <Plus className="h-8 w-8 text-primary" />
@@ -76,7 +76,7 @@ export default function HomePage() {
 
               {/* Tours Management Card */}
               <Link href="/tours">
-                <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-2 hover:border-primary">
+                <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-0 hover:border-primary hover:border-2">
                   <CardHeader className="text-center pb-4">
                     <div className="mx-auto mb-4 p-3 bg-blue-500/10 rounded-full w-fit">
                       <MapPin className="h-8 w-8 text-blue-500" />
@@ -99,7 +99,7 @@ export default function HomePage() {
 
               {/* Database Management Card */}
               <Link href="/database">
-                <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-2 hover:border-primary">
+                <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-0 hover:border-primary hover:border-2">
                   <CardHeader className="text-center pb-4">
                     <div className="mx-auto mb-4 p-3 bg-green-500/10 rounded-full w-fit">
                       <Database className="h-8 w-8 text-green-500" />
@@ -122,7 +122,7 @@ export default function HomePage() {
 
               {/* AI Chatbot Card */}
               <Link href="/chatbot">
-                <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-2 hover:border-primary">
+                <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-0 hover:border-primary hover:border-2">
                   <CardHeader className="text-center pb-4">
                     <div className="mx-auto mb-4 p-3 bg-purple-500/10 rounded-full w-fit">
                       <Sparkles className="h-8 w-8 text-purple-500" />

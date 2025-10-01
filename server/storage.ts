@@ -49,6 +49,7 @@ export interface IStorage {
   updateEntranceFee(id: string, entranceFee: Partial<InsertEntranceFee>): Promise<EntranceFee | undefined>;
   deleteEntranceFee(id: string): Promise<boolean>;
   bulkCreateEntranceFees(entranceFeesData: InsertEntranceFee[]): Promise<EntranceFee[]>;
+  ensureEntranceFeesTableExists(): Promise<void>;
 
   // Quotation methods
   getQuotations(userId?: string): Promise<QuotationRecord[]>;
@@ -217,9 +218,39 @@ export class DatabaseStorage implements IStorage {
 
   async bulkCreateEntranceFees(entranceFeesData: InsertEntranceFee[]): Promise<EntranceFee[]> {
     if (entranceFeesData.length === 0) return [];
+    // Ensure the table exists before bulk insertion
+    await this.ensureEntranceFeesTableExists();
     return await db.insert(entranceFees)
       .values(entranceFeesData)
       .returning();
+  }
+
+  async ensureEntranceFeesTableExists(): Promise<void> {
+    try {
+      // Try to query the table to check if it exists
+      await db.select().from(entranceFees).limit(1);
+    } catch (error: any) {
+      if (error.code === '42P01') { // Table does not exist
+        // Create the table using raw SQL
+        await db.execute(`
+          CREATE TABLE IF NOT EXISTS entrance_fees (
+            id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
+            city TEXT NOT NULL,
+            site_name TEXT NOT NULL,
+            net_pp INTEGER NOT NULL,
+            price TEXT NOT NULL,
+            unit_price REAL NOT NULL,
+            currency TEXT NOT NULL DEFAULT 'EUR',
+            is_active BOOLEAN DEFAULT true,
+            created_at TIMESTAMP DEFAULT NOW(),
+            updated_at TIMESTAMP DEFAULT NOW()
+          )
+        `);
+        console.log('Created entrance_fees table');
+      } else {
+        throw error;
+      }
+    }
   }
 
   // Quotation methods

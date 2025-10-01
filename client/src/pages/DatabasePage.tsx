@@ -258,19 +258,10 @@ export default function DatabasePage() {
       return;
     }
 
-    if (!selectedCity.trim()) {
-      toast({
-        title: "Upload Type Required",
-        description: "Please select an upload type before uploading",
-        variant: "destructive",
-      });
-      return;
-    }
-
     try {
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('city', selectedCity);
+      formData.append('city', 'auto-detect'); // Use auto-detect instead of manual selection
       formData.append('uploadType', uploadType);
       
       const response = await fetch('/api/csv-uploads', {
@@ -285,14 +276,13 @@ export default function DatabasePage() {
 
       await response.json();
       refetchUploads();
-      setSelectedCity("");
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
       
       toast({
         title: "File Uploaded",
-        description: "Your CSV file has been uploaded. Click 'Process' to import the data.",
+        description: "Your CSV file has been uploaded. Cities will be auto-detected during processing.",
       });
     } catch (error: any) {
       toast({
@@ -428,58 +418,11 @@ export default function DatabasePage() {
                       <option value="prices">Transportation/Services Pricing</option>
                       <option value="entrance-fees">Entrance Fees</option>
                     </select>
-                  </div>
-
-                  {/* City Selection */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      {uploadType === 'entrance-fees' ? 'City/Region' : 'Upload Type'}
-                    </label>
-                    <select
-                      className="w-full border rounded-md px-3 py-2 bg-background text-foreground"
-                      value={selectedCity}
-                      onChange={(e) => setSelectedCity(e.target.value)}
-                      data-testid="select-city"
-                    >
-                      <option value="">
-                        {uploadType === 'entrance-fees' ? 'Select city/region...' : 'Select upload type...'}
-                      </option>
-                      {uploadType === 'entrance-fees' ? (
-                        <>
-                          <option value="multi-city">All Cities (uses city column from CSV)</option>
-                          <option value="Cairo">Cairo</option>
-                          <option value="Alexandria">Alexandria</option>
-                          <option value="Luxor">Luxor</option>
-                          <option value="Aswan">Aswan</option>
-                          <option value="Fayoum">Fayoum</option>
-                          <option value="AL MINYA">Al Minya</option>
-                          <option value="SIWA">Siwa</option>
-                          <option value="MATROUH">Matrouh</option>
-                          <option value="Qena">Qena</option>
-                          <option value="SHG">Sohag</option>
-                          <option value="HUR">Hurghada</option>
-                          <option value="SSH">Sharm El Sheikh</option>
-                        </>
-                      ) : (
-                        <>
-                          <option value="multi-city">Multi-City (uses Location column from CSV)</option>
-                          <option value="Alexandria">Single City: Alexandria</option>
-                          <option value="Cairo">Single City: Cairo</option>
-                          <option value="Luxor">Single City: Luxor</option>
-                          <option value="Aswan">Single City: Aswan</option>
-                          <option value="Hurghada">Single City: Hurghada</option>
-                          <option value="Sharm El-Sheikh">Single City: Sharm El-Sheikh</option>
-                          <option value="Marsa Matrouh">Single City: Marsa Matrouh</option>
-                          <option value="Bahariya Oasis">Single City: Bahariya Oasis</option>
-                          <option value="Siwa Oasis">Single City: Siwa Oasis</option>
-                        </>
-                      )}
-                    </select>
-                    {selectedCity === "multi-city" && (
-                      <div className="text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950 p-2 rounded">
-                        <strong>Multi-City Mode:</strong> Your CSV should include a "Location" column with city names. Each record will be assigned to its respective city.
-                      </div>
-                    )}
+                    <div className="text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950 p-2 rounded">
+                      <strong>Auto-Detection:</strong> {uploadType === 'entrance-fees' 
+                        ? 'Cities will be automatically detected from the "city" column in your CSV file.' 
+                        : 'Cities will be automatically detected from the "Location" column in your CSV file.'}
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-4">
@@ -505,7 +448,7 @@ export default function DatabasePage() {
                   <div className="text-sm text-gray-600 dark:text-gray-400">
                     {uploadType === 'entrance-fees' ? (
                       <a
-                        href="data:text/csv;charset=utf-8,city,site name,net_pp,price%0ACairo,Saladin Citadel,550,€10.00%0ACairo,Baron Palace,220,€4.00%0AAlexandria,Qaitbay Citadel,200,€3.64"
+                        href="data:text/csv;charset=utf-8,city,site name,net_pp,price%0ACairo,Saladin Citadel,550,€10.00%0ACairo,Baron Palace,220,€4.00%0AAlexandria,Qaitbay Citadel,200,€3.64%0ALuxor,Karnak Temple,600,€10.91"
                         download="entrance_fees_template.csv"
                         className="text-blue-600 dark:text-blue-400 hover:underline"
                         data-testid="link-download-template"
@@ -515,7 +458,7 @@ export default function DatabasePage() {
                       </a>
                     ) : (
                       <a
-                        href="data:text/csv;charset=utf-8,Service Name,Category,Route Name,Cost Basis,Unit,Base Cost,Notes,Vehicle Type,Passenger Capacity,Location%0ASedan Alexandria Airport Pickup,transport,Alexandria Airport Pickup,per_group,transfer,20 €,One-way airport pickup,Sedan,1-2 pax,Alexandria%0AHiace Cairo Day Tour 8 Hours,transport,Cairo Day Tour 8 Hours,per_group,tour,69 €,8-hour city tour,Hiace,3-7 pax,Cairo"
+                        href="data:text/csv;charset=utf-8,Service Name,Category,Route Name,Cost Basis,Unit,Base Cost,Notes,Vehicle Type,Passenger Capacity,Location%0ASedan Alexandria Airport Pickup,transport,Alexandria Airport Pickup,per_group,transfer,20 €,One-way airport pickup,Sedan,1-2 pax,Alexandria%0AHiace Cairo Day Tour 8 Hours,transport,Cairo Day Tour 8 Hours,per_group,tour,69 €,8-hour city tour,Hiace,3-7 pax,Cairo%0ALuxor Temple Guide,guide,Luxor Temple Tour,per_group,tour,45 €,Professional guide service,Guide,up to 15 pax,Luxor"
                         download="pricing_template.csv"
                         className="text-blue-600 dark:text-blue-400 hover:underline"
                         data-testid="link-download-template"

@@ -218,19 +218,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const city = req.body.city;
     const uploadType = req.body.uploadType || 'prices'; // 'prices' or 'entrance-fees'
-    
-    if (!city) {
-      return res.status(400).json({ error: 'Upload type is required' });
-    }
 
     const uploadData = {
       filename: req.file.filename,
       original_filename: req.file.originalname,
       file_path: req.file.path,
       file_size: req.file.size,
-      city: uploadType === 'entrance-fees' ? `entrance-fees-${city}` : city, // Prefix for entrance fees
+      city: uploadType === 'entrance-fees' ? 'entrance-fees-auto' : 'auto-detect', // Auto-detect cities
       status: 'pending' as const,
       uploaded_by: req.body.uploaded_by || null
     };
@@ -271,6 +266,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const entranceFeesToCreate: any[] = [];
       const isEntranceFeesUpload = upload.city.startsWith('entrance-fees-');
 
+      // Ensure entrance_fees table exists if this is an entrance fees upload
+      if (isEntranceFeesUpload) {
+        try {
+          await storage.ensureEntranceFeesTableExists();
+        } catch (error: any) {
+          console.error('Failed to create entrance_fees table:', error);
+          await storage.updateCsvUpload(req.params.id, {
+            status: 'failed',
+            processed_at: new Date() as any,
+            error_log: `Failed to create entrance_fees table: ${error.message}`
+          });
+          return res.status(500).json({ error: 'Failed to create database table', message: error.message });
+        }
+      }
+
       // Process each record
       for (let i = 0; i < records.length; i++) {
         const record = records[i] as any;
@@ -284,10 +294,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           if (isEntranceFeesUpload) {
             // Process entrance fees CSV
             const mappedRecord = {
-              city: normalizedRecord['city'] || upload.city.replace('entrance-fees-', ''),
-              site_name: normalizedRecord['site name'],
-              net_pp: normalizedRecord['net_pp'],
-              price: normalizedRecord['price']
+              city: normalizedRecord['city'] || normalizedRecord['City'], // Use city from CSV
+              site_name: normalizedRecord['site name'] || normalizedRecord['Site Name'],
+              net_pp: normalizedRecord['net_pp'] || normalizedRecord['Net PP'],
+              price: normalizedRecord['price'] || normalizedRecord['Price']
             };
 
             // Validate entrance fees CSV row
@@ -354,15 +364,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
               }
             }
 
-            // Determine location based on upload type
-            let location;
-            if (upload.city === 'multi-city') {
-              // For multi-city uploads, use the Location column from CSV
-              location = validatedRow.location || null;
-            } else {
-              // For single-city uploads, use the assigned city
-              location = upload.city;
-            }
+            // Use location from CSV (auto-detection)
+            const location = validatedRow.location || null;
 
             pricesToCreate.push({
               service_name: validatedRow.service_name,

@@ -231,8 +231,8 @@ export const entranceFeesCsvRowSchema = z.object({
 export type CsvRow = z.infer<typeof csvRowSchema>;
 export type EntranceFeesCsvRow = z.infer<typeof entranceFeesCsvRowSchema>;
 
-// Tour quotation schema
-export const quotationSchema = pgTable("quotations", {
+// Tour quotation table schema
+export const quotationsTable = pgTable("quotations", {
   id: text("id").primaryKey().notNull(),
   tourName: text("tour_name").notNull(),
   clientName: text("client_name"),
@@ -249,9 +249,9 @@ export const quotationSchema = pgTable("quotations", {
   userId: text("user_id"), // For future user management
 });
 
-export type Quotation = typeof quotationSchema.$inferSelect;
-export type InsertQuotation = typeof quotationSchema.$inferInsert;
+export type QuotationRecord = typeof quotationsTable.$inferSelect;
+export type InsertQuotationRecord = typeof quotationsTable.$inferInsert;
 
 // Add validation schemas
-export const insertQuotationSchema = createInsertSchema(quotationSchema);
-export const selectQuotationSchema = createSelectSchema(quotationSchema);
+export const insertQuotationRecordSchema = createInsertSchema(quotationsTable);
+export const selectQuotationRecordSchema = createSelectSchema(quotationsTable);
